@@ -205,25 +205,23 @@ async function main() {
 
   // --- GitHub token for accessing private repos (optional) ---
   //
-  // Sources (in order of preference):
-  // 1. fileConfig.githubToken (explicit, user-controlled)
-  // 2. process.env.GITHUB_TOKEN *only* when it looks like a personal token
-  //    (ghp_... or github_pat_...), NOT the Actions default ghs_ token
+  // Priority:
+  // 1. fileConfig.githubToken      (explicit, user-controlled)
+  // 2. process.env.GITHUB_TOKEN    (built-in Actions token or a PAT)
+  // 3. no token (public / unauthenticated requests)
   //
-  // This avoids 401s when the default GitHub Actions GITHUB_TOKEN does not
-  // have permission to call certain REST/GraphQL APIs, while still letting
-  // users opt in by adding a real PAT as a secret.
+  // NOTE: The default GitHub Actions GITHUB_TOKEN may not have permission
+  // for all REST/GraphQL APIs. If it returns 401s, users should provide
+  // a real personal access token (ghp_... / github_pat_...) via either
+  // gitforge.config.json or a repository secret.
   const rawEnvToken = process.env.GITHUB_TOKEN && process.env.GITHUB_TOKEN.trim()
-  const envLooksLikePat =
-    !!rawEnvToken &&
-    (rawEnvToken.startsWith('ghp_') || rawEnvToken.startsWith('github_pat_'))
 
   const configToken =
     fileConfig.githubToken && typeof fileConfig.githubToken === 'string'
       ? fileConfig.githubToken.trim()
       : null
 
-  const githubToken = configToken || (envLooksLikePat ? rawEnvToken : null)
+  const githubToken = configToken || rawEnvToken || null
 
   // Debug: Log token status (without exposing the actual token)
   if (githubToken) {
@@ -232,12 +230,6 @@ async function main() {
       : 'environment (GITHUB_TOKEN)'
     console.log(
       `GitHub token found: ${githubToken.substring(0, 7)}... (from ${source})`,
-    )
-  } else if (rawEnvToken && !envLooksLikePat) {
-    console.log(
-      'Ignoring default GitHub Actions GITHUB_TOKEN for API auth; using unauthenticated requests instead. ' +
-        'To enable private-repo stats and higher limits, add a personal access token (ghp_... or github_pat_...) ' +
-        'as the GITHUB_TOKEN secret or set githubToken in gitforge.config.json.',
     )
   } else {
     console.log(
