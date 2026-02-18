@@ -1,5 +1,5 @@
 # gitforge
-
+### [live Demo](https://amide-init.github.io/gitfolio/)
 Generate a polished, static GitHub profile site from any user or organization — using a simple local generator script.
 
 - **Input**: a GitHub username/org and (optionally) a small config file.
