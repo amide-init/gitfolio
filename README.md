@@ -1,4 +1,4 @@
-# gitforge
+# gitfolio
 ### [live Demo](https://amide-init.github.io/gitfolio/)
 Generate a polished, static GitHub profile site from any user or organization — using a simple local generator script.
 
@@ -26,7 +26,7 @@ Generate a polished, static GitHub profile site from any user or organization �
 You’ll get a live site at:
 
 - `https://yourusername.github.io/` if the repo is named `yourusername.github.io`
-- `https://yourusername.github.io/gitforge/` if the repo is named `gitforge`
+- `https://yourusername.github.io/gitfolio/` if the repo is named `gitfolio`
 
 The scheduled workflow also runs daily to refresh your GitHub data and stats.
 
