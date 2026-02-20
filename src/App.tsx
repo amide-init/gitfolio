@@ -211,10 +211,22 @@ function App() {
             <p className="mt-1 text-[11px] text-slate-500">
               {footer.subtleText}
             </p>
+            <p className="mt-2 text-[11px] text-slate-500">
+              Want a site like this?{' '}
+              <a
+                href="https://github.com/amide-init/gitfolio"
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-indigo-600 underline underline-offset-2 hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-200"
+              >
+                Fork the gitfolio project
+              </a>{' '}
+              and point it at your own GitHub profile.
+            </p>
           </div>
           <div className="flex gap-3">
             <a
-              href={footer.githubUrl}
+              href="https://github.com/amide-init/gitfolio"
               target="_blank"
               rel="noreferrer"
               className="text-xs font-medium text-indigo-300 hover:text-indigo-200"
