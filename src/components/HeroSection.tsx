@@ -1,3 +1,5 @@
+import type React from 'react'
+
 type Hero = {
   eyebrow: string
   title: string
@@ -13,6 +15,7 @@ type Hero = {
     company?: string | null
     website?: string | null
     twitter?: string | null
+    social?: { provider: string; url: string }[]
   }
 }
 
@@ -30,6 +33,44 @@ type HeroSectionProps = {
 
 function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
   const isDark = theme === 'dark'
+
+  const websiteRaw = hero.contact?.website ?? null
+  let websiteUrl: string | null = null
+  let websiteLabel: string | null = null
+  let websiteKind: 'linkedin' | 'instagram' | 'twitter' | 'website' | null = null
+
+  const social = Array.isArray(hero.contact?.social)
+    ? hero.contact!.social.filter(
+        (s) => s && typeof s.url === 'string' && typeof s.provider === 'string',
+      )
+    : []
+
+  if (websiteRaw) {
+    let normalized = websiteRaw.trim()
+    if (normalized && !/^https?:\/\//i.test(normalized)) {
+      normalized = `https://${normalized}`
+    }
+    websiteUrl = normalized
+    websiteLabel = websiteRaw
+      .replace(/^https?:\/\//i, '')
+      .replace(/\/$/, '')
+
+    try {
+      const url = new URL(normalized)
+      const host = url.hostname.toLowerCase()
+      if (host.includes('linkedin.com')) {
+        websiteKind = 'linkedin'
+      } else if (host.includes('instagram.com')) {
+        websiteKind = 'instagram'
+      } else if (host.includes('twitter.com') || host.includes('x.com')) {
+        websiteKind = 'twitter'
+      } else {
+        websiteKind = 'website'
+      }
+    } catch {
+      websiteKind = 'website'
+    }
+  }
 
   return (
     <section
@@ -58,7 +99,7 @@ function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
           </h1>
           <p
             className={`text-sm leading-relaxed ${
-              isDark ? "text-slate-300" : "text-slate-700"
+              isDark ? 'text-slate-300' : 'text-slate-700'
             }`}
           >
             {hero.description}
@@ -66,7 +107,7 @@ function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
           {hero.minorInfo && (
             <p
               className={`text-xs leading-relaxed ${
-                isDark ? "text-slate-400" : "text-slate-600"
+                isDark ? 'text-slate-400' : 'text-slate-600'
               }`}
             >
               {hero.minorInfo}
@@ -139,33 +180,57 @@ function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
             </div>
             {hero.contact &&
               (hero.contact.company ||
-                hero.contact.website ||
+                websiteUrl ||
                 hero.contact.email ||
-                hero.contact.twitter) && (
+                hero.contact.twitter ||
+                social.length > 0) && (
                 <div className="mt-4 border-t border-slate-800/40 pt-3 text-[11px] text-slate-300 dark:text-slate-300">
                   <div className="space-y-1.5">
                     {hero.contact.company && (
                       <p className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                        <span className="h-3 w-3 rounded-full bg-slate-400/80" />
+                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-slate-400/80 text-[9px] font-semibold text-white">
+                          <span className="leading-none">✺</span>
+                        </span>
                         <span>{hero.contact.company}</span>
                       </p>
                     )}
-                    {hero.contact.website && (
+                    {websiteUrl && websiteKind && (
                       <p className="flex items-center gap-1.5">
-                        <span className="h-3 w-3 rounded-full bg-indigo-400/80" />
+                        {websiteKind === 'linkedin' && (
+                          <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-sky-700 text-[9px] font-semibold text-white">
+                            in
+                          </span>
+                        )}
+                        {websiteKind === 'instagram' && (
+                          <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-gradient-to-tr from-pink-500 to-amber-400 text-[9px] font-semibold text-white">
+                            ⧖
+                          </span>
+                        )}
+                        {websiteKind === 'twitter' && (
+                          <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-black text-[9px] font-semibold text-white">
+                            X
+                          </span>
+                        )}
+                        {websiteKind === 'website' && (
+                          <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-indigo-500 text-[9px] text-white">
+                            ⌾
+                          </span>
+                        )}
                         <a
-                          href={hero.contact.website}
+                          href={websiteUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="truncate text-indigo-300 hover:text-indigo-200"
+                          className="truncate text-indigo-600 hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-200"
                         >
-                          {hero.contact.website}
+                          {websiteLabel}
                         </a>
                       </p>
                     )}
                     {hero.contact.email && (
                       <p className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                        <span className="h-3 w-3 rounded-full bg-emerald-400/80" />
+                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500 text-[9px] text-white">
+                          @
+                        </span>
                         <a
                           href={`mailto:${hero.contact.email}`}
                           className="hover:underline"
@@ -176,7 +241,9 @@ function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
                     )}
                     {hero.contact.twitter && (
                       <p className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                        <span className="h-3 w-3 rounded-full bg-sky-400/80" />
+                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-black text-[9px] font-semibold text-white">
+                          X
+                        </span>
                         <a
                           href={`https://twitter.com/${hero.contact.twitter}`}
                           target="_blank"
@@ -186,6 +253,60 @@ function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
                           @{hero.contact.twitter}
                         </a>
                       </p>
+                    )}
+                    {social.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {social.map((acc) => {
+                          const provider = acc.provider.toLowerCase()
+                          const label = acc.url
+                            .replace(/^https?:\/\//i, '')
+                            .replace(/\/$/, '')
+
+                          let icon: React.ReactNode = null
+                          if (provider.includes('linkedin')) {
+                            icon = (
+                              <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-sky-700 text-[9px] font-semibold text-white">
+                                in
+                              </span>
+                            )
+                          } else if (provider.includes('instagram')) {
+                            icon = (
+                              <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-gradient-to-tr from-pink-500 to-amber-400 text-[9px] font-semibold text-white">
+                                ⧖
+                              </span>
+                            )
+                          } else if (provider.includes('twitter') || provider === 'x') {
+                            // Avoid duplicating the explicit twitter_username row
+                            if (hero.contact?.twitter) {
+                              return null
+                            }
+                            icon = (
+                              <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-black text-[9px] font-semibold text-white">
+                                X
+                              </span>
+                            )
+                          } else {
+                            icon = (
+                              <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-500 text-[9px] text-white">
+                                ⌾
+                              </span>
+                            )
+                          }
+
+                          return (
+                            <a
+                              key={`${acc.provider}-${acc.url}`}
+                              href={acc.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1.5 rounded-full bg-slate-900/40 px-2 py-0.5 text-[10px] font-medium hover:bg-slate-900/70"
+                            >
+                              {icon}
+                              <span className="truncate max-w-[7rem]">{label}</span>
+                            </a>
+                          )
+                        })}
+                      </div>
                     )}
                   </div>
                 </div>

@@ -419,6 +419,40 @@ async function main() {
   }
 
   const profile = pickProfileFields(profileJson, owner, profileType)
+
+  // Optional: fetch social accounts (LinkedIn, Instagram, etc.) for the
+  // authenticated user when a token is available. This uses the /user/social_accounts
+  // endpoint, which returns social links tied to the token's owner.
+  // In the common GitHub Actions setup, the token owner matches GITHUB_OWNER,
+  // so these links will be your own LinkedIn/Instagram URLs.
+  let socialAccounts = []
+  if (profileType === 'user' && githubToken && showWebsite) {
+    try {
+      const socialJson = await fetchJson(
+        'https://api.github.com/user/social_accounts',
+        'Social accounts',
+        githubToken,
+      )
+      if (Array.isArray(socialJson)) {
+        socialAccounts = socialJson
+          .filter(
+            (acc) =>
+              acc &&
+              typeof acc === 'object' &&
+              typeof acc.provider === 'string' &&
+              typeof acc.url === 'string',
+          )
+          .map((acc) => ({
+            provider: acc.provider.toLowerCase(),
+            url: acc.url,
+          }))
+      }
+    } catch (error) {
+      console.log(
+        `Could not fetch social accounts for token owner: ${error.message}. Continuing without social links.`,
+      )
+    }
+  }
   const reposRaw = Array.isArray(reposJson) ? reposJson : []
   const reposAllRaw = reposRaw.map(pickRepoFields).filter(Boolean)
 
@@ -736,6 +770,19 @@ async function main() {
       language: repo.language || 'Other',
     }))
 
+  // Normalize website/blog URL: ensure it has a protocol, or return null if empty
+  const normalizeWebsiteUrl = (url) => {
+    if (!url || typeof url !== 'string') return null
+    const trimmed = url.trim()
+    if (!trimmed) return null
+    // If it already has a protocol, return as-is
+    if (/^https?:\/\//i.test(trimmed)) return trimmed
+    // Otherwise, prepend https://
+    return `https://${trimmed}`
+  }
+
+  const normalizedWebsite = normalizeWebsiteUrl(profile.blog)
+
   const siteContent = {
     hero: {
       eyebrow: customEyebrow,
@@ -750,7 +797,11 @@ async function main() {
         email: showEmail ? profile.email : null,
         location: profile.location,
         company: showCompany ? profile.company : null,
-        website: showWebsite ? profile.blog : null,
+        website: showWebsite ? normalizedWebsite : null,
+        social:
+          showWebsite && Array.isArray(socialAccounts) && socialAccounts.length > 0
+            ? socialAccounts
+            : [],
         twitter: showTwitter ? profile.twitter_username : null,
       },
     },
