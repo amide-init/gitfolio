@@ -254,60 +254,64 @@ function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
                         </a>
                       </p>
                     )}
-                    {social.length > 0 && (
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        {social.map((acc) => {
-                          const provider = acc.provider.toLowerCase()
-                          const label = acc.url
-                            .replace(/^https?:\/\//i, '')
-                            .replace(/\/$/, '')
+                    {social.map((acc) => {
+                      const provider = acc.provider.toLowerCase()
+                      const label = acc.url
+                        .replace(/^https?:\/\//i, '')
+                        .replace(/\/$/, '')
 
-                          let icon: React.ReactNode = null
-                          if (provider.includes('linkedin')) {
-                            icon = (
-                              <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-sky-700 text-[9px] font-semibold text-white">
-                                in
-                              </span>
-                            )
-                          } else if (provider.includes('instagram')) {
-                            icon = (
-                              <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-gradient-to-tr from-pink-500 to-amber-400 text-[9px] font-semibold text-white">
-                                ⧖
-                              </span>
-                            )
-                          } else if (provider.includes('twitter') || provider === 'x') {
-                            // Avoid duplicating the explicit twitter_username row
-                            if (hero.contact?.twitter) {
-                              return null
-                            }
-                            icon = (
-                              <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-black text-[9px] font-semibold text-white">
-                                X
-                              </span>
-                            )
-                          } else {
-                            icon = (
-                              <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-500 text-[9px] text-white">
-                                ⌾
-                              </span>
-                            )
-                          }
+                      // Skip Twitter if we already show twitter_username
+                      if (
+                        (provider.includes('twitter') || provider === 'x') &&
+                        hero.contact?.twitter
+                      ) {
+                        return null
+                      }
 
-                          return (
-                            <a
-                              key={`${acc.provider}-${acc.url}`}
-                              href={acc.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-full bg-slate-900/40 px-2 py-0.5 text-[10px] font-medium hover:bg-slate-900/70"
-                            >
-                              {icon}
-                              <span className="truncate max-w-[7rem]">{label}</span>
-                            </a>
-                          )
-                        })}
-                      </div>
-                    )}
+                      let icon: React.ReactNode = null
+                      if (provider.includes('linkedin')) {
+                        icon = (
+                          <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-sky-700 text-[9px] font-semibold text-white">
+                            in
+                          </span>
+                        )
+                      } else if (provider.includes('instagram')) {
+                        icon = (
+                          <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-gradient-to-tr from-pink-500 to-amber-400 text-[9px] font-semibold text-white">
+                            ⧖
+                          </span>
+                        )
+                      } else if (provider.includes('twitter') || provider === 'x') {
+                        icon = (
+                          <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-black text-[9px] font-semibold text-white">
+                            X
+                          </span>
+                        )
+                      } else {
+                        icon = (
+                          <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-500 text-[9px] text-white">
+                            ⌾
+                          </span>
+                        )
+                      }
+
+                      return (
+                        <p
+                          key={`${acc.provider}-${acc.url}`}
+                          className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300"
+                        >
+                          {icon}
+                          <a
+                            href={acc.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="truncate hover:underline"
+                          >
+                            {label}
+                          </a>
+                        </p>
+                      )
+                    })}
                   </div>
                 </div>
               )}
