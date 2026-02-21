@@ -319,8 +319,13 @@ function AdminPage() {
               disabled={isBusy}
               className="mt-4 inline-flex items-center gap-2 rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 disabled:opacity-60"
             >
-              {isBusy ? 'Opening GitHub…' : 'Login with GitHub'}
+              {isBusy ? 'Signing in…' : 'Login with GitHub'}
             </button>
+            {viewState === 'authenticating' && (
+              <p className="mt-3 text-xs text-slate-400">
+                If you’ve authorized in the other tab, return here and wait a few seconds for the dashboard to load.
+              </p>
+            )}
             {error && (
               <p className="mt-3 text-xs text-rose-400">{error.message}</p>
             )}
@@ -352,7 +357,7 @@ function AdminPage() {
             </section>
           )}
 
-        {token && viewState === 'ready' && config && (
+        {token && (viewState === 'ready' || viewState === 'saving') && config && (
           <form
             className="mt-6 space-y-8 rounded-lg border border-slate-800 bg-slate-900/60 p-6"
             onSubmit={handleSave}
