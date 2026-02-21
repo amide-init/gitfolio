@@ -1,4 +1,5 @@
 // src/api/github.ts
+import type { Blog, Post, Project } from '../types/contentTypes'
 import type { GitforgeConfig } from '../types/gitforgeConfig'
 
 const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID as string
@@ -331,10 +332,7 @@ export async function updateConfig(
     message: message ?? 'Update gitfolio config via admin panel',
     content: contentBase64,
   }
-
-  if (sha) {
-    body.sha = sha
-  }
+  if (sha) body.sha = sha
 
   const res = await githubFetch(
     token,
@@ -375,4 +373,183 @@ export async function updateConfig(
     config,
     sha: newSha,
   }
+}
+
+// ---- Data folder (data/*.json) helpers ----
+
+const DATA_BASE = 'data'
+
+export type ContentFileResult<T> = {
+  items: T[]
+  sha: string | null
+}
+
+async function getContentFile<T>(
+  token: string,
+  path: string,
+): Promise<ContentFileResult<T>> {
+  const res = await githubFetch(
+    token,
+    `/repos/${OWNER}/${REPO}/contents/${path}`,
+  )
+
+  if (res.status === 404) {
+    return { items: [], sha: null }
+  }
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(
+      `Failed to load ${path} (${res.status}): ${text || res.statusText}`,
+    )
+  }
+
+  const json = await res.json()
+  const { content, encoding, sha } = json as {
+    content: string
+    encoding: string
+    sha: string
+  }
+
+  if (encoding !== 'base64') {
+    throw new Error(`Unexpected encoding for ${path}: ${encoding}`)
+  }
+
+  const decoded = atob(content.replace(/\n/g, ''))
+  let parsed: T[]
+
+  try {
+    const raw = JSON.parse(decoded)
+    parsed = Array.isArray(raw) ? raw : []
+  } catch (err) {
+    throw new Error(
+      `Invalid JSON in ${path}. Please fix in GitHub.\n\n${String(err)}`,
+    )
+  }
+
+  return { items: parsed, sha }
+}
+
+async function updateContentFile<T>(
+  token: string,
+  path: string,
+  items: T[],
+  sha: string | null,
+  message: string,
+  skipRetry = false,
+): Promise<ContentFileResult<T>> {
+  const json = JSON.stringify(items, null, 2)
+  const contentBase64 = btoa(json)
+
+  const body: Record<string, unknown> = {
+    message,
+    content: contentBase64,
+  }
+  if (sha) body.sha = sha
+
+  const res = await githubFetch(
+    token,
+    `/repos/${OWNER}/${REPO}/contents/${path}`,
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  )
+
+  if (res.status === 401 || res.status === 403) {
+    throw new Error('Unauthorized: token does not permit writing to repo.')
+  }
+  if (res.status === 409 && !skipRetry) {
+    // File was modified on GitHub – fetch latest sha and retry once
+    const latest = await getContentFile<T>(token, path)
+    return updateContentFile(
+      token,
+      path,
+      items,
+      latest.sha,
+      message,
+      true,
+    )
+  }
+  if (res.status === 409 && skipRetry) {
+    throw new Error(
+      `File ${path} was updated on GitHub. Please reload and try again.`,
+    )
+  }
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(
+      `Failed to update ${path} (${res.status}): ${text || res.statusText}`,
+    )
+  }
+
+  const data = (await res.json()) as Record<string, unknown>
+  // GitHub response: sha can be at top level or in content.sha
+  const topSha = typeof data.sha === 'string' ? data.sha : null
+  const content = data.content as Record<string, unknown> | undefined
+  const nestedSha =
+    typeof content === 'object' && content && typeof content.sha === 'string'
+      ? content.sha
+      : null
+  const newSha = topSha ?? nestedSha ?? sha
+
+  return { items, sha: newSha }
+}
+
+export async function getProjects(token: string): Promise<ContentFileResult<Project>> {
+  return getContentFile<Project>(token, `${DATA_BASE}/projects.json`)
+}
+
+export async function updateProjects(
+  token: string,
+  items: Project[],
+  sha: string | null,
+  message = 'Update projects via admin panel',
+): Promise<ContentFileResult<Project>> {
+  return updateContentFile<Project>(
+    token,
+    `${DATA_BASE}/projects.json`,
+    items,
+    sha,
+    message,
+  )
+}
+
+export async function getBlogs(token: string): Promise<ContentFileResult<Blog>> {
+  return getContentFile<Blog>(token, `${DATA_BASE}/blogs.json`)
+}
+
+export async function updateBlogs(
+  token: string,
+  items: Blog[],
+  sha: string | null,
+  message = 'Update blogs via admin panel',
+): Promise<ContentFileResult<Blog>> {
+  return updateContentFile<Blog>(
+    token,
+    `${DATA_BASE}/blogs.json`,
+    items,
+    sha,
+    message,
+  )
+}
+
+export async function getPosts(token: string): Promise<ContentFileResult<Post>> {
+  return getContentFile<Post>(token, `${DATA_BASE}/posts.json`)
+}
+
+export async function updatePosts(
+  token: string,
+  items: Post[],
+  sha: string | null,
+  message = 'Update posts via admin panel',
+): Promise<ContentFileResult<Post>> {
+  return updateContentFile<Post>(
+    token,
+    `${DATA_BASE}/posts.json`,
+    items,
+    sha,
+    message,
+  )
 }

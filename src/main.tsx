@@ -4,7 +4,10 @@ import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import AdminPage from './admin/AdminPage'
+import { AdminBlogsPage } from './admin/pages/AdminBlogsPage'
 import { AdminConfigPage } from './admin/pages/AdminConfigPage'
+import { AdminPostsPage } from './admin/pages/AdminPostsPage'
+import { AdminProjectsPage } from './admin/pages/AdminProjectsPage'
 import { AdminPlaceholderPage } from './admin/pages/AdminPlaceholderPage'
 
 createRoot(document.getElementById('root')!).render(
@@ -15,24 +18,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="admin" element={<AdminPage />}>
           <Route index element={<Navigate to="config" replace />} />
           <Route path="config" element={<AdminConfigPage />} />
-          <Route
-            path="projects"
-            element={
-              <AdminPlaceholderPage
-                title="Projects"
-                description="Manage featured projects and repositories."
-              />
-            }
-          />
-          <Route
-            path="blogs"
-            element={
-              <AdminPlaceholderPage
-                title="Blogs"
-                description="Manage blog posts and articles."
-              />
-            }
-          />
+          <Route path="projects" element={<AdminProjectsPage />} />
+          <Route path="blogs" element={<AdminBlogsPage />} />
           <Route
             path="videos"
             element={
@@ -42,15 +29,7 @@ createRoot(document.getElementById('root')!).render(
               />
             }
           />
-          <Route
-            path="posts"
-            element={
-              <AdminPlaceholderPage
-                title="Posts"
-                description="Manage social posts and updates."
-              />
-            }
-          />
+          <Route path="posts" element={<AdminPostsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
