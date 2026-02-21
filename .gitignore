@@ -33,7 +33,7 @@ src/siteContent.json
 # Local config (keep examples tracked)
 gitforge.config.json
 
-# Environment variables
+# Environment variables (never commit – contains tokens / secrets)
 .env
 .env.local
 .env.*.local

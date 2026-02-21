@@ -242,9 +242,20 @@ Click **Login with GitHub**, complete the device flow in the new tab, then edit 
 
 ### Deployed site (GitHub Pages)
 
-For the admin panel to work on your live URL, the OAuth App’s **Homepage URL** and **Authorization callback URL** must match that URL (e.g. `https://yourusername.github.io/gitfolio`). Build the site with the same env vars (e.g. in GitHub Actions, add `VITE_GITHUB_CLIENT_ID`, `VITE_GITHUB_OWNER`, `VITE_GITHUB_REPO` as repository variables so they are available at build time).
+1. **Create an OAuth App** at [github.com/settings/developers](https://github.com/settings/developers):
+   - Homepage URL: your site URL (e.g. `https://yourusername.github.io/gitfolio`)
+   - Authorization callback URL: same as Homepage
+   - Copy the **Client ID**
 
-**Note:** GitHub’s OAuth token endpoint may not allow browser CORS. If “Login with GitHub” fails in production with a CORS error, you’ll need a small serverless proxy for the token exchange; the rest of the admin flow is unchanged.
+2. **Add GitHub Actions secret**:
+   - Repo → **Settings → Secrets and variables → Actions**
+   - **New repository secret**
+   - Name: `VITE_GITHUB_CLIENT_ID`
+   - Value: your OAuth App Client ID
+
+   The workflow already uses `VITE_GITHUB_OWNER` and `VITE_GITHUB_REPO` from the repo (automatic for forks).
+
+3. **Note:** If “Login with GitHub” fails in production (CORS), you’ll need a small serverless proxy for the OAuth token exchange.
 
 ---
 

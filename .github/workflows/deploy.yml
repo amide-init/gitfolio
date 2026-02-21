@@ -45,16 +45,15 @@ jobs:
           # and to include private repos in stats if desired.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Default to this repo's owner as the GitHub profile target.
-          # This means in a repo named "yourusername.github.io" it will
-          # automatically build the site for "yourusername" without any
-          # gitforge.config.json being tracked.
           GITHUB_OWNER: ${{ github.repository_owner }}
           GITHUB_PROFILE_TYPE: user
-          # Set Vite base path for GitHub Pages:
-          # - user site    (username.github.io)        -> '/'
-          # - project site (username.github.io/repo)   -> '/repo/'
-          # Detect user site by repo name ending with ".github.io".
+          # Set Vite base path for GitHub Pages
           VITE_BASE: ${{ endsWith(github.event.repository.name, '.github.io') && '/' || format('/{0}/', github.event.repository.name) }}
+          # Admin panel (route /admin) – set in repo Settings → Secrets and variables → Actions
+          # VITE_GITHUB_CLIENT_ID from secret (create OAuth App at github.com/settings/developers)
+          VITE_GITHUB_CLIENT_ID: ${{ secrets.VITE_GITHUB_CLIENT_ID }}
+          VITE_GITHUB_OWNER: ${{ github.repository_owner }}
+          VITE_GITHUB_REPO: ${{ github.event.repository.name }}
         run: pnpm build
 
       - name: Upload Pages artifact
