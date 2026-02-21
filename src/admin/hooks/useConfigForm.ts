@@ -1,20 +1,11 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import type { CustomLink, GitforgeConfig } from '../../types/gitforgeConfig'
-import {
-  DEFAULT_HERO,
-  DEFAULT_CUSTOM_LINK,
-  parseFeaturedReposText,
-} from '../utils/configHelpers'
+import { DEFAULT_HERO, DEFAULT_CUSTOM_LINK } from '../utils/configHelpers'
 
 export function useConfigForm(
   config: GitforgeConfig | null,
   setConfig: React.Dispatch<React.SetStateAction<GitforgeConfig | null>>,
 ) {
-  const featuredReposText = useMemo(
-    () => (config?.featuredRepos ?? []).join(', '),
-    [config?.featuredRepos],
-  )
-
   const updateConfigField = useCallback(
     <K extends keyof GitforgeConfig>(key: K, value: GitforgeConfig[K]) => {
       setConfig((prev) => {
@@ -26,8 +17,8 @@ export function useConfigForm(
   )
 
   const handleFeaturedReposChange = useCallback(
-    (value: string) => {
-      updateConfigField('featuredRepos', parseFeaturedReposText(value))
+    (repos: string[]) => {
+      updateConfigField('featuredRepos', repos)
     },
     [updateConfigField],
   )
@@ -98,7 +89,6 @@ export function useConfigForm(
   )
 
   return {
-    featuredReposText,
     updateConfigField,
     handleFeaturedReposChange,
     updateHero,

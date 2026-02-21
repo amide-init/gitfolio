@@ -19,7 +19,6 @@ export function AdminConfigPage() {
   } = useAdminAuthContext()
 
   const {
-    featuredReposText,
     handleFeaturedReposChange,
     updateHero,
     updateCustomLink,
@@ -54,7 +53,7 @@ export function AdminConfigPage() {
       />
 
       <AdminFeaturedReposForm
-        value={featuredReposText}
+        value={config.featuredRepos ?? []}
         onChange={handleFeaturedReposChange}
       />
 
