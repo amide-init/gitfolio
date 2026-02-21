@@ -54,6 +54,8 @@ jobs:
           VITE_GITHUB_CLIENT_ID: ${{ secrets.VITE_GITHUB_CLIENT_ID }}
           VITE_GITHUB_OWNER: ${{ github.repository_owner }}
           VITE_GITHUB_REPO: ${{ github.event.repository.name }}
+          # OAuth CORS proxy – optional; add repo variable for admin login in production
+          VITE_GITHUB_OAUTH_PROXY_URL: ${{ vars.VITE_GITHUB_OAUTH_PROXY_URL }}
         run: pnpm build
 
       - name: Upload Pages artifact

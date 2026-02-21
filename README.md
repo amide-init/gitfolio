@@ -255,7 +255,7 @@ Click **Login with GitHub**, complete the device flow in the new tab, then edit 
 
    The workflow already uses `VITE_GITHUB_OWNER` and `VITE_GITHUB_REPO` from the repo (automatic for forks).
 
-3. **Note:** If “Login with GitHub” fails in production (CORS), you’ll need a small serverless proxy for the OAuth token exchange.
+3. **OAuth CORS fix (required for admin login):** GitHub blocks OAuth from the browser. Deploy the Cloudflare Worker: run `npx wrangler deploy` from `workers/github-oauth-proxy/` (requires [Cloudflare account](https://dash.cloudflare.com)), then add a **repository variable** `VITE_GITHUB_OAUTH_PROXY_URL` = `https://YOUR-WORKER.workers.dev` (no trailing slash).
 
 ---
 
