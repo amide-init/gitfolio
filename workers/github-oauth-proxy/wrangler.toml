@@ -1,0 +1,7 @@
+name = "github-oauth-proxy"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# After deploy, your worker URL will be:
+# https://github-oauth-proxy.<YOUR_SUBDOMAIN>.workers.dev
+# Add that as VITE_GITHUB_OAUTH_PROXY_URL in repo variables.
