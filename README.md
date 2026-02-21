@@ -191,6 +191,63 @@ The generated site is:
 
 ---
 
+## Admin panel (edit config in the browser)
+
+The `/admin` route lets repository **admins** edit `gitforge.config.json` (hero, featured repos, custom links) from the browser. Changes are committed via the GitHub API; GitHub Actions then rebuilds the site.
+
+### 1. Create a GitHub OAuth App
+
+1. Go to **GitHub → Settings → Developer settings → OAuth Apps**: [github.com/settings/developers](https://github.com/settings/developers).
+2. Click **New OAuth App**.
+3. Set:
+   - **Application name**: e.g. `gitfolio Admin`
+   - **Homepage URL**: your site URL  
+     - User site: `https://YOUR_USERNAME.github.io`  
+     - Project site: `https://YOUR_USERNAME.github.io/gitfolio`
+   - **Authorization callback URL**: same as Homepage (or the default shown).
+4. Click **Register application**.
+5. Copy the **Client ID** (you do **not** need the client secret for the Device Flow used here).
+
+### 2. Configure environment variables
+
+Copy the example env file and set the admin variables:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and set:
+
+```bash
+VITE_GITHUB_CLIENT_ID=your_oauth_app_client_id_here
+VITE_GITHUB_OWNER=your-github-username-or-org
+VITE_GITHUB_REPO=gitfolio
+```
+
+- `VITE_GITHUB_OWNER`: owner of the repo (your username or org).
+- `VITE_GITHUB_REPO`: repository name (e.g. `gitfolio` or `yourusername.github.io`).
+
+### 3. Run the app and open the admin panel
+
+```bash
+pnpm dev
+```
+
+Then open:
+
+- **Main site**: `http://localhost:5173/`
+- **Admin panel**: `http://localhost:5173/admin`
+
+Click **Login with GitHub**, complete the device flow in the new tab, then edit and save. Only users with **admin** permission on the repo can save; others see “Unauthorized”.
+
+### Deployed site (GitHub Pages)
+
+For the admin panel to work on your live URL, the OAuth App’s **Homepage URL** and **Authorization callback URL** must match that URL (e.g. `https://yourusername.github.io/gitfolio`). Build the site with the same env vars (e.g. in GitHub Actions, add `VITE_GITHUB_CLIENT_ID`, `VITE_GITHUB_OWNER`, `VITE_GITHUB_REPO` as repository variables so they are available at build time).
+
+**Note:** GitHub’s OAuth token endpoint may not allow browser CORS. If “Login with GitHub” fails in production with a CORS error, you’ll need a small serverless proxy for the token exchange; the rest of the admin flow is unchanged.
+
+---
+
 ## CLI usage details
 
 ### Command

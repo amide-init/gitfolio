@@ -9,4 +9,14 @@ export default defineConfig({
   // We drive this via VITE_BASE set in the CI workflow.
   base: process.env.VITE_BASE || '/',
   plugins: [react()],
+  server: {
+    // Proxy GitHub OAuth endpoints to avoid CORS (browser blocks direct calls to github.com)
+    proxy: {
+      '/api/github/login': {
+        target: 'https://github.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/github/, ''),
+      },
+    },
+  },
 })
