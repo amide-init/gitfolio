@@ -7,7 +7,7 @@ import {
   login,
   updateConfig,
 } from '../../api/github'
-import type { GitforgeConfig } from '../../../types/gitforgeConfig'
+import type { GitforgeConfig } from '../../types/gitforgeConfig'
 import type { AdminUiError, AdminViewState } from '../types'
 import { cleanConfigForSave, getAdminHeading } from '../utils/configHelpers'
 
