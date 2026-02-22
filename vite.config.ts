@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
-import { writeFileSync } from 'node:fs'
+import { copyFileSync, mkdirSync, readdirSync, readFileSync, existsSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 // For project site (username.github.io/repo): keep 1 path segment (repo name)
@@ -39,10 +39,42 @@ function ghPages404() {
   }
 }
 
+function copyData() {
+  return {
+    name: 'copy-data',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const m = req.url?.match(/^\/data\/([a-z0-9_-]+\.json)$/i)
+        if (!m) return next()
+        const dataDir = join(process.cwd(), 'data')
+        const file = join(dataDir, m[1])
+        if (!existsSync(file)) return next()
+        try {
+          res.setHeader('Content-Type', 'application/json')
+          res.end(readFileSync(file, 'utf-8'))
+        } catch {
+          next()
+        }
+      })
+    },
+    closeBundle() {
+      const dataDir = join(process.cwd(), 'data')
+      const outDir = join(process.cwd(), 'dist', 'data')
+      if (!existsSync(dataDir)) return
+      mkdirSync(outDir, { recursive: true })
+      for (const name of readdirSync(dataDir)) {
+        if (name.endsWith('.json')) {
+          copyFileSync(join(dataDir, name), join(outDir, name))
+        }
+      }
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   base,
-  plugins: [react(), ghPages404()],
+  plugins: [react(), ghPages404(), copyData()],
   server: {
     // Proxy GitHub OAuth endpoints to avoid CORS (browser blocks direct calls to github.com)
     proxy: {
