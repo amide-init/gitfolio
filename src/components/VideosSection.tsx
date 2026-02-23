@@ -44,16 +44,6 @@ export default function VideosSection() {
             <VideoCard key={video.id} video={video} />
           ))}
         </div>
-        {!loading && videos.length > 0 && videos.length <= PREVIEW_COUNT && (
-          <div className="mt-6">
-            <Link
-              to="/videos"
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400 hover:underline"
-            >
-              View all videos
-            </Link>
-          </div>
-        )}
       </div>
     </section>
   )

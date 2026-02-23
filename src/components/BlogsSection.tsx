@@ -44,16 +44,6 @@ export default function BlogsSection() {
             <BlogCard key={blog.id} blog={blog} />
           ))}
         </div>
-        {!loading && blogs.length > 0 && blogs.length <= PREVIEW_COUNT && (
-          <div className="mt-6">
-            <Link
-              to="/blogs"
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400 hover:underline"
-            >
-              View all blogs
-            </Link>
-          </div>
-        )}
       </div>
     </section>
   )

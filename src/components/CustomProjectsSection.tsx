@@ -44,16 +44,6 @@ export default function CustomProjectsSection() {
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
-        {!loading && projects.length > 0 && projects.length <= PREVIEW_COUNT && (
-          <div className="mt-6">
-            <Link
-              to="/projects"
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400 hover:underline"
-            >
-              View all projects
-            </Link>
-          </div>
-        )}
       </div>
     </section>
   )

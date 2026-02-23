@@ -16,7 +16,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </p>
       )}
       {project.links && project.links.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-3 text-[13px]">
           {project.links.map((link, i) =>
             link.url ? (
               <a
@@ -24,9 +24,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 href={link.url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex rounded-full bg-slate-900/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-100 ring-1 ring-slate-500/50 transition hover:bg-slate-900 dark:bg-slate-100 dark:text-slate-900 dark:ring-slate-400/50 dark:hover:bg-slate-100"
+                className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400"
               >
-                {link.label || 'Link'}
+                <span>{link.label || link.url}</span>
+                <span aria-hidden>↗</span>
               </a>
             ) : null,
           )}
