@@ -817,9 +817,9 @@ async function main() {
       cards: philosophyCards,
     },
     projects: {
-      title: 'Projects',
+      title: 'GitHub',
       body:
-        'A selection of repositories from this GitHub profile, captured at build time. Links take you directly to the source on GitHub.',
+        'A curated selection of repositories from this GitHub profile, captured at build time. Links take you straight to the code on GitHub.',
       repos: featuredReposNormalized,
     },
     stats: showStats
