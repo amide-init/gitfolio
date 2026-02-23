@@ -34,6 +34,11 @@ type HeroSectionProps = {
 function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
   const isDark = theme === 'dark'
 
+  const mainDescription =
+    (hero.minorInfo && hero.minorInfo.trim().length > 0) || !hero.description
+      ? hero.minorInfo || hero.description
+      : hero.description
+
   const websiteRaw = hero.contact?.website ?? null
   let websiteUrl: string | null = null
   let websiteLabel: string | null = null
@@ -97,20 +102,13 @@ function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
           >
             {hero.title}
           </h1>
-          <p
-            className={`text-sm leading-relaxed ${
-              isDark ? 'text-slate-300' : 'text-slate-700'
-            }`}
-          >
-            {hero.description}
-          </p>
-          {hero.minorInfo && (
+          {mainDescription && (
             <p
-              className={`text-xs leading-relaxed ${
-                isDark ? 'text-slate-400' : 'text-slate-600'
+              className={`text-sm leading-relaxed ${
+                isDark ? 'text-slate-300' : 'text-slate-700'
               }`}
             >
-              {hero.minorInfo}
+              {mainDescription}
             </p>
           )}
           <div className="flex flex-col items-start gap-3 pt-2 sm:flex-row sm:items-center">
