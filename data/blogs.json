@@ -2,9 +2,9 @@
   {
     "id": "21d56b6c-a513-45c7-b174-4be5cb6b5c55",
     "title": "Stop Forcing LLMs Everywhere - Start Building Strong CI/CD Automation",
-    "content": "In the past two years, Large Language Models (LLMs) have taken over tech conversations. Every product pitch includes Ã¢ÂÂAI-powered.Ã¢ÂÂ Every roadmap tries to squeeze in an LLM somewhere.\n\n\n\nBut hereÃ¢ÂÂs an uncomfortable truth:\n\n\n\n> Most software teams donÃ¢ÂÂt need an LLM.  \n\n> Most software teams need better CI/CD automation.\n\n\n\n\n\nThis blog is not anti-AI. ItÃ¢ÂÂs pro-engineering.\n\n\n\n---\n\n\n\n## The Trend Trap: Adding LLMs Without Real Need\n\n\n\n\n\nMany products integrate LLMs because:\n\n\n\n- It sounds innovative.\n\n- It attracts attention.\n\n- Investors expect Ã¢ÂÂAIÃ¢ÂÂ.\n\n- Competitors are doing it.\n\n\n\n\n\nBut often:\n\n\n\n- It increases infrastructure cost.\n\n- It introduces unpredictable behavior.\n\n- It complicates debugging.\n\n- It doesnÃ¢ÂÂt solve the core reliability problems.\n\n\n\n\n\nAn unstable deployment pipeline with an AI feature is still an unstable product.\n\n\n\n\n\nBefore adding intelligence, ensure reliability.\n\n\n\n---\n\n\n\n## The Real Multiplier: CI/CD Automation\n\n\n\nCI/CD (Continuous Integration and Continuous Deployment) is not flashy Ã¢ÂÂ but it is powerful.\n\n\n\nWith proper automation:\n\n\n\n- Every commit is tested automatically.\n\n- Every pull request is validated.\n\n- Security checks run on every build.\n\n- Deployments are consistent and reproducible.\n\n- Rollbacks are fast and safe.\n\n\n\nThatÃ¢ÂÂs real engineering leverage.\n\n\n\n---\n\n\n\n## What Strong CI/CD Actually Looks Like\n\n\n\nGood CI/CD is not just Ã¢ÂÂa GitHub Action that runs `npm build`.Ã¢ÂÂ\n\n\n\nIt includes:\n\n\n\n### 1. Automated Testing\n\n\n\n- Unit tests  \n\n- Integration tests  \n\n- API contract tests  \n\n- Edge case validation  \n\n\n\nIf tests donÃ¢ÂÂt run automatically, they donÃ¢ÂÂt exist.\n\n\n\n---\n\n\n\n### 2. Dockerized Environments\n\n\n\nÃ¢ÂÂWorks on my machineÃ¢ÂÂ should disappear from your vocabulary.\n\n\n\nUsing:\n\n\n\n- Docker images  \n\n- Versioned dependencies  \n\n- Immutable builds  \n\n\n\nYou ensure consistency across:\n\n\n\n- Developer machines  \n\n- CI pipelines  \n\n- Production servers  \n\n\n\n---\n\n\n\n### 3. Deployment Automation\n\n\n\nManual deployments are risk.\n\n\n\nAutomated pipelines enable:\n\n\n\n- Zero-downtime deployments  \n\n- Canary releases  \n\n- Blue-green deployments  \n\n- Fast rollback strategies  \n\n\n\nA well-built pipeline turns deployment into a non-event.\n\n\n\n---\n\n\n\n### 4. Infrastructure as Code\n\n\n\nInstead of manually configuring servers:\n\n\n\n- Define infrastructure declaratively.\n\n- Version-control your configs.\n\n- Review infrastructure changes via pull requests.\n\n\n\nInfrastructure becomes predictable, repeatable, and auditable.\n\n\n\n---\n\n\n\n## Why CI/CD Is More Valuable Than Forced AI\n\n\n\nLetÃ¢ÂÂs compare impact:\n\n\n\n| Trend LLM Feature | Strong CI/CD |\n\n|-------------------|--------------|\n\n| Might impress users | Protects all users |\n\n| Adds cost | Reduces operational cost |\n\n| Hard to debug | Improves reliability |\n\n| Risk of hallucination | Deterministic execution |\n\n| Feature-level impact | Organization-level impact |\n\n\n\nLLMs improve features.  \n\nCI/CD improves everything.\n\n\n\n---\n\n\n\n## When You *Should* Use LLMs\n\n\n\nLLMs are powerful when:\n\n\n\n- YouÃ¢ÂÂre solving a language-heavy problem.\n\n- You need summarization, search, or generation.\n\n- AI is core to your product value.\n\n- YouÃ¢ÂÂre building developer tools.\n\n\n\nBut if your deployment breaks twice a weekÃ¢ÂÂ¦\n\n\n\nAI is not your priority.\n\n\n\nAutomation is.\n\n\n\n---\n\n\n\n## How I Apply This Philosophy\n\n\n\nWhile building **BadgeMonster**, I made a conscious decision:\n\n\n\nBefore experimenting with AI-heavy features, I focused on:\n\n\n\n- Stable CI pipelines  \n\n- Automated builds  \n\n- Controlled deployments  \n\n- Versioned infrastructure  \n\n- Monitoring and logs  \n\n\n\nBecause no AI feature matters if your deployment breaks.\n\n\n\nStrong automation allowed me to iterate faster, ship consistently, and experiment safely Ã¢ÂÂ without risking production stability.\n\n\n\nAI should sit on top of a strong foundation, not replace it.\n\n\n\n---\n\n\n\n## Engineering Maturity > Engineering Hype\n\n\n\nThe strongest engineering teams:\n\n\n\n- Ship fast.\n\n- Break less.\n\n- Recover quickly.\n\n- Monitor everything.\n\n- Automate aggressively.\n\n\n\nThey donÃ¢ÂÂt chase trends blindly.\n\n\n\nThey invest in:\n\n\n\n- Pipeline stability  \n\n- Code quality  \n\n- Reproducible environments  \n\n- Observability  \n\n- Security automation  \n\n\n\nThatÃ¢ÂÂs long-term leverage.\n\n\n\n---\n\n\n\n## A Simple Engineering Checklist\n\n\n\nBefore adding AI anywhere, ask:\n\n\n\n1. Are our builds stable?\n\n2. Do all PRs run automated tests?\n\n3. Can we deploy in one click?\n\n4. Can we roll back instantly?\n\n5. Is our infrastructure version-controlled?\n\n\n\nIf the answer is Ã¢ÂÂno,Ã¢ÂÂ fix that first.\n\n\n\nBecause:\n\n\n\n> Reliable systems beat flashy features.\n\n\n\n---\n\n\n\n## Final Thought\n\n\n\nAI is a powerful tool.  \n\nBut automation is foundational engineering.\n\n\n\nBuild systems that:\n\n\n\n- Ship consistently  \n\n- Scale cleanly  \n\n- Fail safely  \n\n- Recover automatically  \n\n\n\nOnce your foundation is strong, then add intelligence intentionally, not forcefully.\n\n\n\n---\n\n\n\nTrends fade.  \n\n\n\nAutomation compounds.",
+    "content": "In the past two years, Large Language Models (LLMs) have taken over tech conversations. Every product pitch includes AI-powered. Every roadmap tries to squeeze in an LLM somewhere.\n\nBut here is an uncomfortable truth:\n\nMost software teams don't need an LLM.Most software teams need better CI/CD automation.\n\nThis blog is not anti-AI. ItÃ¢ÂÂs pro-engineering.\n\n## The Trend Trap: Adding LLMs Without Real Need\n\nMany products integrate LLMs because:\n\nIt sounds innovative.\n\nIt attracts attention.\n\nInvestors expect Ã¢ÂÂAIÃ¢ÂÂ.\n\nCompetitors are doing it.\n\nBut often:\n\nIt increases infrastructure cost.\n\nIt introduces unpredictable behavior.\n\nIt complicates debugging.\n\nIt doesnÃ¢ÂÂt solve the core reliability problems.\n\nAn unstable deployment pipeline with an AI feature is still an unstable product.\n\nBefore adding intelligence, ensure reliability.\n\n## The Real Multiplier: CI/CD Automation\n\nCI/CD (Continuous Integration and Continuous Deployment) is not flashy Ã¢ÂÂ but it is powerful.\n\nWith proper automation:\n\nEvery commit is tested automatically.\n\nEvery pull request is validated.\n\nSecurity checks run on every build.\n\nDeployments are consistent and reproducible.\n\nRollbacks are fast and safe.\n\nThatÃ¢ÂÂs real engineering leverage.\n\n## What Strong CI/CD Actually Looks Like\n\nGood CI/CD is not just Ã¢ÂÂa GitHub Action that runs npm build.Ã¢ÂÂ\n\nIt includes:\n\n### 1. Automated Testing\n\nUnit tests\n\nIntegration tests\n\nAPI contract tests\n\nEdge case validation\n\nIf tests donÃ¢ÂÂt run automatically, they donÃ¢ÂÂt exist.\n\n### 2. Dockerized Environments\n\nÃ¢ÂÂWorks on my machineÃ¢ÂÂ should disappear from your vocabulary.\n\nUsing:\n\nDocker images\n\nVersioned dependencies\n\nImmutable builds\n\nYou ensure consistency across:\n\nDeveloper machines\n\nCI pipelines\n\nProduction servers\n\n### 3. Deployment Automation\n\nManual deployments are risk.\n\nAutomated pipelines enable:\n\nZero-downtime deployments\n\nCanary releases\n\nBlue-green deployments\n\nFast rollback strategies\n\nA well-built pipeline turns deployment into a non-event.\n\n### 4. Infrastructure as Code\n\nInstead of manually configuring servers:\n\nDefine infrastructure declaratively.\n\nVersion-control your configs.\n\nReview infrastructure changes via pull requests.\n\nInfrastructure becomes predictable, repeatable, and auditable.\n\n## Why CI/CD Is More Valuable Than Forced AI\n\nLetÃ¢ÂÂs compare impact:\n\nTrend LLM FeatureStrong CI/CD\n\nMight impress users\n\nProtects all users\n\nAdds cost\n\nReduces operational cost\n\nHard to debug\n\nImproves reliability\n\nRisk of hallucination\n\nDeterministic execution\n\nFeature-level impact\n\nOrganization-level impact\n\nLLMs improve features.CI/CD improves everything.\n\n## When You *Should* Use LLMs\n\nLLMs are powerful when:\n\nYouÃ¢ÂÂre solving a language-heavy problem.\n\nYou need summarization, search, or generation.\n\nAI is core to your product value.\n\nYouÃ¢ÂÂre building developer tools.\n\nBut if your deployment breaks twice a weekÃ¢ÂÂ¦\n\nAI is not your priority.\n\nAutomation is.\n\n## How I Apply This Philosophy\n\nWhile building **BadgeMonster**, I made a conscious decision:\n\nBefore experimenting with AI-heavy features, I focused on:\n\nStable CI pipelines\n\nAutomated builds\n\nControlled deployments\n\nVersioned infrastructure\n\nMonitoring and logs\n\nBecause no AI feature matters if your deployment breaks.\n\nStrong automation allowed me to iterate faster, ship consistently, and experiment safely Ã¢ÂÂ without risking production stability.\n\nAI should sit on top of a strong foundation, not replace it.\n\n## Engineering Maturity > Engineering Hype\n\nThe strongest engineering teams:\n\nShip fast.\n\nBreak less.\n\nRecover quickly.\n\nMonitor everything.\n\nAutomate aggressively.\n\nThey donÃ¢ÂÂt chase trends blindly.\n\nThey invest in:\n\nPipeline stability\n\nCode quality\n\nReproducible environments\n\nObservability\n\nSecurity automation\n\nThatÃ¢ÂÂs long-term leverage.\n\n## A Simple Engineering Checklist\n\nBefore adding AI anywhere, ask:\n\nAre our builds stable?\n\nDo all PRs run automated tests?\n\nCan we deploy in one click?\n\nCan we roll back instantly?\n\nIs our infrastructure version-controlled?\n\nIf the answer is Ã¢ÂÂno,Ã¢ÂÂ fix that first.\n\nBecause:\n\nReliable systems beat flashy features.\n\n## Final Thought\n\nAI is a powerful tool.But automation is foundational engineering.\n\nBuild systems that:\n\nShip consistently\n\nScale cleanly\n\nFail safely\n\nRecover automatically\n\nOnce your foundation is strong, then add intelligence intentionally, not forcefully.\n\nTrends fade.\n\nAutomation compounds.",
     "createdAt": "2026-02-22T10:44:49.654Z",
-    "updatedAt": "2026-03-01T15:26:31.448Z",
+    "updatedAt": "2026-03-01T15:35:39.392Z",
     "contentJSON": {
       "root": {
         "children": [
@@ -15,23 +15,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "In the past two years, Large Language Models (LLMs) have taken over tech conversations. Every product pitch includes Ã¢ÂÂAI-powered.Ã¢ÂÂ Every roadmap tries to squeeze in an LLM somewhere.",
+                "text": "In the past two years, Large Language Models (LLMs) have taken over tech conversations. Every product pitch includes AI-powered. Every roadmap tries to squeeze in an LLM somewhere.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -45,23 +35,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "But hereÃ¢ÂÂs an uncomfortable truth:",
+                "text": "But here is an uncomfortable truth:",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -75,53 +55,26 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "> Most software teams donÃ¢ÂÂt need an LLM.  ",
+                "text": "Most software teams don't need an LLM.",
                 "type": "text",
                 "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
+              },
+              {
+                "type": "linebreak",
+                "version": 1
+              },
               {
                 "detail": 0,
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "> Most software teams need better CI/CD automation.",
+                "text": "Most software teams need better CI/CD automation.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -141,17 +94,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -165,68 +108,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "The Trend Trap: Adding LLMs Without Real Need",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "## The Trend Trap: Adding LLMs Without Real Need",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -241,17 +133,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -265,13 +147,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- It sounds innovative.",
+                "text": "It sounds innovative.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -285,13 +167,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- It attracts attention.",
+                "text": "It attracts attention.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -305,13 +187,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Investors expect Ã¢ÂÂAIÃ¢ÂÂ.",
+                "text": "Investors expect Ã¢ÂÂAIÃ¢ÂÂ.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -325,33 +207,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Competitors are doing it.",
+                "text": "Competitors are doing it.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -371,17 +233,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -395,13 +247,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- It increases infrastructure cost.",
+                "text": "It increases infrastructure cost.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -415,13 +267,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- It introduces unpredictable behavior.",
+                "text": "It introduces unpredictable behavior.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -435,13 +287,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- It complicates debugging.",
+                "text": "It complicates debugging.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -455,33 +307,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- It doesnÃ¢ÂÂt solve the core reliability problems.",
+                "text": "It doesnÃ¢ÂÂt solve the core reliability problems.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -501,27 +333,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -541,17 +353,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -565,58 +367,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "The Real Multiplier: CI/CD Automation",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "## The Real Multiplier: CI/CD Automation",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -631,17 +392,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -661,17 +412,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -685,13 +426,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Every commit is tested automatically.",
+                "text": "Every commit is tested automatically.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -705,13 +446,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Every pull request is validated.",
+                "text": "Every pull request is validated.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -725,13 +466,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Security checks run on every build.",
+                "text": "Security checks run on every build.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -745,13 +486,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Deployments are consistent and reproducible.",
+                "text": "Deployments are consistent and reproducible.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -765,23 +506,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Rollbacks are fast and safe.",
+                "text": "Rollbacks are fast and safe.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -801,17 +532,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -825,28 +546,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "What Strong CI/CD Actually Looks Like",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -855,53 +565,31 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "## What Strong CI/CD Actually Looks Like",
+                "text": "Good CI/CD is not just Ã¢ÂÂa GitHub Action that runs ",
                 "type": "text",
                 "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
+              },
+              {
+                "detail": 0,
+                "format": 16,
+                "mode": "normal",
+                "style": "",
+                "text": "npm build",
+                "type": "text",
+                "version": 1
+              },
               {
                 "detail": 0,
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "Good CI/CD is not just Ã¢ÂÂa GitHub Action that runs `npm build`.Ã¢ÂÂ",
+                "text": ".Ã¢ÂÂ",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -921,17 +609,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -945,23 +623,32 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "### 1. Automated Testing",
+                "text": "1. Automated Testing",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h3"
           },
           {
-            "children": [],
+            "children": [
+              {
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Unit tests",
+                "type": "text",
+                "version": 1
+              }
+            ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -975,13 +662,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Unit tests  ",
+                "text": "Integration tests",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -995,13 +682,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Integration tests  ",
+                "text": "API contract tests",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1015,43 +702,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- API contract tests  ",
+                "text": "Edge case validation",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "- Edge case validation  ",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1071,17 +728,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1095,58 +742,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "2. Dockerized Environments",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "### 2. Dockerized Environments",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h3"
           },
           {
             "children": [
@@ -1161,17 +767,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1191,17 +787,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1215,13 +801,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Docker images  ",
+                "text": "Docker images",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1235,13 +821,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Versioned dependencies  ",
+                "text": "Versioned dependencies",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1255,23 +841,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Immutable builds  ",
+                "text": "Immutable builds",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1291,17 +867,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1315,13 +881,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Developer machines  ",
+                "text": "Developer machines",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1335,13 +901,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- CI pipelines  ",
+                "text": "CI pipelines",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1355,23 +921,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Production servers  ",
+                "text": "Production servers",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1385,58 +941,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "3. Deployment Automation",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "### 3. Deployment Automation",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h3"
           },
           {
             "children": [
@@ -1451,17 +966,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1481,17 +986,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1505,13 +1000,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Zero-downtime deployments  ",
+                "text": "Zero-downtime deployments",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1525,13 +1020,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Canary releases  ",
+                "text": "Canary releases",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1545,13 +1040,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Blue-green deployments  ",
+                "text": "Blue-green deployments",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1565,23 +1060,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Fast rollback strategies  ",
+                "text": "Fast rollback strategies",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1601,17 +1086,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1625,58 +1100,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "4. Infrastructure as Code",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "### 4. Infrastructure as Code",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h3"
           },
           {
             "children": [
@@ -1691,17 +1125,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1715,13 +1139,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Define infrastructure declaratively.",
+                "text": "Define infrastructure declaratively.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1735,13 +1159,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Version-control your configs.",
+                "text": "Version-control your configs.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1755,23 +1179,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Review infrastructure changes via pull requests.",
+                "text": "Review infrastructure changes via pull requests.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1791,17 +1205,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1815,58 +1219,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "Why CI/CD Is More Valuable Than Forced AI",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "## Why CI/CD Is More Valuable Than Forced AI",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -1881,17 +1244,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1905,13 +1258,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "| Trend LLM Feature | Strong CI/CD |",
+                "text": "Trend LLM FeatureStrong CI/CD",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1925,13 +1278,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "|-------------------|--------------|",
+                "text": "Might impress users",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1945,13 +1298,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "| Might impress users | Protects all users |",
+                "text": "Protects all users",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1965,13 +1318,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "| Adds cost | Reduces operational cost |",
+                "text": "Adds cost",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -1985,13 +1338,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "| Hard to debug | Improves reliability |",
+                "text": "Reduces operational cost",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2005,13 +1358,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "| Risk of hallucination | Deterministic execution |",
+                "text": "Hard to debug",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2025,23 +1378,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "| Feature-level impact | Organization-level impact |",
+                "text": "Improves reliability",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2055,13 +1398,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "LLMs improve features.  ",
+                "text": "Risk of hallucination",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2070,6 +1413,79 @@
           },
           {
             "children": [
+              {
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Deterministic execution",
+                "type": "text",
+                "version": 1
+              }
+            ],
+            "direction": null,
+            "format": "start",
+            "indent": 0,
+            "type": "paragraph",
+            "version": 1,
+            "textFormat": 0,
+            "textStyle": ""
+          },
+          {
+            "children": [
+              {
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Feature-level impact",
+                "type": "text",
+                "version": 1
+              }
+            ],
+            "direction": null,
+            "format": "start",
+            "indent": 0,
+            "type": "paragraph",
+            "version": 1,
+            "textFormat": 0,
+            "textStyle": ""
+          },
+          {
+            "children": [
+              {
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Organization-level impact",
+                "type": "text",
+                "version": 1
+              }
+            ],
+            "direction": null,
+            "format": "start",
+            "indent": 0,
+            "type": "paragraph",
+            "version": 1,
+            "textFormat": 0,
+            "textStyle": ""
+          },
+          {
+            "children": [
+              {
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "LLMs improve features.",
+                "type": "text",
+                "version": 1
+              },
+              {
+                "type": "linebreak",
+                "version": 1
+              },
               {
                 "detail": 0,
                 "format": 0,
@@ -2081,17 +1497,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2105,58 +1511,35 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "When You ",
                 "type": "text",
                 "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
+              },
+              {
+                "detail": 0,
+                "format": 2,
+                "mode": "normal",
+                "style": "",
+                "text": "Should",
+                "type": "text",
+                "version": 1
+              },
               {
                 "detail": 0,
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "## When You *Should* Use LLMs",
+                "text": " Use LLMs",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -2171,17 +1554,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2195,13 +1568,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- YouÃ¢ÂÂre solving a language-heavy problem.",
+                "text": "YouÃ¢ÂÂre solving a language-heavy problem.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2215,13 +1588,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- You need summarization, search, or generation.",
+                "text": "You need summarization, search, or generation.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2235,13 +1608,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- AI is core to your product value.",
+                "text": "AI is core to your product value.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2255,23 +1628,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- YouÃ¢ÂÂre building developer tools.",
+                "text": "YouÃ¢ÂÂre building developer tools.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2291,17 +1654,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2321,17 +1674,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2351,17 +1694,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2375,28 +1708,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "How I Apply This Philosophy",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -2405,53 +1727,31 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "## How I Apply This Philosophy",
+                "text": "While building ",
                 "type": "text",
                 "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
+              },
+              {
+                "detail": 0,
+                "format": 1,
+                "mode": "normal",
+                "style": "",
+                "text": "BadgeMonster",
+                "type": "text",
+                "version": 1
+              },
               {
                 "detail": 0,
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "While building **BadgeMonster**, I made a conscious decision:",
+                "text": ", I made a conscious decision:",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2471,17 +1771,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2495,13 +1785,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Stable CI pipelines  ",
+                "text": "Stable CI pipelines",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2515,13 +1805,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Automated builds  ",
+                "text": "Automated builds",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2535,13 +1825,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Controlled deployments  ",
+                "text": "Controlled deployments",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2555,13 +1845,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Versioned infrastructure  ",
+                "text": "Versioned infrastructure",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2575,23 +1865,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Monitoring and logs  ",
+                "text": "Monitoring and logs",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2611,17 +1891,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2641,17 +1911,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2671,17 +1931,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2695,58 +1945,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "Engineering Maturity > Engineering Hype",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "## Engineering Maturity > Engineering Hype",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -2761,17 +1970,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2785,13 +1984,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Ship fast.",
+                "text": "Ship fast.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2805,13 +2004,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Break less.",
+                "text": "Break less.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2825,13 +2024,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Recover quickly.",
+                "text": "Recover quickly.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2845,13 +2044,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Monitor everything.",
+                "text": "Monitor everything.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2865,23 +2064,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Automate aggressively.",
+                "text": "Automate aggressively.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2901,17 +2090,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2931,17 +2110,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2955,13 +2124,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Pipeline stability  ",
+                "text": "Pipeline stability",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2975,13 +2144,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Code quality  ",
+                "text": "Code quality",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -2995,13 +2164,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Reproducible environments  ",
+                "text": "Reproducible environments",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3015,13 +2184,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Observability  ",
+                "text": "Observability",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3035,23 +2204,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Security automation  ",
+                "text": "Security automation",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3071,17 +2230,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3095,58 +2244,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "A Simple Engineering Checklist",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "## A Simple Engineering Checklist",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -3161,17 +2269,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3185,13 +2283,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "1. Are our builds stable?",
+                "text": "Are our builds stable?",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3205,13 +2303,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "2. Do all PRs run automated tests?",
+                "text": "Do all PRs run automated tests?",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3225,13 +2323,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "3. Can we deploy in one click?",
+                "text": "Can we deploy in one click?",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3245,13 +2343,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "4. Can we roll back instantly?",
+                "text": "Can we roll back instantly?",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3265,23 +2363,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "5. Is our infrastructure version-controlled?",
+                "text": "Is our infrastructure version-controlled?",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3301,17 +2389,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3331,17 +2409,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3355,23 +2423,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "> Reliable systems beat flashy features.",
+                "text": "Reliable systems beat flashy features.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3385,28 +2443,17 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "Final Thought",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
-            "type": "paragraph",
+            "type": "heading",
             "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
+            "tag": "h2"
           },
           {
             "children": [
@@ -3415,51 +2462,14 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "## Final Thought",
+                "text": "AI is a powerful tool.",
                 "type": "text",
                 "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
+              },
               {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "AI is a powerful tool.  ",
-                "type": "text",
+                "type": "linebreak",
                 "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
+              },
               {
                 "detail": 0,
                 "format": 0,
@@ -3471,17 +2481,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3501,17 +2501,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3525,13 +2515,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Ship consistently  ",
+                "text": "Ship consistently",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3545,13 +2535,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Scale cleanly  ",
+                "text": "Scale cleanly",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3565,13 +2555,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Fail safely  ",
+                "text": "Fail safely",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3585,23 +2575,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "- Recover automatically  ",
+                "text": "Recover automatically",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3621,17 +2601,7 @@
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3645,53 +2615,13 @@
                 "format": 0,
                 "mode": "normal",
                 "style": "",
-                "text": "---",
+                "text": "Trends fade.",
                 "type": "text",
                 "version": 1
               }
             ],
             "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [
-              {
-                "detail": 0,
-                "format": 0,
-                "mode": "normal",
-                "style": "",
-                "text": "Trends fade.  ",
-                "type": "text",
-                "version": 1
-              }
-            ],
-            "direction": null,
-            "format": "",
-            "indent": 0,
-            "type": "paragraph",
-            "version": 1,
-            "textFormat": 0,
-            "textStyle": ""
-          },
-          {
-            "children": [],
-            "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
@@ -3711,7 +2641,7 @@
               }
             ],
             "direction": null,
-            "format": "",
+            "format": "start",
             "indent": 0,
             "type": "paragraph",
             "version": 1,
