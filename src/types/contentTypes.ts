@@ -20,6 +20,7 @@ export type Blog = Timestamped & {
   id: string
   title: string
   content: string
+  contentJSON?: any
 }
 
 export type Post = Timestamped & {

@@ -1,4 +1,5 @@
-import { AdminMarkdownEditor } from '../../components/admin'
+import { LuxeEditor, getEditorJSON, getEditorFormattedText } from 'luxe-edit'
+import 'luxe-edit/index.css'
 import { useAdminAuthContext } from '../context/AdminAuthContext'
 import { useBlogsStore } from '../hooks/useBlogsStore'
 import type { Blog } from '../../types/contentTypes'
@@ -14,6 +15,49 @@ function formatDate(iso: string) {
     return iso
   }
 }
+
+// ── Minimal markdown → Lexical JSON ──────────────────────────────────────────
+// Handles headings, bold, italic, strikethrough, and paragraphs.
+// Returns a JSON string suitable for initialConfig.editorState.
+
+function makeText(text: string, format = 0) {
+  return { detail: 0, format, mode: 'normal', style: '', text, type: 'text', version: 1 }
+}
+
+function parseInline(line: string) {
+  const nodes: object[] = []
+  // Tokenise bold (**), italic (*/_), strikethrough (~~)
+  const re = /(\*\*(.+?)\*\*|\*(.+?)\*|_(.+?)_|~~(.+?)~~|([^*_~]+))/g
+  let m: RegExpExecArray | null
+  while ((m = re.exec(line)) !== null) {
+    if (m[2] != null) nodes.push(makeText(m[2], 1))        // bold
+    else if (m[3] != null) nodes.push(makeText(m[3], 2))   // *italic*
+    else if (m[4] != null) nodes.push(makeText(m[4], 2))   // _italic_
+    else if (m[5] != null) nodes.push(makeText(m[5], 4))   // strikethrough
+    else if (m[6] != null) nodes.push(makeText(m[6], 0))   // plain
+  }
+  return nodes.length ? nodes : [makeText(line, 0)]
+}
+
+function makeBlock(type: string, children: object[], tag?: string) {
+  return { children, direction: 'ltr', format: '', indent: 0, type, ...(tag ? { tag } : {}), version: 1 }
+}
+
+function markdownToLexicalJSON(md: string): string {
+  const blocks: object[] = []
+  for (const line of md.split('\n')) {
+    const hMatch = line.match(/^(#{1,6})\s+(.+)/)
+    if (hMatch) {
+      blocks.push(makeBlock('heading', parseInline(hMatch[2]), `h${hMatch[1].length}`))
+    } else {
+      const text = line.trimEnd()
+      blocks.push(makeBlock('paragraph', text ? parseInline(text) : []))
+    }
+  }
+  if (!blocks.length) blocks.push(makeBlock('paragraph', []))
+  return JSON.stringify({ root: { children: blocks, direction: 'ltr', format: '', indent: 0, type: 'root', version: 1 } })
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 export function AdminBlogsPage() {
   const { token } = useAdminAuthContext()
@@ -98,9 +142,15 @@ function BlogCard({
   onRemove,
 }: {
   blog: Blog
-  onUpdate: (u: Partial<Pick<Blog, 'title' | 'content'>>) => void
+  onUpdate: (u: Partial<Pick<Blog, 'title' | 'content' | 'contentJSON'>>) => void
   onRemove: () => void
 }) {
+  // For legacy blogs (markdown only), seed the editor from converted markdown.
+  const legacyEditorState =
+    blog.contentJSON == null && blog.content
+      ? markdownToLexicalJSON(blog.content)
+      : undefined
+
   return (
     <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-5">
       <div className="flex items-start justify-between gap-4">
@@ -112,11 +162,20 @@ function BlogCard({
             value={blog.title}
             onChange={(e) => onUpdate({ title: e.target.value })}
           />
-          <AdminMarkdownEditor
-            value={blog.content}
-            onChange={(content) => onUpdate({ content })}
-            placeholder="Markdown content…"
-            minRows={6}
+          <LuxeEditor
+            colorScheme="dark"
+            initialConfig={{
+              namespace: `blog-${blog.id}`,
+              ...(legacyEditorState ? { editorState: legacyEditorState } : {}),
+            }}
+            initialJSON={blog.contentJSON}
+            onChange={(editorState) => {
+              onUpdate({
+                content: getEditorFormattedText(editorState),
+                contentJSON: getEditorJSON(editorState),
+              })
+            }}
+            ignoreInitialChange
           />
           <p className="text-[11px] text-slate-500">
             Created {formatDate(blog.createdAt)} · Updated{' '}
