@@ -1,0 +1,32 @@
+name: Validate main branch stays clean
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'gitforge.config.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'gitforge.config.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure data files are empty templates
+        run: |
+          fail=0
+          for file in data/blogs.json data/posts.json data/projects.json data/videos.json; do
+            content=$(cat "$file" | tr -d '[:space:]')
+            if [ "$content" != "[]" ]; then
+              echo "❌ $file must be [] on main (personal data belongs on the web branch)"
+              fail=1
+            else
+              echo "✅ $file is clean"
+            fi
+          done
+          exit $fail
