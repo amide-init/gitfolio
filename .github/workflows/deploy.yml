@@ -3,7 +3,7 @@ name: Deploy profile site to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - web
   workflow_dispatch:
   schedule:
     # Run once a day at 03:00 UTC to refresh GitHub data and redeploy
@@ -56,6 +56,7 @@ jobs:
           VITE_GITHUB_REPO: ${{ github.event.repository.name }}
           # OAuth CORS proxy – optional; add repo variable for admin login in production
           VITE_GITHUB_OAUTH_PROXY_URL: ${{ vars.VITE_GITHUB_OAUTH_PROXY_URL }}
+          VITE_DATA_BRANCH: web
         run: pnpm build
 
       - name: Upload Pages artifact

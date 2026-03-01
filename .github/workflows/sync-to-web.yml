@@ -1,0 +1,38 @@
+name: Sync code from main to web
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'data/**'
+      - 'gitforge.config.json'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main into web (preserving web's data)
+        run: |
+          git fetch origin
+          if git ls-remote --exit-code --heads origin web; then
+            git checkout web
+            git merge origin/main --no-ff --no-commit || true
+            # Always restore web's personal files
+            git checkout HEAD -- data/ gitforge.config.json
+            git diff --cached --quiet || git commit -m "Sync code from main [skip ci]"
+            git push origin web
+          else
+            echo "web branch not yet created — skipping sync"
+          fi

@@ -1,0 +1,31 @@
+name: Setup web branch (first-time)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create web branch from main
+        run: |
+          git fetch origin
+          if git ls-remote --exit-code --heads origin web; then
+            echo "web branch already exists."
+          else
+            git checkout -b web origin/main
+            git push origin web
+            echo "Created web branch from main."
+          fi

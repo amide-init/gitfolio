@@ -5,6 +5,7 @@ import type { GitforgeConfig } from '../types/gitforgeConfig'
 const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID as string
 const OWNER = import.meta.env.VITE_GITHUB_OWNER as string
 const REPO = import.meta.env.VITE_GITHUB_REPO as string
+const DATA_BRANCH = (import.meta.env.VITE_DATA_BRANCH as string | undefined) ?? 'web'
 
 if (!GITHUB_CLIENT_ID || !OWNER || !REPO) {
   // Fail fast in development; in production you'll just see console errors.
@@ -260,7 +261,7 @@ export type ConfigFile = {
 export async function getConfig(token: string): Promise<ConfigFile> {
   const res = await githubFetch(
     token,
-    `/repos/${OWNER}/${REPO}/contents/gitforge.config.json`,
+    `/repos/${OWNER}/${REPO}/contents/gitforge.config.json?ref=${DATA_BRANCH}`,
   )
 
   if (res.status === 404) {
@@ -340,6 +341,7 @@ export async function updateConfig(
   const body: Record<string, unknown> = {
     message: message ?? 'Update gitfolio config via admin panel',
     content: contentBase64,
+    branch: DATA_BRANCH,
   }
   if (sha) body.sha = sha
 
@@ -399,7 +401,7 @@ async function getContentFile<T>(
 ): Promise<ContentFileResult<T>> {
   const res = await githubFetch(
     token,
-    `/repos/${OWNER}/${REPO}/contents/${path}`,
+    `/repos/${OWNER}/${REPO}/contents/${path}?ref=${DATA_BRANCH}`,
   )
 
   if (res.status === 404) {
@@ -453,6 +455,7 @@ async function updateContentFile<T>(
   const body: Record<string, unknown> = {
     message,
     content: contentBase64,
+    branch: DATA_BRANCH,
   }
   if (sha) body.sha = sha
 
