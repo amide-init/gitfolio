@@ -1,180 +1,126 @@
 # gitfolio
-### [live Demo](https://amide-init.github.io/gitfolio/)
-Generate a polished, static GitHub profile site from any user or organization — using a simple local generator script.
+### [Live demo](https://amide-init.github.io/gitfolio/)
 
-- **Input**: a GitHub username/org and (optionally) a small config file.
-- **Output**: a Vite + React + TypeScript site wired to static data generated from the GitHub API.
-- **No runtime API calls**: all data is fetched once at build time and written into JSON/TS files.
-- **License**: MIT (see `LICENSE`).
+A polished, static GitHub profile site you can fork and make your own in minutes. Add your own blogs, videos, projects, and posts through the in-browser admin panel — no local setup required.
+
+- **Built with**: Vite + React + TypeScript
+- **Data**: stored in `data/*.json` files on your `web` branch, edited via `/admin`
+- **Deployed**: GitHub Pages, triggered automatically on every change
+- **License**: MIT (see `LICENSE`)
+
+---
+
+## Branch strategy
+
+This repo uses two branches so forking gives you a **clean template** with no personal data baked in:
+
+| Branch | Purpose |
+|--------|---------|
+| `main` | Clean template — empty data files, safe to fork |
+| `web` | Your personal branch — holds your data, gets deployed |
+
+All admin panel writes go to `web`. The deploy workflow triggers on `web`. `main` never contains personal data.
 
 ---
 
 ## Quick start (fork & deploy)
 
-### 1. Fork & deploy (no local setup)
+### Step 1 — Fork the repo
 
-**Recommended for most users:**
+Fork to your GitHub account. Optionally rename the fork to `yourusername.github.io` for a root URL:
 
-1. Fork this repo to your GitHub account.
-2. (Optional but recommended) Rename the fork to `yourusername.github.io` if you want the site at the root:
-   - `Settings → General → Repository name`
-3. GitHub Actions will:
-   - Run the generator using your GitHub username as `GITHUB_OWNER`.
-   - Build the site.
-   - Deploy to GitHub Pages.
+- `Settings → General → Repository name`
 
 You’ll get a live site at:
+- `https://yourusername.github.io/` (if repo is named `yourusername.github.io`)
+- `https://yourusername.github.io/gitfolio/` (if repo is named `gitfolio`)
 
-- `https://yourusername.github.io/` if the repo is named `yourusername.github.io`
-- `https://yourusername.github.io/gitfolio/` if the repo is named `gitfolio`
+### Step 2 — Create your `web` branch
 
-The scheduled workflow also runs daily to refresh your GitHub data and stats.
+Go to **Actions → Setup web branch (first-time) → Run workflow**.
 
-### GitHub token (recommended)
+This creates a `web` branch from your `main`. GitHub Pages will deploy from `web` going forward.
 
-By default, the generator uses the built‑in `GITHUB_TOKEN` provided by GitHub Actions:
+### Step 3 — Enable GitHub Pages
 
-- This is already wired in the workflow:
+In your fork: **Settings → Pages → Source → Deploy from a branch → `web` / `/ (root)`**.
 
-  ```yaml
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    GITHUB_OWNER: ${{ github.repository_owner }}
-    GITHUB_PROFILE_TYPE: user
-  ```
+> If you see a `github-pages` environment already deploying, it may have already been configured by the workflow — check before changing.
 
-- This is usually enough for:
-  - Higher rate limits than anonymous requests.
-  - Access to public profile + repos.
+### Step 4 — Set up the admin panel
 
-If you want to include **private repos** in stats (they are only used for aggregates, never shown as projects), you can:
+The `/admin` route lets you edit your site’s content from the browser. It needs a GitHub OAuth App to authenticate you.
 
-- Create a **personal access token** with `repo` scope.
-- Add it as a secret named `GITHUB_TOKEN` in:
-  - **Settings → Secrets and variables → Actions → New repository secret**.
-- The workflow will automatically use that instead of the default token.
+#### 4a. Create a GitHub OAuth App
+
+1. Go to [github.com/settings/developers](https://github.com/settings/developers) → **New OAuth App**
+2. Set:
+   - **Homepage URL**: your site URL (e.g. `https://yourusername.github.io/gitfolio`)
+   - **Authorization callback URL**: same as Homepage
+3. Click **Register application** and copy the **Client ID**
+
+#### 4b. Add the Client ID as a repo secret
+
+Repo → **Settings → Secrets and variables → Actions → New repository secret**
+
+- Name: `VITE_GITHUB_CLIENT_ID`
+- Value: your OAuth App Client ID
+
+#### 4c. Set up the OAuth CORS proxy (required for browser login)
+
+GitHub blocks OAuth token exchange from the browser. You need a small proxy. The easiest option is the included Cloudflare Worker:
+
+```bash
+cd workers/github-oauth-proxy
+npx wrangler deploy
+```
+
+Then add a **repository variable** (not secret):
+
+- Name: `VITE_GITHUB_OAUTH_PROXY_URL`
+- Value: `https://YOUR-WORKER.workers.dev` (no trailing slash)
+
+### Step 5 — Add your content
+
+1. Visit `https://yourusername.github.io/gitfolio/admin`
+2. Click **Login with GitHub** and complete the device flow
+3. Edit your config, add blogs, videos, projects, posts
+4. Save → the admin panel commits directly to your `web` branch → GitHub Actions rebuilds → your site updates
 
 ---
 
-## Local usage (optional)
+## How pushes flow
 
-If you want to run it locally or customize more deeply:
-
-### 1. Clone & install
-
-```bash
-git clone https://github.com/usedamru/gitforge.git .
-pnpm install   # or: npm install
+```
+You push code to main
+        ↓
+sync-to-web.yml runs automatically
+        ↓
+merges main → web (your data files are always preserved)
+        ↓
+deploy.yml triggers on web → site rebuilds
 ```
 
-### 2. Generate content from GitHub
-
-You can either pass the owner on the CLI or via config.
-
-#### Option A – CLI only (local script)
-
-```bash
-# user profile
-pnpm generate:github amide-init --type user
-
-# organization
-pnpm generate:github usedamru --type org
+```
+You save data via /admin
+        ↓
+admin panel commits directly to web branch
+        ↓
+deploy.yml triggers on web → site rebuilds
 ```
 
-#### Option B – Config file
-
-1. Copy the example:
-
-```bash
-cp gitforge.config.example.json gitforge.config.json
-```
-
-2. Edit `gitforge.config.json`:
-
-```jsonc
-{
-  "githubOwner": "amide-init",         // user or org name
-  "profileType": "user",               // "user" | "org"
-  "featuredRepos": ["tide-app"],       // optional; list of repo names to always include
-  "listedRepo": {
-    "count": 4,                        // how many *additional* repos to list
-    "sort": "date"                     // "date" | "star" | "date-then-star" | "star-then-date"
-  }
-}
-```
-
-3. Run the generator (no args needed; it reads the config):
-
-```bash
-pnpm generate:github
-```
-
-> Precedence for owner/type: CLI args → env vars → `gitforge.config.json` → defaults.
+You never need to touch the `web` branch manually.
 
 ---
 
-## What gitforge generates
-
-The CLI calls the GitHub API once and writes:
-
-- `src/generated/githubData.ts` – raw, typed snapshot of the profile + repos.
-- `src/siteContent.json` – **editable JSON template** used by the React app.
-
-The React app (`src/App.tsx`) reads **only** from `src/siteContent.json`, so:
-
-- You can fully tweak copy/ordering/layout text without touching TypeScript.
-- Regenerating with `gitforge` will overwrite `siteContent.json` with fresh data, so:
-  - Either treat JSON as “generated, don’t edit”, or
-  - Keep a copy / commit your version and regenerate only when needed.
-
-### How stats are computed
-
-- **Language distribution** (used for the language pie chart):
-
-  - For each repo we read GitHub’s primary `language` field.
-  - We count how many repos use each language:
-
-    \[
-    \text{count(language)} = \#\{\text{repos with that primary language}\}
-    \]
-
-  - We only consider repos that have a language set. Let \(\text{total\_with\_language}\) be the sum of counts over all languages:
-
-    \[
-    \text{total\_with\_language} = \sum_{\ell} \text{count}(\ell)
-    \]
-
-  - The percentage for each language is:
-
-    \[
-    \text{percentage}(\ell) =
-      \text{round}\left(
-        \frac{\text{count}(\ell)}{\text{total\_with\_language}} \times 100
-      \right)
-    \]
-
-  - Only the top 8 languages (by `count`) are shown in the chart.
-
-Key sections in `siteContent.json`:
-
-- `hero`: title, subtitle, CTA, caption.
-- `snapshot`: list of profile stats (repos, followers, last updated).
-- `philosophy`: section title, intro, and cards summarizing repo activity/languages/topics.
-- `projects`: section title, intro, and an array of featured repos with:
-  - `name`, `description`, `url`, `stars`, `language`, `topics`, `lastUpdated`.
-- `footer`: short explanatory text + GitHub link label/URL.
-
----
-
-## Running the site locally
-
-After generating content:
+## Local development
 
 ```bash
-pnpm dev        # or: npm run dev
+git clone https://github.com/amide-init/gitfolio.git
+cd gitfolio
+pnpm install
+pnpm dev
 ```
-
-Then open the printed URL (usually `http://localhost:5173`).
 
 To build and preview a production bundle:
 
@@ -183,217 +129,59 @@ pnpm build
 pnpm preview
 ```
 
-The generated site is:
-
-- Dark, minimal, developer‑focused.
-- Single‑page (no routing).
-- Built with React + TypeScript + Vite.
-
 ---
 
-## Admin panel (edit config in the browser)
+## Admin panel (local development)
 
-The `/admin` route lets repository **admins** edit `gitforge.config.json` (hero, featured repos, custom links) from the browser. Changes are committed via the GitHub API; GitHub Actions then rebuilds the site.
+To run the admin panel locally:
 
-### 1. Create a GitHub OAuth App
-
-1. Go to **GitHub → Settings → Developer settings → OAuth Apps**: [github.com/settings/developers](https://github.com/settings/developers).
-2. Click **New OAuth App**.
-3. Set:
-   - **Application name**: e.g. `gitfolio Admin`
-   - **Homepage URL**: your site URL  
-     - User site: `https://YOUR_USERNAME.github.io`  
-     - Project site: `https://YOUR_USERNAME.github.io/gitfolio`
-   - **Authorization callback URL**: same as Homepage (or the default shown).
-4. Click **Register application**.
-5. Copy the **Client ID** (you do **not** need the client secret for the Device Flow used here).
-
-### 2. Configure environment variables
-
-Copy the example env file and set the admin variables:
+### 1. Configure environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` and set:
+Edit `.env`:
 
 ```bash
 VITE_GITHUB_CLIENT_ID=your_oauth_app_client_id_here
 VITE_GITHUB_OWNER=your-github-username-or-org
 VITE_GITHUB_REPO=gitfolio
+VITE_DATA_BRANCH=web   # branch where data is read/written
 ```
 
-- `VITE_GITHUB_OWNER`: owner of the repo (your username or org).
-- `VITE_GITHUB_REPO`: repository name (e.g. `gitfolio` or `yourusername.github.io`).
-
-### 3. Run the app and open the admin panel
+### 2. Run the dev server
 
 ```bash
 pnpm dev
 ```
-
-Then open:
 
 - **Main site**: `http://localhost:5173/`
 - **Admin panel**: `http://localhost:5173/admin`
 
 Click **Login with GitHub**, complete the device flow in the new tab, then edit and save. Only users with **admin** permission on the repo can save; others see “Unauthorized”.
 
-### Deployed site (GitHub Pages)
-
-1. **Create an OAuth App** at [github.com/settings/developers](https://github.com/settings/developers):
-   - Homepage URL: your site URL (e.g. `https://yourusername.github.io/gitfolio`)
-   - Authorization callback URL: same as Homepage
-   - Copy the **Client ID**
-
-2. **Add GitHub Actions secret**:
-   - Repo → **Settings → Secrets and variables → Actions**
-   - **New repository secret**
-   - Name: `VITE_GITHUB_CLIENT_ID`
-   - Value: your OAuth App Client ID
-
-   The workflow already uses `VITE_GITHUB_OWNER` and `VITE_GITHUB_REPO` from the repo (automatic for forks).
-
-3. **OAuth CORS fix (required for admin login):** GitHub blocks OAuth from the browser. Deploy the Cloudflare Worker: run `npx wrangler deploy` from `workers/github-oauth-proxy/` (requires [Cloudflare account](https://dash.cloudflare.com)), then add a **repository variable** `VITE_GITHUB_OAUTH_PROXY_URL` = `https://YOUR-WORKER.workers.dev` (no trailing slash).
+> In dev, OAuth requests are proxied through Vite (`/api/github/login/*`) to avoid CORS — no worker needed locally.
 
 ---
 
-## CLI usage details
-
-### Command
-
-```bash
-gitforge [owner] [--type user|org]
-```
-
-- `owner` (optional): GitHub user or org (e.g. `amide-init`, `steipete`, `usedamru`).
-- `--type` (optional): `user` or `org`.
-
-If you omit both, `gitforge` falls back to:
-
-1. `GITHUB_OWNER` / `GITHUB_PROFILE_TYPE` env vars.
-2. `gitforge.config.json`.
-3. Internal defaults (`usedamru` / `org`).
-
-### Examples
-
-```bash
-# CLI only (local)
-pnpm generate:github steipete --type user
-
-# With config file only
-cp gitforge.config.example.json gitforge.config.json
-pnpm generate:github
-```
-
----
-
-## Project structure (template)
+## Project structure
 
 Key files:
 
-- `scripts/generate-github-data.js` – CLI & GitHub fetcher.
-- `src/App.tsx` – main React app wired to `siteContent.json`.
-- `src/App.css` – layout & styling (dark, minimal, responsive).
-- `src/siteContent.json` – generated + editable content JSON.
-- `gitforge.config.example.json` – config template for users.
-- `gitforge.config.json` – user-local config (ignored by git).
+- `src/api/github.ts` — GitHub API client; all reads/writes target the `web` branch
+- `src/App.tsx` — main React app
+- `data/` — content files (`blogs.json`, `posts.json`, `projects.json`, `videos.json`); empty on `main`, populated on `web`
+- `gitforge.config.json` — site config; read/written by the admin panel
+- `.github/workflows/deploy.yml` — builds and deploys from the `web` branch
+- `.github/workflows/sync-to-web.yml` — syncs code changes from `main` → `web`
+- `.github/workflows/setup-web.yml` — one-time setup to create the `web` branch
 
 ---
 
-## Ignored / local files
+## Roadmap
 
-`.gitignore` is set up to ignore:
+- Additional themes (minimal, dev-focused)
+- Multi-profile / team pages
 
-- `node_modules`, `dist`, Vite/TS build artefacts.
-- Logs (`*.log`, `logs/`, `npm-debug.log*`, etc.).
-- Editor files (`.vscode`, `.idea`, `.DS_Store`, etc.).
-- Generated content: `src/generated/`, `src/siteContent.json`.
-- Local config: `gitforge.config.json`.
-
-This keeps the repo clean while allowing each user to have their own profile config.
-
----
-
-## Roadmap ideas
-
-- `gitforge init` – scaffold a fresh project into any empty directory (no manual clone).
-- Additional themes (still minimal, dev‑focused).
-- Multi-profile / team pages.
-
-If you have a specific workflow in mind, open an issue or PR in the repo where this package lives. :)
-
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Open an issue or PR for feature requests.
