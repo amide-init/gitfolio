@@ -31,7 +31,7 @@ jobs:
             git merge origin/main --no-ff --no-commit || true
             # Always restore web's personal files
             git checkout HEAD -- data/ gitforge.config.json
-            git diff --cached --quiet || git commit -m "Sync code from main [skip ci]"
+            git diff --cached --quiet || git commit -m "Sync code from main"
             git push origin web
           else
             echo "web branch not yet created — skipping sync"
