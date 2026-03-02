@@ -193,26 +193,36 @@ function App() {
           <div>
             <p>{footer.text}</p>
             <p className="mt-1 text-[11px] text-slate-500">{footer.subtleText}</p>
-            <p className="mt-2 text-[11px] text-slate-500">
-              Want a site like this?{' '}
-              <a href="https://github.com/amide-init/gitfolio" target="_blank" rel="noreferrer" className="font-medium text-indigo-600 underline underline-offset-2 hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-200">Fork the gitfolio project</a> and point it at your own GitHub profile.
-            </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href="https://github.com/amide-init/gitfolio"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-semibold transition border-amber-400/40 bg-amber-400/10 text-amber-500 hover:bg-amber-400/20 dark:border-amber-400/30 dark:text-amber-300 dark:hover:bg-amber-400/20"
+            >
+              <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current" aria-hidden="true">
+                <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.873 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" />
+              </svg>
+              Star
+            </a>
+            <a
+              href="https://github.com/amide-init/gitfolio/fork"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-semibold transition border-indigo-400/40 bg-indigo-400/10 text-indigo-500 hover:bg-indigo-400/20 dark:border-indigo-400/30 dark:text-indigo-300 dark:hover:bg-indigo-400/20"
+            >
+              <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current" aria-hidden="true">
+                <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z" />
+              </svg>
+              Fork
+            </a>
             <Link
               to="/admin"
               className="text-[11px] font-medium text-slate-500 underline-offset-2 hover:underline dark:text-slate-400"
             >
               Admin
             </Link>
-            <a
-              href="https://github.com/amide-init/gitfolio"
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs font-medium text-indigo-300 hover:text-indigo-200"
-            >
-              {footer.githubLabel}
-            </a>
           </div>
         </div>
       </footer>
