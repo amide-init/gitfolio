@@ -13,7 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "luxe-edit": "^0.1.6",
+    "luxe-edit": "^0.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-markdown": "^9.0.1",

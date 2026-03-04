@@ -33,6 +33,21 @@ jobs:
             git checkout HEAD -- data/ gitforge.config.json
             git diff --cached --quiet || git commit -m "Sync code from main"
             git push origin web
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
           else
             echo "web branch not yet created — skipping sync"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
           fi
+        id: sync
+
+      - name: Trigger deploy
+        if: steps.sync.outputs.pushed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',
+              ref: 'web'
+            })
