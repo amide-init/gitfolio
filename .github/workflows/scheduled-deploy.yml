@@ -1,0 +1,24 @@
+name: Scheduled deploy
+
+on:
+  schedule:
+    # Run once a day at 03:00 UTC to refresh GitHub data and redeploy
+    - cron: '0 3 * * *'
+
+permissions:
+  actions: write
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch deploy on web branch
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',
+              ref: 'web'
+            })
