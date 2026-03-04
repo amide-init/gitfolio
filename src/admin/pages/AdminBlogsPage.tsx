@@ -1,4 +1,4 @@
-import { LuxeEditor, getEditorJSON, getEditorFormattedText } from 'luxe-edit'
+import { LuxeEditor, getEditorJSON } from 'luxe-edit'
 import 'luxe-edit/index.css'
 import { useAdminAuthContext } from '../context/AdminAuthContext'
 import { useBlogsStore } from '../hooks/useBlogsStore'
@@ -170,10 +170,7 @@ function BlogCard({
             }}
             initialJSON={blog.contentJSON}
             onChange={(editorState) => {
-              onUpdate({
-                content: getEditorFormattedText(editorState),
-                contentJSON: getEditorJSON(editorState),
-              })
+              onUpdate({ contentJSON: getEditorJSON(editorState) })
             }}
             ignoreInitialChange
           />

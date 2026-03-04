@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       luxe-edit:
-        specifier: ^0.1.6
-        version: 0.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.29)
+        specifier: ^0.2.0
+        version: 0.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.29)
       react:
         specifier: ^19.2.0
         version: 19.2.4
@@ -1357,8 +1357,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  luxe-edit@0.1.6:
-    resolution: {integrity: sha512-BU+eSxq3mkRqRFFFHe5XGXcfZbrZA1hHLTAQtBIQ6haCxJF2lVAO5Rv/CZqKqQewbHGR9vcyVEh13Ipf6mfBeg==}
+  luxe-edit@0.2.0:
+    resolution: {integrity: sha512-LnAn64HxIYrENIhutOUPBDdsPrindMMk+yyLbQDUBVVC2a7U1/32WRNkSpt9CK3s1hf43ZM4wNvsL2HOoF3s+g==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -3211,7 +3211,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  luxe-edit@0.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.29):
+  luxe-edit@0.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.29):
     dependencies:
       '@lexical/code': 0.39.0
       '@lexical/html': 0.39.0

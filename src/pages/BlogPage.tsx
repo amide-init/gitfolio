@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { useSiteData } from '../hooks/useSiteData'
-import { getHTMLFromJSON } from 'luxe-edit'
+import { getDOMFromJSON } from 'luxe-edit'
 import ReactMarkdown from 'react-markdown'
 
 export default function BlogPage() {
@@ -48,7 +48,7 @@ export default function BlogPage() {
       {blog.contentJSON ? (
         <div
           className="prose prose-slate dark:prose-invert max-w-none text-sm text-slate-700 dark:text-slate-300"
-          dangerouslySetInnerHTML={{ __html: getHTMLFromJSON(blog.contentJSON) }}
+          dangerouslySetInnerHTML={{ __html: getDOMFromJSON(blog.contentJSON) }}
         />
       ) : (
         <div className="prose prose-slate dark:prose-invert max-w-none text-sm text-slate-700 dark:text-slate-300">
