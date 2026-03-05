@@ -43,9 +43,9 @@ This creates a `web` branch from your `main`. GitHub Pages will deploy from `web
 
 ### Step 3 — Enable GitHub Pages
 
-In your fork: **Settings → Pages → Source → Deploy from a branch → `web` / `/ (root)`**.
+In your fork: **Settings → Pages → Source → GitHub Actions**.
 
-> If you see a `github-pages` environment already deploying, it may have already been configured by the workflow — check before changing.
+> Do **not** set it to "Deploy from a branch". The deploy workflow uses `actions/deploy-pages` which requires the "GitHub Actions" source. Setting it to a branch will serve raw template files and show a blank page.
 
 ### Step 4 — Set up the admin panel
 
