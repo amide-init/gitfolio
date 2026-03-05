@@ -36,8 +36,11 @@ jobs:
             git push origin web
             echo "pushed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "web branch not yet created — skipping sync"
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            echo "web branch not found — creating it from main"
+            git checkout -b web origin/main
+            git push origin web
+            echo "Created web branch from main."
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
           fi
         id: sync
 
