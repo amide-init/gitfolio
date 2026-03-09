@@ -17,6 +17,7 @@ function App() {
   const { hero, footer } = sc
 
   const [theme, setTheme] = useState<Theme>('dark')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const stored = window.localStorage.getItem('gitforge-theme')
@@ -94,6 +95,10 @@ function App() {
   }, [location.search, navigate])
 
   useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
     document.title = hero.title || 'GitHub Profile'
     const firstChar = (hero.title || '?').charAt(0).toUpperCase()
     const svg = `
@@ -143,7 +148,7 @@ function App() {
   return (
     <div className={rootClasses}>
       <header className={headerClasses}>
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
           <Link
             to="/"
             className="inline-flex items-center gap-2 no-underline text-slate-900 dark:text-slate-100"
@@ -153,7 +158,9 @@ function App() {
               {navInitials}
             </span>
           </Link>
-          <nav className="flex items-center gap-3 text-xs font-medium text-slate-700 dark:text-slate-300" aria-label="Primary">
+
+          {/* Desktop nav — hidden below md */}
+          <nav className="hidden md:flex items-center gap-3 text-xs font-medium text-slate-700 dark:text-slate-300" aria-label="Primary">
             <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Home</Link>
             <Link to="/videos" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Videos</Link>
             <Link to="/blogs" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Blogs</Link>
@@ -181,7 +188,59 @@ function App() {
               </span>
             </button>
           </nav>
+
+          {/* Mobile controls: theme toggle + hamburger */}
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              type="button"
+              onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 text-slate-800 transition hover:bg-white dark:border-slate-500/60 dark:bg-black/20 dark:text-slate-100 dark:hover:bg-black/40"
+              aria-label="Toggle light and dark mode"
+            >
+              {theme === 'dark' ? (
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+                  <circle cx="12" cy="12" r="4" className="fill-amber-400" />
+                  <path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" className="stroke-amber-400" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+                  <path d="M20 12.5A7.5 7.5 0 0 1 11.5 4 6 6 0 1 0 20 12.5Z" className="fill-slate-700" />
+                </svg>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="flex h-8 w-8 items-center justify-center rounded-md text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {mobileMenuOpen ? (
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown menu */}
+        {mobileMenuOpen && (
+          <nav className="border-t border-slate-200 bg-slate-50/95 backdrop-blur dark:border-white/5 dark:bg-[#050509]/95 md:hidden" aria-label="Mobile navigation">
+            <div className="mx-auto flex max-w-5xl flex-col px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="py-2.5 transition-colors hover:text-slate-900 dark:hover:text-slate-50">Home</Link>
+              <Link to="/videos" onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">Videos</Link>
+              <Link to="/blogs" onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">Blogs</Link>
+              <Link to="/projects" onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">Projects</Link>
+              <a href={`${import.meta.env.BASE_URL}#github`} onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">GitHub</a>
+              <a href={`${import.meta.env.BASE_URL}#stats`} onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">Stats</a>
+              <a href={footer.githubUrl || '#'} target="_blank" rel="noreferrer" onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">{footer.githubLabel || 'Fork'}</a>
+            </div>
+          </nav>
+        )}
       </header>
 
       <main>
