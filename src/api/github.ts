@@ -38,7 +38,7 @@ function utf8ToBase64(str: string): string {
 
 export function getStoredToken(): string | null {
   try {
-    return window.sessionStorage.getItem(ACCESS_TOKEN_KEY)
+    return window.localStorage.getItem(ACCESS_TOKEN_KEY)
   } catch {
     return null
   }
@@ -46,15 +46,15 @@ export function getStoredToken(): string | null {
 
 function storeToken(token: string) {
   try {
-    window.sessionStorage.setItem(ACCESS_TOKEN_KEY, token)
+    window.localStorage.setItem(ACCESS_TOKEN_KEY, token)
   } catch {
-    // Ignore – sessionStorage can fail in private mode; token will just live in memory.
+    // Ignore – localStorage can fail in private mode; token will just live in memory.
   }
 }
 
 export function clearStoredToken() {
   try {
-    window.sessionStorage.removeItem(ACCESS_TOKEN_KEY)
+    window.localStorage.removeItem(ACCESS_TOKEN_KEY)
   } catch {
     // ignore
   }
