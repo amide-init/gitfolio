@@ -4,14 +4,15 @@
   "featuredRepos": [
     "gitfolio",
     "usedamru/sql2nosql",
-    "luxe-tools/luxe-edit"
+    "luxe-tools/luxe-edit",
+    "mindlog"
   ],
   "listedRepo": {
     "count": 4,
     "sort": "date"
   },
   "hero": {
-    "eyebrow": "sudo rm -rf /people/*",
+    "eyebrow": "OSS Builder • AI Engineer • Product Creator",
     "minorInfo": "I am a Software Engineer and Product Builder focused on AI-driven learning and scalable web systems. I am the founder of BadgeMonster, an AI-powered skill assessment platform helping students master coding, analytics, DevOps, and AI. I build with .NET, React, Python, and cloud technologies to create impactful, practical products."
   },
   "customLinks": [
