@@ -1,5 +1,5 @@
 # gitfolio
-### [demo Url](https://amide-init.github.io/gitfolio/)
+### [Demo Portfolio - amide-init](https://amide-init.github.io/gitfolio/)
 
 A polished, static GitHub profile site you can fork and make your own in minutes. Add your own blogs, videos, projects, and posts through the in-browser admin panel — no local setup required.
 
