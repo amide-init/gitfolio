@@ -165,7 +165,6 @@ function App() {
             <Link to="/videos" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Videos</Link>
             <Link to="/blogs" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Blogs</Link>
             <Link to="/projects" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Projects</Link>
-            <a href={`${import.meta.env.BASE_URL}#github`} className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">GitHub</a>
             <a href={`${import.meta.env.BASE_URL}#stats`} className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Stats</a>
             <a href={footer.githubUrl || '#'} target="_blank" rel="noreferrer" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">{footer.githubLabel || 'Fork'}</a>
             <button
@@ -235,7 +234,6 @@ function App() {
               <Link to="/videos" onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">Videos</Link>
               <Link to="/blogs" onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">Blogs</Link>
               <Link to="/projects" onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">Projects</Link>
-              <a href={`${import.meta.env.BASE_URL}#github`} onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">GitHub</a>
               <a href={`${import.meta.env.BASE_URL}#stats`} onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">Stats</a>
               <a href={footer.githubUrl || '#'} target="_blank" rel="noreferrer" onClick={() => setMobileMenuOpen(false)} className="border-t border-slate-200/60 py-2.5 transition-colors hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50">{footer.githubLabel || 'Fork'}</a>
             </div>
