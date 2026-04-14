@@ -1,29 +1,23 @@
 import { lazy, Suspense } from 'react'
+import PhilosophyCard from './PhilosophyCard'
 
-const ParticleField = lazy(() => import('./ParticleField'))
+const PhilosophyScene = lazy(() => import('./PhilosophyScene'))
 
-type PhilosophyCard = {
-  title: string
-  body: string
-}
-
-type Philosophy = {
-  title: string
-  body: string
-  cards: PhilosophyCard[]
-}
+type PhilosophyCardData = { title: string; body: string }
+type Philosophy = { title: string; body: string; cards: PhilosophyCardData[] }
 
 export default function PhilosophySection({ philosophy }: { philosophy: Philosophy }) {
   if (!philosophy?.cards?.length) return null
+
   return (
     <section
       id="philosophy"
       className="relative overflow-hidden border-t border-blue-900/30 bg-[#050509] py-16"
       aria-labelledby="philosophy-title"
     >
-      {/* Particle network background */}
+      {/* Three.js floating wireframe shapes — one per card */}
       <Suspense fallback={null}>
-        <ParticleField count={40} color={0x3b82f6} opacity={0.35} />
+        <PhilosophyScene count={philosophy.cards.length} />
       </Suspense>
 
       <div className="relative z-10 mx-auto max-w-5xl px-6">
@@ -33,17 +27,15 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
           </p>
           <p className="text-sm leading-relaxed text-slate-400">{philosophy.body}</p>
         </header>
-        <div className="grid gap-4 md:grid-cols-2">
-          {philosophy.cards.map((card) => (
-            <article
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {philosophy.cards.map((card, i) => (
+            <PhilosophyCard
               key={card.title}
-              className="group rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220]/80 to-[#080c18]/80 p-5 text-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.18)]"
-            >
-              {/* Glowing top border accent */}
-              <div className="mb-3 h-px w-12 bg-gradient-to-r from-blue-500 to-cyan-400 opacity-60 transition-all group-hover:w-20 group-hover:opacity-100" />
-              <h3 className="mb-2 text-sm font-semibold text-slate-100">{card.title}</h3>
-              <p className="text-[13px] leading-relaxed text-slate-400">{card.body}</p>
-            </article>
+              title={card.title}
+              body={card.body}
+              index={i}
+            />
           ))}
         </div>
       </div>
