@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import type { BarDatum } from './ThreeBarChart'
 import { PIE_COLORS } from './ThreePieChart'
+import AnimatedMetricCard from './AnimatedMetricCard'
 
 const ParticleField = lazy(() => import('./ParticleField'))
 const ThreeBarChart = lazy(() => import('./ThreeBarChart'))
@@ -29,55 +30,6 @@ type Stats = {
 }
 
 
-const metricCards = (m: Stats['metrics']) => [
-  {
-    label:
-      m.publicRepos !== undefined && m.publicRepos < m.totalRepos
-        ? `Total Repos (${m.publicRepos} public)`
-        : 'Repositories',
-    value: m.totalRepos,
-    color: 'text-blue-400',
-    glow: 'shadow-blue-500/20',
-    icon: (
-      <svg className="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Total Stars',
-    value: m.totalStars.toLocaleString(),
-    color: 'text-amber-400',
-    glow: 'shadow-amber-500/20',
-    icon: (
-      <svg className="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Languages',
-    value: m.languagesUsed,
-    color: 'text-cyan-400',
-    glow: 'shadow-cyan-500/20',
-    icon: (
-      <svg className="h-5 w-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Followers',
-    value: m.followers,
-    color: 'text-emerald-400',
-    glow: 'shadow-emerald-500/20',
-    icon: (
-      <svg className="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ),
-  },
-]
 
 export default function StatsSection({ stats }: { stats: Stats | null }) {
   if (!stats) return null
@@ -124,23 +76,62 @@ export default function StatsSection({ stats }: { stats: Stats | null }) {
           </p>
         </header>
 
-        {/* Metric cards */}
+        {/* Metric cards — animated gauge rings */}
         <div className="mb-12 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {metricCards(metrics).map(({ label, value, color, glow, icon }) => (
-            <div
-              key={label}
-              className={`group rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220]/90 to-[#080c18]/90 p-4 text-center backdrop-blur-sm transition hover:border-blue-500/50 hover:shadow-lg hover:${glow}`}
-            >
-              <div className="mb-2 flex justify-center">{icon}</div>
-              <div className={`text-2xl font-bold ${color}`}>{value}</div>
-              <div className="mt-1 text-[11px] text-slate-400">{label}</div>
-            </div>
-          ))}
+          <AnimatedMetricCard
+            label="Repositories"
+            value={metrics.totalRepos}
+            sublabel={metrics.publicRepos !== undefined && metrics.publicRepos < metrics.totalRepos ? `${metrics.publicRepos} public` : undefined}
+            progress={Math.min(metrics.totalRepos / 150, 1)}
+            ringColor="#3b82f6"
+            textColor="text-blue-400"
+            icon={
+              <svg className="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+              </svg>
+            }
+          />
+          <AnimatedMetricCard
+            label="Total Stars"
+            value={metrics.totalStars}
+            progress={Math.min(metrics.totalStars / 500, 1)}
+            ringColor="#f59e0b"
+            textColor="text-amber-400"
+            icon={
+              <svg className="h-4 w-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            }
+          />
+          <AnimatedMetricCard
+            label="Languages"
+            value={metrics.languagesUsed}
+            progress={Math.min(metrics.languagesUsed / 20, 1)}
+            ringColor="#06b6d4"
+            textColor="text-cyan-400"
+            icon={
+              <svg className="h-4 w-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            }
+          />
+          <AnimatedMetricCard
+            label="Followers"
+            value={metrics.followers}
+            progress={Math.min(metrics.followers / 500, 1)}
+            ringColor="#10b981"
+            textColor="text-emerald-400"
+            icon={
+              <svg className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            }
+          />
         </div>
 
         {/* Charts grid */}
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Language distribution — Three.js 3D pie */}
+          {/* Language distribution — Three.js 3D pie + animated skill bars */}
           {pieData.length > 0 && (
             <div className="rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220]/90 to-[#080c18]/90 p-6 backdrop-blur-sm">
               <h3 className="mb-1 text-sm font-semibold text-slate-100">Language Distribution</h3>
@@ -148,6 +139,32 @@ export default function StatsSection({ stats }: { stats: Stats | null }) {
               <Suspense fallback={<div className="h-[260px] animate-pulse rounded-lg bg-blue-900/10" />}>
                 <ThreePieChart data={pieData} colors={PIE_COLORS} height={260} />
               </Suspense>
+
+              {/* Animated skill bars */}
+              <div className="mt-5 space-y-2.5">
+                {pieData.slice(0, 6).map((d, i) => {
+                  const barColor = `#${PIE_COLORS[i % PIE_COLORS.length].toString(16).padStart(6, '0')}`
+                  return (
+                    <div key={d.label}>
+                      <div className="mb-1 flex justify-between text-[11px]">
+                        <span className="font-medium text-slate-300">{d.label}</span>
+                        <span className="text-slate-500">{d.percentage}%</span>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+                        <div
+                          className="h-full rounded-full"
+                          style={{
+                            width: `${d.percentage}%`,
+                            background: `linear-gradient(90deg, ${barColor}99, ${barColor})`,
+                            boxShadow: `0 0 6px ${barColor}80`,
+                            animation: `growBar 1.2s ${i * 0.08}s ease-out both`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           )}
 
