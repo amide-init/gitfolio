@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import siteContent from './siteContent.json'
 import { githubConfig } from './generated/githubData'
+import { activeTemplate } from './lib/activeTemplate'
 
 type Theme = 'dark' | 'light'
 
@@ -17,7 +18,7 @@ function App() {
   const { hero, footer } = sc
 
   // Theme is derived from the template setting — no user toggle needed.
-  const template = (githubConfig as { template?: string }).template ?? 'hacker'
+  const template = activeTemplate
   const theme: Theme = template === 'classic' ? 'light' : 'dark'
   // hacker template overrides the shared nav/footer to terminal green
   const isHacker = template === 'hacker'

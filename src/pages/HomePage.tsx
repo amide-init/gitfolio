@@ -1,4 +1,4 @@
-import { githubConfig } from '../generated/githubData'
+import { activeTemplate } from '../lib/activeTemplate'
 import MinimalHomePage from '../templates/minimal/HomePage'
 import ClassicHomePage from '../templates/classic/HomePage'
 import BentoHomePage from '../templates/bento/HomePage'
@@ -7,11 +7,10 @@ import NetflixHomePage from '../templates/netflix/HomePage'
 import ThreejsHomePage from '../templates/threejs/HomePage'
 
 export default function HomePage() {
-  const template = (githubConfig as { template?: string }).template ?? 'hacker'
-  if (template === 'classic') return <ClassicHomePage />
-  if (template === 'bento') return <BentoHomePage />
-  if (template === 'hacker') return <HackerHomePage />
-  if (template === 'netflix') return <NetflixHomePage />
-  if (template === 'threejs') return <ThreejsHomePage />
+  if (activeTemplate === 'classic') return <ClassicHomePage />
+  if (activeTemplate === 'bento') return <BentoHomePage />
+  if (activeTemplate === 'hacker') return <HackerHomePage />
+  if (activeTemplate === 'netflix') return <NetflixHomePage />
+  if (activeTemplate === 'threejs') return <ThreejsHomePage />
   return <MinimalHomePage />
 }

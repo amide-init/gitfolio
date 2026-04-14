@@ -174,7 +174,7 @@ export function AdminTemplatePage() {
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {TEMPLATES.map(({ id, label, description, preview }) => {
-          const isActive = (config.template ?? 'hacker') === id
+          const isActive = (config.template ?? 'threejs') === id
           return (
             <button
               key={id}

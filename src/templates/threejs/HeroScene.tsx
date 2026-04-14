@@ -442,6 +442,9 @@ export default function HeroScene({ location }: HeroSceneProps) {
     let velX = 0
     let velY = 0
     let autoRotate = true
+    // Normalised mouse position over the canvas (-1 … 1). Used for hover parallax.
+    let hoverNormX = 0
+    let hoverNormY = 0
 
     const startDrag = (x: number, y: number) => {
       isDragging = true
@@ -468,13 +471,27 @@ export default function HeroScene({ location }: HeroSceneProps) {
     }
 
     const onMouseDown = (e: MouseEvent) => startDrag(e.clientX, e.clientY)
-    const onMouseMove = (e: MouseEvent) => moveDrag(e.clientX, e.clientY)
+    const onMouseMove = (e: MouseEvent) => {
+      // Track hover position relative to the canvas for the parallax effect
+      if (!isDragging) {
+        const rect = mount.getBoundingClientRect()
+        hoverNormX = ((e.clientX - rect.left) / rect.width - 0.5) * 2
+        hoverNormY = -((e.clientY - rect.top) / rect.height - 0.5) * 2
+      }
+      moveDrag(e.clientX, e.clientY)
+    }
     const onMouseUp = () => endDrag()
+    const onMouseLeave = () => {
+      // Smoothly reset hover influence when cursor leaves the canvas
+      hoverNormX = 0
+      hoverNormY = 0
+    }
     const onTouchStart = (e: TouchEvent) => { if (e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY) }
     const onTouchMove = (e: TouchEvent) => { if (e.touches.length === 1) moveDrag(e.touches[0].clientX, e.touches[0].clientY) }
     const onTouchEnd = () => endDrag()
 
     mount.addEventListener('mousedown', onMouseDown)
+    mount.addEventListener('mouseleave', onMouseLeave)
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
     mount.addEventListener('touchstart', onTouchStart, { passive: true })
@@ -500,7 +517,11 @@ export default function HeroScene({ location }: HeroSceneProps) {
 
       // Globe rotation
       if (autoRotate) {
-        globeGroup.rotation.y += 0.0018
+        // Y: auto-spin speed nudged by horizontal mouse position
+        globeGroup.rotation.y += 0.0018 + hoverNormX * 0.002
+        // X: smoothly tilt toward vertical mouse position
+        const hoverTargetX = hoverNormY * MAX_TILT * 0.5
+        globeGroup.rotation.x += (hoverTargetX - globeGroup.rotation.x) * 0.04
       } else if (!isDragging) {
         // Momentum decay after drag
         globeGroup.rotation.x += velX
@@ -536,6 +557,7 @@ export default function HeroScene({ location }: HeroSceneProps) {
     return () => {
       cancelAnimationFrame(frameId)
       mount.removeEventListener('mousedown', onMouseDown)
+      mount.removeEventListener('mouseleave', onMouseLeave)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseup', onMouseUp)
       mount.removeEventListener('touchstart', onTouchStart)
