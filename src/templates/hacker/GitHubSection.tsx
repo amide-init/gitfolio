@@ -18,7 +18,6 @@ type GitHubSectionProps = {
 }
 
 export default function GitHubSection({
-  title = 'GitHub',
   body,
   repos,
 }: GitHubSectionProps) {
