@@ -1,5 +1,3 @@
-import type React from 'react'
-
 type Hero = {
   eyebrow: string
   title: string
