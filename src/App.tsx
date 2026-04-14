@@ -16,27 +16,14 @@ function App() {
   }
   const { hero, footer } = sc
 
-  const [theme, setTheme] = useState<Theme>('dark')
+  // Theme is derived from the template setting — no user toggle needed.
+  const template = (githubConfig as { template?: string }).template ?? 'minimal'
+  const theme: Theme = template === 'classic' ? 'light' : 'dark'
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const stored = window.localStorage.getItem('gitforge-theme')
-    if (stored === 'dark' || stored === 'light') {
-      setTheme(stored)
-      document.documentElement.classList.toggle('dark', stored === 'dark')
-      return
-    }
-    const prefersDark = window.matchMedia?.(
-      '(prefers-color-scheme: dark)',
-    ).matches
-    const initial = prefersDark ? 'dark' : 'light'
-    setTheme(initial)
-    document.documentElement.classList.toggle('dark', initial === 'dark')
-  }, [])
-
-  useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
-    window.localStorage.setItem('gitforge-theme', theme)
   }, [theme])
 
   // Apply font family from generated GitHub config
@@ -166,46 +153,10 @@ function App() {
             <Link to="/blogs" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Blogs</Link>
             <Link to="/projects" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Projects</Link>
             <a href={`${import.meta.env.BASE_URL}#stats`} className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Stats</a>
-            <button
-              type="button"
-              onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
-              className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] border-slate-300 bg-white/80 text-slate-800 transition hover:bg-white dark:border-slate-500/60 dark:bg-black/20 dark:text-slate-100 dark:hover:bg-black/40"
-              aria-label="Toggle light and dark mode"
-            >
-              <span aria-hidden="true" className="h-5 w-5">
-                {theme === 'dark' ? (
-                  <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-                    <circle cx="12" cy="12" r="4" className="fill-amber-400" />
-                    <path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" className="stroke-amber-400" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 scale-125">
-                    <path d="M20 12.5A7.5 7.5 0 0 1 11.5 4 6 6 0 1 0 20 12.5Z" className="fill-slate-700" />
-                  </svg>
-                )}
-              </span>
-            </button>
           </nav>
 
-          {/* Mobile controls: theme toggle + hamburger */}
+          {/* Mobile controls: hamburger */}
           <div className="flex items-center gap-2 md:hidden">
-            <button
-              type="button"
-              onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 text-slate-800 transition hover:bg-white dark:border-slate-500/60 dark:bg-black/20 dark:text-slate-100 dark:hover:bg-black/40"
-              aria-label="Toggle light and dark mode"
-            >
-              {theme === 'dark' ? (
-                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
-                  <circle cx="12" cy="12" r="4" className="fill-amber-400" />
-                  <path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" className="stroke-amber-400" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
-                  <path d="M20 12.5A7.5 7.5 0 0 1 11.5 4 6 6 0 1 0 20 12.5Z" className="fill-slate-700" />
-                </svg>
-              )}
-            </button>
             <button
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
