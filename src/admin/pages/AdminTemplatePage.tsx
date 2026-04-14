@@ -166,8 +166,8 @@ export function AdminTemplatePage() {
   return (
     <form onSubmit={handleSave} className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-slate-100">Template</h2>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="text-lg font-semibold text-zinc-100">Template</h1>
+        <p className="mt-1 text-sm text-zinc-400">
           Choose the visual layout for your portfolio. Changes are committed to the repo and trigger a rebuild.
         </p>
       </div>
@@ -180,23 +180,23 @@ export function AdminTemplatePage() {
               key={id}
               type="button"
               onClick={() => updateConfigField('template', id)}
-              className={`relative flex flex-col overflow-hidden rounded-xl border text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+              className={`relative flex flex-col overflow-hidden rounded-xl border text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                 isActive
-                  ? 'border-indigo-500 ring-2 ring-indigo-500/40'
-                  : 'border-slate-700 hover:border-slate-500'
+                  ? 'border-blue-500 ring-2 ring-blue-500/30'
+                  : 'border-zinc-700 hover:border-zinc-500'
               }`}
             >
-              <div className="aspect-[3/2] w-full bg-slate-950">{preview}</div>
-              <div className="p-3">
-                <p className="flex items-center gap-1.5 text-sm font-semibold text-slate-200">
+              <div className="aspect-[3/2] w-full bg-zinc-950">{preview}</div>
+              <div className="bg-zinc-900 p-3">
+                <p className="flex items-center gap-1.5 text-sm font-semibold text-zinc-200">
                   {isActive && (
-                    <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-indigo-500 text-[9px] text-white">
+                    <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[9px] text-white">
                       ✓
                     </span>
                   )}
                   {label}
                 </p>
-                <p className="mt-0.5 text-xs text-slate-500">{description}</p>
+                <p className="mt-0.5 text-xs text-zinc-500">{description}</p>
               </div>
             </button>
           )

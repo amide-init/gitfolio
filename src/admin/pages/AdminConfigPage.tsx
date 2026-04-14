@@ -1,109 +1,61 @@
-import {
-  AdminCustomLinksForm,
-  AdminFeaturedReposForm,
-  AdminFormFooter,
-  AdminHeroForm,
-} from '../../components/admin'
+import { AdminCustomLinksForm, AdminFeaturedReposForm, AdminFormFooter, AdminHeroForm } from '../../components/admin'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card'
 import { useAdminAuthContext } from '../context/AdminAuthContext'
 import { useConfigForm } from '../hooks/useConfigForm'
 
 export function AdminConfigPage() {
-  const {
-    config,
-    setConfig,
-    error,
-    saveSuccess,
-    handleSave,
-    isBusy,
-    viewState,
-  } = useAdminAuthContext()
+  const { config, setConfig, error, saveSuccess, handleSave, isBusy, viewState } = useAdminAuthContext()
+  const { handleFeaturedReposChange, updateHero, updateCustomLink, addCustomLink, removeCustomLink } = useConfigForm(config, setConfig)
 
-  const {
-    updateConfigField,
-    handleFeaturedReposChange,
-    updateHero,
-    updateCustomLink,
-    addCustomLink,
-    removeCustomLink,
-  } = useConfigForm(config, setConfig)
-
-  const showForm =
-    (viewState === 'ready' || viewState === 'saving') && config
-
-  if (!showForm || !config) return null
+  if ((viewState !== 'ready' && viewState !== 'saving') || !config) return null
 
   return (
-    <form
-      className="space-y-8 rounded-xl border border-slate-800 bg-slate-900/40 p-6"
-      onSubmit={handleSave}
-    >
+    <form className="space-y-6" onSubmit={handleSave}>
       <div>
-        <h2 className="text-lg font-semibold text-slate-100">
-          Portfolio Settings
-        </h2>
-        <p className="mt-1 text-sm text-slate-400">
-          Edit hero, featured repos, and custom links. Changes are committed to
-          the repo and trigger a rebuild.
-        </p>
+        <h1 className="text-lg font-semibold text-zinc-100">Portfolio Settings</h1>
+        <p className="mt-1 text-sm text-zinc-400">Edit hero, featured repos, and custom links. Changes commit to the repo and trigger a rebuild.</p>
       </div>
 
-      <AdminHeroForm
-        hero={config.hero}
-        onEyebrowChange={(v) => updateHero('eyebrow', v)}
-        onMinorInfoChange={(v) => updateHero('minorInfo', v)}
-      />
+      <Card className="border-zinc-800 bg-zinc-900">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-sm text-zinc-100">Hero section</CardTitle>
+          <CardDescription className="text-xs text-zinc-500">Controls the eyebrow text and bio shown in the hero.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AdminHeroForm
+            hero={config.hero}
+            onEyebrowChange={(v) => updateHero('eyebrow', v)}
+            onMinorInfoChange={(v) => updateHero('minorInfo', v)}
+          />
+        </CardContent>
+      </Card>
 
-      <section className="space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-        <h3 className="text-sm font-semibold text-slate-200">Typography</h3>
-        <p className="text-xs text-slate-400">
-          Choose the primary font used across the portfolio.
-        </p>
-        <div className="mt-2">
-          <label className="block text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
-            Font family
-          </label>
-          <select
-            className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-emerald-500 focus:outline-none"
-            value={config.fontFamily ?? 'system'}
-            onChange={(e) =>
-              updateConfigField(
-                'fontFamily',
-                e.target.value as
-                  | 'system'
-                  | 'ubuntu'
-                  | 'comic-sans'
-                  | 'inter'
-                  | 'roboto',
-              )
-            }
-          >
-            <option value="system">System default</option>
-            <option value="ubuntu">Ubuntu</option>
-            <option value="comic-sans">Comic Sans</option>
-            <option value="inter">Inter</option>
-            <option value="roboto">Roboto</option>
-          </select>
-        </div>
-      </section>
+      <Card className="border-zinc-800 bg-zinc-900">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-sm text-zinc-100">Featured repositories</CardTitle>
+          <CardDescription className="text-xs text-zinc-500">Pinned repos highlighted at the top of the GitHub section.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AdminFeaturedReposForm value={config.featuredRepos ?? []} onChange={handleFeaturedReposChange} />
+        </CardContent>
+      </Card>
 
-      <AdminFeaturedReposForm
-        value={config.featuredRepos ?? []}
-        onChange={handleFeaturedReposChange}
-      />
+      <Card className="border-zinc-800 bg-zinc-900">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-sm text-zinc-100">Custom links</CardTitle>
+          <CardDescription className="text-xs text-zinc-500">External links shown on your profile page.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AdminCustomLinksForm
+            links={config.customLinks ?? []}
+            onUpdate={updateCustomLink}
+            onAdd={addCustomLink}
+            onRemove={removeCustomLink}
+          />
+        </CardContent>
+      </Card>
 
-      <AdminCustomLinksForm
-        links={config.customLinks ?? []}
-        onUpdate={updateCustomLink}
-        onAdd={addCustomLink}
-        onRemove={removeCustomLink}
-      />
-
-      <AdminFormFooter
-        errorMessage={error?.message ?? null}
-        saveSuccessMessage={saveSuccess}
-        isSaving={viewState === 'saving'}
-        isBusy={isBusy}
-      />
+      <AdminFormFooter errorMessage={error?.message ?? null} saveSuccessMessage={saveSuccess} isSaving={viewState === 'saving'} isBusy={isBusy} />
     </form>
   )
 }
