@@ -1,4 +1,4 @@
-import { githubConfig } from '../generated/githubData'
+import { activeTemplate } from '../lib/activeTemplate'
 import MinimalProjectsPage from '../templates/minimal/ProjectsPage'
 import ClassicProjectsPage from '../templates/classic/ProjectsPage'
 import BentoProjectsPage from '../templates/bento/ProjectsPage'
@@ -7,11 +7,10 @@ import NetflixProjectsPage from '../templates/netflix/ProjectsPage'
 import ThreejsProjectsPage from '../templates/threejs/ProjectsPage'
 
 export default function ProjectsPage() {
-  const template = (githubConfig as { template?: string }).template ?? 'hacker'
-  if (template === 'classic') return <ClassicProjectsPage />
-  if (template === 'bento') return <BentoProjectsPage />
-  if (template === 'hacker') return <HackerProjectsPage />
-  if (template === 'netflix') return <NetflixProjectsPage />
-  if (template === 'threejs') return <ThreejsProjectsPage />
+  if (activeTemplate === 'classic') return <ClassicProjectsPage />
+  if (activeTemplate === 'bento') return <BentoProjectsPage />
+  if (activeTemplate === 'hacker') return <HackerProjectsPage />
+  if (activeTemplate === 'netflix') return <NetflixProjectsPage />
+  if (activeTemplate === 'threejs') return <ThreejsProjectsPage />
   return <MinimalProjectsPage />
 }

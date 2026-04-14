@@ -1,4 +1,4 @@
-import { githubConfig } from '../generated/githubData'
+import { activeTemplate } from '../lib/activeTemplate'
 import MinimalVideosPage from '../templates/minimal/VideosPage'
 import ClassicVideosPage from '../templates/classic/VideosPage'
 import BentoVideosPage from '../templates/bento/VideosPage'
@@ -7,11 +7,10 @@ import NetflixVideosPage from '../templates/netflix/VideosPage'
 import ThreejsVideosPage from '../templates/threejs/VideosPage'
 
 export default function VideosPage() {
-  const template = (githubConfig as { template?: string }).template ?? 'hacker'
-  if (template === 'classic') return <ClassicVideosPage />
-  if (template === 'bento') return <BentoVideosPage />
-  if (template === 'hacker') return <HackerVideosPage />
-  if (template === 'netflix') return <NetflixVideosPage />
-  if (template === 'threejs') return <ThreejsVideosPage />
+  if (activeTemplate === 'classic') return <ClassicVideosPage />
+  if (activeTemplate === 'bento') return <BentoVideosPage />
+  if (activeTemplate === 'hacker') return <HackerVideosPage />
+  if (activeTemplate === 'netflix') return <NetflixVideosPage />
+  if (activeTemplate === 'threejs') return <ThreejsVideosPage />
   return <MinimalVideosPage />
 }
