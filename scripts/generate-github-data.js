@@ -510,6 +510,7 @@ async function main() {
       count: listedRepoCount,
       sort: listedRepoSort,
     },
+    template: fileConfig.template || 'minimal',
     fontFamily: fileConfig.fontFamily || 'system',
     // Section visibility flags for the client (default true when omitted in config)
     showVideosSection: fileConfig.showVideosSection !== false,
