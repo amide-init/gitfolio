@@ -17,7 +17,7 @@ function App() {
   const { hero, footer } = sc
 
   // Theme is derived from the template setting — no user toggle needed.
-  const template = (githubConfig as { template?: string }).template ?? 'minimal'
+  const template = (githubConfig as { template?: string }).template ?? 'hacker'
   const theme: Theme = template === 'classic' ? 'light' : 'dark'
   // hacker template overrides the shared nav/footer to terminal green
   const isHacker = template === 'hacker'

@@ -5,7 +5,7 @@ import BentoVideosPage from '../templates/bento/VideosPage'
 import HackerVideosPage from '../templates/hacker/VideosPage'
 
 export default function VideosPage() {
-  const template = (githubConfig as { template?: string }).template ?? 'minimal'
+  const template = (githubConfig as { template?: string }).template ?? 'hacker'
   if (template === 'classic') return <ClassicVideosPage />
   if (template === 'bento') return <BentoVideosPage />
   if (template === 'hacker') return <HackerVideosPage />

@@ -31,7 +31,7 @@ export interface GitforgeConfig {
   githubToken?: string | null
   featuredRepos?: string[]
   listedRepo?: ListedRepoConfig
-  /** Active portfolio template (optional, defaults to "minimal"). */
+  /** Active portfolio template (optional, defaults to "hacker"). */
   template?: 'minimal' | 'classic' | 'bento' | 'hacker'
   /** Global font family for the site (optional, defaults to system). */
   fontFamily?: 'system' | 'ubuntu' | 'comic-sans' | 'inter' | 'roboto'

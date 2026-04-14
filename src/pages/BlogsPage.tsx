@@ -5,7 +5,7 @@ import BentoBlogsPage from '../templates/bento/BlogsPage'
 import HackerBlogsPage from '../templates/hacker/BlogsPage'
 
 export default function BlogsPage() {
-  const template = (githubConfig as { template?: string }).template ?? 'minimal'
+  const template = (githubConfig as { template?: string }).template ?? 'hacker'
   if (template === 'classic') return <ClassicBlogsPage />
   if (template === 'bento') return <BentoBlogsPage />
   if (template === 'hacker') return <HackerBlogsPage />

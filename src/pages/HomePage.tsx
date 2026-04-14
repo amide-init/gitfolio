@@ -5,7 +5,7 @@ import BentoHomePage from '../templates/bento/HomePage'
 import HackerHomePage from '../templates/hacker/HomePage'
 
 export default function HomePage() {
-  const template = (githubConfig as { template?: string }).template ?? 'minimal'
+  const template = (githubConfig as { template?: string }).template ?? 'hacker'
   if (template === 'classic') return <ClassicHomePage />
   if (template === 'bento') return <BentoHomePage />
   if (template === 'hacker') return <HackerHomePage />
