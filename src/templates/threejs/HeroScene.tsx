@@ -192,9 +192,25 @@ export default function HeroScene() {
       cancelAnimationFrame(frameId)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('resize', handleResize)
+
+      // Dispose all geometries and materials to prevent WebGL memory leaks
+      starGeo.dispose()
+      starMat.dispose()
+      scene.traverse((obj) => {
+        const mesh = obj as THREE.Mesh
+        if (mesh.geometry) mesh.geometry.dispose()
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach((m) => m.dispose())
+        } else if (mesh.material) {
+          ;(mesh.material as THREE.Material).dispose()
+        }
+      })
+
       renderer.dispose()
-      if (mount.contains(renderer.domElement)) {
+      try {
         mount.removeChild(renderer.domElement)
+      } catch {
+        // element may have already been removed from DOM
       }
     }
   }, [])
