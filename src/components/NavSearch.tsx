@@ -1,29 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Search, X, Star, Loader2, ExternalLink, MapPin, GitFork } from 'lucide-react'
+import { Search, X, Star, Loader2, ExternalLink, MapPin, GitFork, Eye } from 'lucide-react'
+import { PortfolioPreviewModal } from './PortfolioPreviewModal'
+import type { PreviewUser, PreviewRepo } from './PortfolioPreviewModal'
 
 // ── GitHub API types ──────────────────────────────────────────────────────────
 
-type GHUser = {
-  login: string
-  name: string | null
-  avatar_url: string
-  bio: string | null
-  html_url: string
-  public_repos: number
-  followers: number
-  following: number
-  location: string | null
-}
+type GHUser = PreviewUser
 
-type GHRepo = {
-  id: number
-  name: string
-  html_url: string
-  description: string | null
-  stargazers_count: number
-  language: string | null
-  fork: boolean
-}
+type GHRepo = PreviewRepo
 
 type SearchState =
   | { status: 'idle' }
@@ -64,6 +48,7 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [state, setState] = useState<SearchState>({ status: 'idle' })
+  const [previewOpen, setPreviewOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -93,6 +78,7 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
     setOpen(false)
     setQuery('')
     setState({ status: 'idle' })
+    setPreviewOpen(false)
   }
 
   const search = useCallback(async (username: string) => {
@@ -111,7 +97,7 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
       const repos = allRepos
         .filter((r) => !r.fork)
         .sort((a, b) => b.stargazers_count - a.stargazers_count)
-        .slice(0, 4)
+        .slice(0, 6)
       setState({ status: 'done', user, repos })
     } catch (err) {
       setState({ status: 'error', message: err instanceof Error ? err.message : 'Search failed' })
@@ -286,17 +272,41 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
               )}
 
               {/* CTA footer */}
-              <div className={`flex gap-2 border-t p-3 ${dividerCls}`}>
-                <a href={state.user.html_url} target="_blank" rel="noreferrer" className={viewBtnCls}>
-                  <ExternalLink className="h-3 w-3" /> View GitHub
-                </a>
-                <a href={FORK_URL} target="_blank" rel="noreferrer" className={forkBtnCls}>
-                  <GitFork className="h-3 w-3" /> Fork this template
-                </a>
+              <div className={`border-t p-3 space-y-2 ${dividerCls}`}>
+                {/* Preview CTA — full width, prominent */}
+                <button
+                  type="button"
+                  onClick={() => setPreviewOpen(true)}
+                  className={`w-full flex items-center justify-center gap-1.5 rounded-md py-2 text-xs font-semibold transition ${
+                    isThreejs
+                      ? 'bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600/30'
+                      : 'bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 dark:bg-blue-600/20 dark:border-blue-500/40 dark:text-blue-300 dark:hover:bg-blue-600/30'
+                  }`}
+                >
+                  <Eye className="h-3.5 w-3.5" /> Preview portfolio
+                </button>
+                {/* Secondary row */}
+                <div className="flex gap-2">
+                  <a href={state.user.html_url} target="_blank" rel="noreferrer" className={viewBtnCls}>
+                    <ExternalLink className="h-3 w-3" /> View GitHub
+                  </a>
+                  <a href={FORK_URL} target="_blank" rel="noreferrer" className={forkBtnCls}>
+                    <GitFork className="h-3 w-3" /> Fork template
+                  </a>
+                </div>
               </div>
             </>
           )}
         </div>
+      )}
+
+      {/* Full-screen portfolio preview modal */}
+      {previewOpen && state.status === 'done' && (
+        <PortfolioPreviewModal
+          user={state.user}
+          repos={state.repos}
+          onClose={() => setPreviewOpen(false)}
+        />
       )}
     </div>
   )
