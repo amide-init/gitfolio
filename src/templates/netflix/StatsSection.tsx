@@ -33,7 +33,13 @@ export default function StatsSection({ stats }: { stats: Stats | null }) {
   const { metrics, languageDistribution, activityByYear, commitActivityByYear, topReposByStars } = stats
 
   const metricTiles = [
-    { label: metrics.publicRepos !== undefined && metrics.publicRepos < metrics.totalRepos ? `Repos (${metrics.publicRepos} public)` : 'Repositories', value: metrics.totalRepos },
+    {
+      label: (() => {
+        const hasPublic = metrics.publicRepos !== undefined && metrics.publicRepos < metrics.totalRepos
+        return hasPublic ? `Repos (${metrics.publicRepos} public)` : 'Repositories'
+      })(),
+      value: metrics.totalRepos,
+    },
     { label: 'Total Stars', value: metrics.totalStars.toLocaleString() },
     { label: 'Languages', value: metrics.languagesUsed },
     { label: 'Followers', value: metrics.followers },

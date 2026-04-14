@@ -8,7 +8,7 @@ function parseYouTubeId(url: string): string | null {
       return u.searchParams.get('v')
     if (u.hostname === 'youtu.be')
       return u.pathname.slice(1).split('/')[0] || null
-  } catch { /* ignore */ }
+  } catch { /* ignore — invalid or unsupported URLs are expected; fallback to null */ }
   return null
 }
 
