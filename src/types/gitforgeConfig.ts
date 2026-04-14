@@ -32,7 +32,7 @@ export interface GitforgeConfig {
   featuredRepos?: string[]
   listedRepo?: ListedRepoConfig
   /** Active portfolio template (optional, defaults to "hacker"). */
-  template?: 'minimal' | 'classic' | 'bento' | 'hacker' | 'netflix'
+  template?: 'minimal' | 'classic' | 'bento' | 'hacker' | 'netflix' | 'threejs'
   /** Global font family for the site (optional, defaults to system). */
   fontFamily?: 'system' | 'ubuntu' | 'comic-sans' | 'inter' | 'roboto'
   hero?: HeroConfig
