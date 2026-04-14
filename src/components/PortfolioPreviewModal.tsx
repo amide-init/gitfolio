@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Star, MapPin, Globe, ExternalLink, GitFork, Users, BookOpen } from 'lucide-react'
 
 // Twitter/X brand icon (lucide-react does not ship it)
@@ -164,7 +165,7 @@ export function PortfolioPreviewModal({ user, repos, onClose }: Props) {
     ? user.blog.startsWith('http') ? user.blog : `https://${user.blog}`
     : null
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[200] flex flex-col bg-black/70 backdrop-blur-sm"
       role="dialog"
@@ -366,6 +367,7 @@ export function PortfolioPreviewModal({ user, repos, onClose }: Props) {
         </section>
 
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
