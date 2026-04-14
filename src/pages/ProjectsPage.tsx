@@ -5,7 +5,7 @@ import BentoProjectsPage from '../templates/bento/ProjectsPage'
 import HackerProjectsPage from '../templates/hacker/ProjectsPage'
 
 export default function ProjectsPage() {
-  const template = (githubConfig as { template?: string }).template ?? 'minimal'
+  const template = (githubConfig as { template?: string }).template ?? 'hacker'
   if (template === 'classic') return <ClassicProjectsPage />
   if (template === 'bento') return <BentoProjectsPage />
   if (template === 'hacker') return <HackerProjectsPage />
