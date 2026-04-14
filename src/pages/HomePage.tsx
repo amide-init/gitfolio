@@ -1,49 +1,10 @@
-import { useOutletContext } from 'react-router-dom'
-import siteContent from '../siteContent.json'
 import { githubConfig } from '../generated/githubData'
-import type { LayoutContext } from '../App'
-import HeroSection from '../components/HeroSection'
-import PhilosophySection from '../components/PhilosophySection'
-import VideosSection from '../components/VideosSection'
-import BlogsSection from '../components/BlogsSection'
-import CustomProjectsSection from '../components/CustomProjectsSection'
-import GitHubSection from '../components/GitHubSection'
-import StatsSection from '../components/StatsSection'
-
-const stats = (siteContent as { stats?: unknown }).stats as {
-  metrics: { totalRepos: number; totalStars: number; totalForks: number; totalOpenIssues: number; languagesUsed: number; followers: number; following: number }
-  languageDistribution: Array<{ language: string; count: number; percentage: number }>
-  activityByYear: Array<{ year: number; repos: number }>
-  topReposByStars: Array<{ name: string; stars: number; language: string }>
-} | null | undefined
+import MinimalHomePage from '../templates/minimal/HomePage'
 
 export default function HomePage() {
-  const { theme } = useOutletContext<LayoutContext>()
-  const { hero, snapshot, philosophy, projects } = siteContent as any
-
-  const sectionsConfig = githubConfig as {
-    showVideosSection?: boolean
-    showBlogsSection?: boolean
-    showProjectsSection?: boolean
-  }
-
-  const showVideos = sectionsConfig.showVideosSection !== false
-  const showBlogs = sectionsConfig.showBlogsSection !== false
-  const showProjects = sectionsConfig.showProjectsSection !== false
-
-  return (
-    <>
-      <HeroSection hero={hero} snapshot={snapshot} theme={theme} />
-      <PhilosophySection philosophy={philosophy} />
-      {showVideos && <VideosSection />}
-      {showBlogs && <BlogsSection />}
-      {showProjects && <CustomProjectsSection />}
-      <GitHubSection
-        title={projects?.title ?? 'GitHub'}
-        body={projects?.body ?? 'Repositories from this GitHub profile.'}
-        repos={projects?.repos ?? []}
-      />
-      <StatsSection stats={stats ?? null} />
-    </>
-  )
+  const template = (githubConfig as { template?: string }).template ?? 'minimal'
+  // 'classic' and 'bento' templates will be added in future issues
+  if (template === 'classic') return <MinimalHomePage />
+  if (template === 'bento') return <MinimalHomePage />
+  return <MinimalHomePage />
 }
