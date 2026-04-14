@@ -63,6 +63,33 @@ const TEMPLATES = [
       </svg>
     ),
   },
+  {
+    id: 'hacker' as const,
+    label: 'Hacker',
+    description: 'Terminal, green-on-black, ASCII',
+    preview: (
+      <svg viewBox="0 0 120 80" className="h-full w-full" aria-hidden="true">
+        <rect width="120" height="80" fill="#000000" />
+        <rect x="0" y="0" width="120" height="10" fill="#020d02" />
+        <circle cx="8" cy="5" r="2" fill="#ff5f56" opacity="0.7" />
+        <circle cx="15" cy="5" r="2" fill="#ffbd2e" opacity="0.7" />
+        <circle cx="22" cy="5" r="2" fill="#27c93f" opacity="0.7" />
+        <rect x="8" y="16" width="6" height="2" rx="0.5" fill="#004400" />
+        <rect x="16" y="16" width="40" height="2" rx="0.5" fill="#00aa44" opacity="0.8" />
+        <rect x="8" y="22" width="60" height="2" rx="0.5" fill="#006600" opacity="0.5" />
+        <rect x="8" y="30" width="6" height="2" rx="0.5" fill="#004400" />
+        <rect x="16" y="30" width="30" height="2" rx="0.5" fill="#00aa44" opacity="0.8" />
+        <rect x="8" y="38" width="4" height="2" rx="0" fill="#002200" />
+        <rect x="14" y="38" width="42" height="2" rx="0" fill="#00ff41" opacity="0.5" />
+        <rect x="8" y="43" width="4" height="2" rx="0" fill="#002200" />
+        <rect x="14" y="43" width="26" height="2" rx="0" fill="#00cc33" opacity="0.5" />
+        <rect x="8" y="48" width="4" height="2" rx="0" fill="#002200" />
+        <rect x="14" y="48" width="56" height="2" rx="0" fill="#00ff41" opacity="0.4" />
+        <rect x="8" y="60" width="6" height="2" rx="0.5" fill="#004400" />
+        <rect x="16" y="58" width="4" height="8" rx="0" fill="#00ff41" opacity="0.9" />
+      </svg>
+    ),
+  },
 ]
 
 export function AdminConfigPage() {
@@ -110,7 +137,7 @@ export function AdminConfigPage() {
         <p className="text-xs text-slate-400">
           Choose the visual layout for your portfolio. Affects all public pages.
         </p>
-        <div className="mt-2 grid grid-cols-3 gap-3">
+        <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {TEMPLATES.map(({ id, label, description, preview }) => {
             const isActive = (config.template ?? 'minimal') === id
             return (
