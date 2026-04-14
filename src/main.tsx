@@ -14,6 +14,7 @@ import { AdminConfigPage } from './admin/pages/AdminConfigPage'
 import { AdminProjectsPage } from './admin/pages/AdminProjectsPage'
 import { AdminVideosPage } from './admin/pages/AdminVideosPage'
 import { AdminSettingsPage } from './admin/pages/AdminSettingsPage'
+import { AdminTemplatePage } from './admin/pages/AdminTemplatePage'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -32,6 +33,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="projects" element={<AdminProjectsPage />} />
           <Route path="blogs" element={<AdminBlogsPage />} />
           <Route path="videos" element={<AdminVideosPage />} />
+          <Route path="template" element={<AdminTemplatePage />} />
           <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
       </Routes>
