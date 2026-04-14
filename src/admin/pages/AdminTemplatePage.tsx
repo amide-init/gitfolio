@@ -85,6 +85,44 @@ const TEMPLATES = [
       </svg>
     ),
   },
+  {
+    id: 'netflix' as const,
+    label: 'Netflix',
+    description: 'Cinematic, red-on-black, horizontal rows',
+    preview: (
+      <svg viewBox="0 0 120 80" className="h-full w-full" aria-hidden="true">
+        <rect width="120" height="80" fill="#141414" />
+        {/* top nav bar */}
+        <rect x="0" y="0" width="120" height="10" fill="#141414" />
+        <rect x="8" y="3" width="12" height="5" rx="1" fill="#e50914" />
+        <rect x="30" y="4" width="10" height="2" rx="0.5" fill="#e5e5e5" opacity="0.6" />
+        <rect x="44" y="4" width="10" height="2" rx="0.5" fill="#e5e5e5" opacity="0.4" />
+        <rect x="58" y="4" width="10" height="2" rx="0.5" fill="#e5e5e5" opacity="0.4" />
+        {/* Hero area */}
+        <rect x="0" y="10" width="120" height="30" fill="#1a0000" />
+        <rect x="0" y="10" width="120" height="30" fill="url(#nf-grad)" />
+        <defs>
+          <linearGradient id="nf-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#000000" stopOpacity="0.9" />
+            <stop offset="60%" stopColor="#000000" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <rect x="8" y="15" width="30" height="5" rx="0.5" fill="#ffffff" opacity="0.9" />
+        <rect x="8" y="23" width="50" height="2" rx="0.5" fill="#d2d2d2" opacity="0.5" />
+        <rect x="8" y="33" width="18" height="5" rx="0.5" fill="#e50914" />
+        <rect x="30" y="33" width="18" height="5" rx="0.5" fill="#ffffff" opacity="0.2" />
+        {/* Row 1 */}
+        <rect x="8" y="46" width="20" height="2" rx="0.5" fill="#ffffff" opacity="0.7" />
+        <rect x="8" y="52" width="24" height="12" rx="1" fill="#1f1f1f" />
+        <rect x="35" y="52" width="24" height="12" rx="1" fill="#1f1f1f" />
+        <rect x="62" y="52" width="24" height="12" rx="1" fill="#1f1f1f" />
+        <rect x="89" y="52" width="24" height="12" rx="1" fill="#1f1f1f" />
+        <rect x="8" y="52" width="3" height="12" rx="0" fill="#e50914" opacity="0.6" />
+        <rect x="35" y="52" width="3" height="12" rx="0" fill="#e50914" opacity="0.4" />
+      </svg>
+    ),
+  },
 ]
 
 export function AdminTemplatePage() {
@@ -103,7 +141,7 @@ export function AdminTemplatePage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {TEMPLATES.map(({ id, label, description, preview }) => {
           const isActive = (config.template ?? 'hacker') === id
           return (
