@@ -3,6 +3,18 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import siteContent from './siteContent.json'
 import { githubConfig } from './generated/githubData'
 import { activeTemplate } from './lib/activeTemplate'
+import { NavSearch } from './components/NavSearch'
+
+const FORK_URL = 'https://github.com/amide-init/gitfolio/fork'
+
+// Fork SVG icon (GitHub fork icon)
+function ForkIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" className={className ?? 'h-3 w-3 fill-current'} aria-hidden="true">
+      <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z" />
+    </svg>
+  )
+}
 
 type Theme = 'dark' | 'light'
 
@@ -26,6 +38,8 @@ function App() {
   const isNetflix = template === 'netflix'
   // threejs template gets sci-fi HUD navbar
   const isThreejs = template === 'threejs'
+
+  const showSearch = (githubConfig as { showSearch?: boolean }).showSearch !== false
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const scanRef = useRef<HTMLCanvasElement>(null)
@@ -242,13 +256,29 @@ function App() {
                 </a>
               </nav>
 
-              {/* Mobile hamburger */}
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen((prev) => !prev)}
-                className="md:hidden flex h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:text-slate-100 hover:bg-white/5 transition"
-                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              >
+              {/* Right-side controls: search + claim + hamburger */}
+              <div className="flex items-center gap-2">
+                {/* Search */}
+                {showSearch && <NavSearch variant="threejs" />}
+
+                {/* Claim / Fork CTA */}
+                <a
+                  href={FORK_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 text-[11px] font-semibold text-indigo-300 transition hover:bg-indigo-500/20 hover:border-indigo-400/50"
+                >
+                  <ForkIcon className="h-3 w-3 fill-current" />
+                  Fork &amp; deploy
+                </a>
+
+                {/* Mobile hamburger */}
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen((prev) => !prev)}
+                  className="md:hidden flex h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:text-slate-100 hover:bg-white/5 transition"
+                  aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                >
                 {mobileMenuOpen ? (
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -258,8 +288,9 @@ function App() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 )}
-              </button>
-            </div>
+                </button>
+              </div>{/* end right-side controls */}
+            </div>{/* end header inner */}
 
             {/* Animated scan-line bottom border */}
             <canvas ref={scanRef} width={1200} height={1} className="w-full block" aria-hidden="true" style={{ height: 1 }} />
@@ -291,6 +322,23 @@ function App() {
                   >
                     Stats
                   </a>
+                  {/* Mobile: Fork CTA */}
+                  <a
+                    href={FORK_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="border-t border-blue-900/20 py-2.5 flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                  >
+                    <ForkIcon className="h-3.5 w-3.5 fill-current" />
+                    Fork &amp; deploy your own
+                  </a>
+                  {/* Mobile: Search */}
+                  {showSearch && (
+                    <div className="border-t border-blue-900/20 py-2.5">
+                      <NavSearch variant="threejs" />
+                    </div>
+                  )}
                 </div>
               </nav>
             )}
@@ -348,6 +396,26 @@ function App() {
                 </nav>
               )}
 
+              {/* Desktop: search + claim (hidden on mobile) */}
+              <div className="hidden md:flex items-center gap-2">
+                {showSearch && <NavSearch variant="default" />}
+                <a
+                  href={FORK_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-semibold transition ${
+                    isHacker
+                      ? 'border-green-900 bg-green-950/40 text-green-600 hover:bg-green-900/30'
+                      : isNetflix
+                        ? 'border-white/10 bg-white/5 text-[#e5e5e5] hover:bg-white/10'
+                        : 'border-indigo-300/60 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-300 dark:hover:bg-indigo-500/20'
+                  }`}
+                >
+                  <ForkIcon className="h-3 w-3 fill-current" />
+                  Fork &amp; deploy
+                </a>
+              </div>
+
               {/* Mobile controls: hamburger */}
               <div className="flex items-center gap-2 md:hidden">
                 <button
@@ -381,6 +449,23 @@ function App() {
                   <Link to="/blogs" onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>Blogs</Link>
                   <Link to="/projects" onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>Projects</Link>
                   <a href={`${import.meta.env.BASE_URL}#stats`} onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>{isHacker ? '~/stats' : 'Stats'}</a>
+                  {/* Mobile: Fork CTA */}
+                  <a
+                    href={FORK_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`border-t py-2.5 flex items-center gap-2 transition-colors ${isHacker ? 'border-green-900/40 text-green-600 hover:text-green-400' : isNetflix ? 'border-white/5 text-[#e5e5e5] hover:text-white' : 'border-slate-200/60 text-indigo-500 hover:text-indigo-700 dark:border-white/5 dark:text-indigo-400 dark:hover:text-indigo-300'}`}
+                  >
+                    <ForkIcon className="h-3.5 w-3.5 fill-current" />
+                    Fork &amp; deploy your own
+                  </a>
+                  {/* Mobile: Search */}
+                  {showSearch && (
+                    <div className="border-t py-2.5 dark:border-white/5 border-slate-200/60">
+                      <NavSearch variant="default" />
+                    </div>
+                  )}
                 </div>
               </nav>
             )}
