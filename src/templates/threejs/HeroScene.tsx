@@ -1,7 +1,15 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 const GLOBE_R = 2.2
+// Milliseconds of inactivity after drag before auto-rotation resumes
+const AUTO_ROTATE_RESUME_DELAY = 2500
+// Maximum vertical tilt (radians) to prevent the globe from flipping upside-down
+const MAX_TILT = Math.PI * 0.45
+// Approximate degree threshold below which an arc target is considered "too close"
+// to the developer's pin and is skipped (≈8° lat / 12° lng ≈ ~800-1200 km proximity)
+const ARC_SKIP_LAT_DEG = 8
+const ARC_SKIP_LNG_DEG = 12
 
 // Convert geographic coordinates to a 3D point on a sphere
 function latLngToVec3(lat: number, lng: number, r: number): THREE.Vector3 {
@@ -141,12 +149,14 @@ const LOCATION_LOOKUP: Record<string, [number, number]> = {
   'romania': [45.94, 24.97],
 }
 
+// Pre-sorted descending by key length so longer names match before shorter substrings
+// (e.g. "new york" matches before "york")
+const SORTED_LOCATION_ENTRIES = Object.entries(LOCATION_LOOKUP).sort((a, b) => b[0].length - a[0].length)
+
 function parseLocationCoords(location: string | null | undefined): [number, number] {
   if (!location) return [37.09, -95.71]
   const lower = location.toLowerCase()
-  // Longest match first to avoid partial hits (e.g. "new york" before "york")
-  const sorted = Object.entries(LOCATION_LOOKUP).sort((a, b) => b[0].length - a[0].length)
-  for (const [key, coords] of sorted) {
+  for (const [key, coords] of SORTED_LOCATION_ENTRIES) {
     if (lower.includes(key)) return coords
   }
   return [37.09, -95.71]
@@ -158,6 +168,7 @@ interface HeroSceneProps {
 
 export default function HeroScene({ location }: HeroSceneProps) {
   const mountRef = useRef<HTMLDivElement>(null)
+  const [grabbing, setGrabbing] = useState(false)
 
   useEffect(() => {
     const mount = mountRef.current
@@ -400,8 +411,8 @@ export default function HeroScene({ location }: HeroSceneProps) {
       [37.57, 127.00],   // Seoul
     ]
     ARC_TARGETS.forEach(([lat2, lng2]) => {
-      // Skip arc if target is too close to pin
-      if (Math.abs(lat2 - pinLat) < 8 && Math.abs(lng2 - pinLng) < 12) return
+      // Skip arc if target is too close to the developer's pin
+      if (Math.abs(lat2 - pinLat) < ARC_SKIP_LAT_DEG && Math.abs(lng2 - pinLng) < ARC_SKIP_LNG_DEG) return
       const start = latLngToVec3(pinLat, pinLng, GLOBE_R + 0.04)
       const end = latLngToVec3(lat2, lng2, GLOBE_R + 0.04)
       const mid = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(GLOBE_R + 1.1)
@@ -439,6 +450,7 @@ export default function HeroScene({ location }: HeroSceneProps) {
       prevY = y
       velX = 0
       velY = 0
+      setGrabbing(true)
     }
     const moveDrag = (x: number, y: number) => {
       if (!isDragging) return
@@ -451,7 +463,8 @@ export default function HeroScene({ location }: HeroSceneProps) {
     }
     const endDrag = () => {
       isDragging = false
-      setTimeout(() => { autoRotate = true }, 2500)
+      setGrabbing(false)
+      setTimeout(() => { autoRotate = true }, AUTO_ROTATE_RESUME_DELAY)
     }
 
     const onMouseDown = (e: MouseEvent) => startDrag(e.clientX, e.clientY)
@@ -496,7 +509,7 @@ export default function HeroScene({ location }: HeroSceneProps) {
         velY *= 0.94
       }
       // Clamp vertical rotation to avoid flipping
-      globeGroup.rotation.x = Math.max(-Math.PI * 0.45, Math.min(Math.PI * 0.45, globeGroup.rotation.x))
+      globeGroup.rotation.x = Math.max(-MAX_TILT, Math.min(MAX_TILT, globeGroup.rotation.x))
 
       // Pulse rings – expand outward and fade
       pulseRings.forEach(({ mesh, mat, phase }) => {
@@ -550,5 +563,5 @@ export default function HeroScene({ location }: HeroSceneProps) {
     }
   }, [location])
 
-  return <div ref={mountRef} className="absolute inset-0 w-full h-full" style={{ cursor: 'grab' }} />
+  return <div ref={mountRef} className="absolute inset-0 w-full h-full" style={{ cursor: grabbing ? 'grabbing' : 'grab' }} />
 }
