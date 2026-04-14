@@ -59,7 +59,7 @@ type ShapeKey = keyof typeof SHAPES
 export const SHAPE_KEYS: ShapeKey[] = ['cube', 'octahedron', 'tetrahedron', 'diamond', 'prism', 'star']
 
 // Rotate a point around X then Y axis
-function rotate(v: number[], rx: number, ry: number): [number, number, number] {
+function rotate(v: readonly number[], rx: number, ry: number): [number, number, number] {
   let [x, y, z] = v
   // Rotate Y
   const x1 = x * Math.cos(ry) - z * Math.sin(ry)
@@ -108,7 +108,7 @@ export default function CardShape({ index, color, size = 80, isHovered = false }
     let ry = 0
     let frameId: number
 
-    const draw = (ts: number) => {
+    const draw = () => {
       frameId = requestAnimationFrame(draw)
       const speed = isHovRef.current ? 0.022 : 0.007
 
