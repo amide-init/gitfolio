@@ -37,5 +37,6 @@
     "showEmail": true,
     "showWebsite": true,
     "showTwitter": true
-  }
+  },
+  "template": "bento"
 }
