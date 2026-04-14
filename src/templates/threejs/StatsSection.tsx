@@ -1,15 +1,10 @@
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts'
+import { lazy, Suspense } from 'react'
+import type { BarDatum } from './ThreeBarChart'
+import { PIE_COLORS } from './ThreePieChart'
+
+const ParticleField = lazy(() => import('./ParticleField'))
+const ThreeBarChart = lazy(() => import('./ThreeBarChart'))
+const ThreePieChart = lazy(() => import('./ThreePieChart'))
 
 type LanguageData = { language: string; count: number; percentage: number }
 type ActivityData = { year: number; repos: number }
@@ -33,22 +28,16 @@ type Stats = {
   topReposByStars: RepoStarsData[]
 }
 
-const CHART_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316', '#ec4899']
-
-const TOOLTIP_STYLE = {
-  backgroundColor: 'rgba(5,5,15,0.95)',
-  border: '1px solid rgba(59,130,246,0.3)',
-  borderRadius: '8px',
-  color: '#e2e8f0',
-  fontSize: '12px',
-}
 
 const metricCards = (m: Stats['metrics']) => [
   {
-    label: m.publicRepos !== undefined && m.publicRepos < m.totalRepos
-      ? `Total Repos (${m.publicRepos} public)`
-      : 'Repositories',
+    label:
+      m.publicRepos !== undefined && m.publicRepos < m.totalRepos
+        ? `Total Repos (${m.publicRepos} public)`
+        : 'Repositories',
     value: m.totalRepos,
+    color: 'text-blue-400',
+    glow: 'shadow-blue-500/20',
     icon: (
       <svg className="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
@@ -58,6 +47,8 @@ const metricCards = (m: Stats['metrics']) => [
   {
     label: 'Total Stars',
     value: m.totalStars.toLocaleString(),
+    color: 'text-amber-400',
+    glow: 'shadow-amber-500/20',
     icon: (
       <svg className="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -67,6 +58,8 @@ const metricCards = (m: Stats['metrics']) => [
   {
     label: 'Languages',
     value: m.languagesUsed,
+    color: 'text-cyan-400',
+    glow: 'shadow-cyan-500/20',
     icon: (
       <svg className="h-5 w-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -76,6 +69,8 @@ const metricCards = (m: Stats['metrics']) => [
   {
     label: 'Followers',
     value: m.followers,
+    color: 'text-emerald-400',
+    glow: 'shadow-emerald-500/20',
     icon: (
       <svg className="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -88,13 +83,38 @@ export default function StatsSection({ stats }: { stats: Stats | null }) {
   if (!stats) return null
   const { metrics, languageDistribution, activityByYear, commitActivityByYear, topReposByStars } = stats
 
+  const pieData = languageDistribution.map((d) => ({
+    label: d.language,
+    value: d.count,
+    percentage: d.percentage,
+  }))
+
+  const repoActivityData: BarDatum[] = activityByYear.map((d) => ({
+    label: String(d.year),
+    value: d.repos,
+  }))
+
+  const commitActivityData: BarDatum[] = (commitActivityByYear ?? []).map((d) => ({
+    label: String(d.year),
+    value: d.commits,
+  }))
+
+  const topReposData: BarDatum[] = topReposByStars.map((d) => ({
+    label: d.name,
+    value: d.stars,
+  }))
+
   return (
     <section
       id="stats"
-      className="border-t border-blue-900/30 bg-[#050509] py-16"
+      className="relative overflow-hidden border-t border-blue-900/30 bg-[#050509] py-16"
       aria-labelledby="stats-title"
     >
-      <div className="mx-auto max-w-5xl px-6">
+      <Suspense fallback={null}>
+        <ParticleField count={45} color={0x3b82f6} opacity={0.25} />
+      </Suspense>
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6">
         <header className="mb-10">
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-blue-400">
             Developer Statistics
@@ -106,79 +126,62 @@ export default function StatsSection({ stats }: { stats: Stats | null }) {
 
         {/* Metric cards */}
         <div className="mb-12 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {metricCards(metrics).map(({ label, value, icon }) => (
+          {metricCards(metrics).map(({ label, value, color, glow, icon }) => (
             <div
               key={label}
-              className="rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] p-4 text-center"
+              className={`group rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220]/90 to-[#080c18]/90 p-4 text-center backdrop-blur-sm transition hover:border-blue-500/50 hover:shadow-lg hover:${glow}`}
             >
               <div className="mb-2 flex justify-center">{icon}</div>
-              <div className="text-2xl font-bold text-slate-100">{value}</div>
+              <div className={`text-2xl font-bold ${color}`}>{value}</div>
               <div className="mt-1 text-[11px] text-slate-400">{label}</div>
             </div>
           ))}
         </div>
 
-        {/* Charts */}
+        {/* Charts grid */}
         <div className="grid gap-6 md:grid-cols-2">
-          {languageDistribution.length > 0 && (
-            <div className="rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] p-6">
-              <h3 className="mb-4 text-sm font-semibold text-slate-100">Language Distribution</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <PieChart>
-                  <Pie data={languageDistribution} dataKey="count" nameKey="language" cx="50%" cy="50%" outerRadius={80} label={({ language, percentage }: LanguageData) => `${language} (${percentage}%)`}>
-                    {languageDistribution.map((_entry, i) => (
-                      <Cell key={`cell-${i}`} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={TOOLTIP_STYLE} />
-                </PieChart>
-              </ResponsiveContainer>
+          {/* Language distribution — Three.js 3D pie */}
+          {pieData.length > 0 && (
+            <div className="rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220]/90 to-[#080c18]/90 p-6 backdrop-blur-sm">
+              <h3 className="mb-1 text-sm font-semibold text-slate-100">Language Distribution</h3>
+              <p className="mb-4 text-[11px] text-slate-500">Repos by primary language — hover slices for details</p>
+              <Suspense fallback={<div className="h-[260px] animate-pulse rounded-lg bg-blue-900/10" />}>
+                <ThreePieChart data={pieData} colors={PIE_COLORS} height={260} />
+              </Suspense>
             </div>
           )}
 
-          {activityByYear.length > 0 && (
-            <div className="rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] p-6">
-              <h3 className="mb-4 text-sm font-semibold text-slate-100">Repository Activity</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={activityByYear}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" opacity={0.4} />
-                  <XAxis dataKey="year" stroke="#475569" style={{ fontSize: '12px' }} />
-                  <YAxis stroke="#475569" style={{ fontSize: '12px' }} />
-                  <Tooltip contentStyle={TOOLTIP_STYLE} />
-                  <Bar dataKey="repos" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+          {/* Repository Activity — Three.js 3D bars */}
+          {repoActivityData.length > 0 && (
+            <div className="rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220]/90 to-[#080c18]/90 p-6 backdrop-blur-sm">
+              <h3 className="mb-1 text-sm font-semibold text-slate-100">Repository Activity</h3>
+              <p className="mb-4 text-[11px] text-slate-500">New repos created per year — hover bars for details</p>
+              <Suspense fallback={<div className="h-[260px] animate-pulse rounded-lg bg-blue-900/10" />}>
+                <ThreeBarChart data={repoActivityData} barColor={0x3b82f6} accentColor={0x06b6d4} height={260} />
+              </Suspense>
             </div>
           )}
 
-          {commitActivityByYear && commitActivityByYear.length > 0 && (
-            <div className="rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] p-6">
-              <h3 className="mb-4 text-sm font-semibold text-slate-100">Commit Activity</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={commitActivityByYear}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" opacity={0.4} />
-                  <XAxis dataKey="year" stroke="#475569" style={{ fontSize: '12px' }} />
-                  <YAxis stroke="#475569" style={{ fontSize: '12px' }} />
-                  <Tooltip contentStyle={TOOLTIP_STYLE} />
-                  <Bar dataKey="commits" fill="#10b981" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+          {/* Commit Activity — Three.js 3D bars */}
+          {commitActivityData.length > 0 && (
+            <div className="rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220]/90 to-[#080c18]/90 p-6 backdrop-blur-sm">
+              <h3 className="mb-1 text-sm font-semibold text-slate-100">Commit Activity</h3>
+              <p className="mb-4 text-[11px] text-slate-500">Commits per year — hover bars for details</p>
+              <Suspense fallback={<div className="h-[260px] animate-pulse rounded-lg bg-emerald-900/10" />}>
+                <ThreeBarChart data={commitActivityData} barColor={0x10b981} accentColor={0x34d399} height={260} />
+              </Suspense>
             </div>
           )}
         </div>
 
-        {topReposByStars.length > 0 && (
-          <div className="mt-6 rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] p-6">
-            <h3 className="mb-4 text-sm font-semibold text-slate-100">Top Repositories by Stars</h3>
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={topReposByStars} layout="vertical" margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" opacity={0.4} />
-                <XAxis type="number" stroke="#475569" style={{ fontSize: '12px' }} />
-                <YAxis type="category" dataKey="name" stroke="#475569" style={{ fontSize: '12px' }} width={90} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Bar dataKey="stars" fill="#10b981" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+        {/* Top repos by stars — Three.js 3D bars (full width) */}
+        {topReposData.length > 0 && (
+          <div className="mt-6 rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220]/90 to-[#080c18]/90 p-6 backdrop-blur-sm">
+            <h3 className="mb-1 text-sm font-semibold text-slate-100">Top Repositories by Stars</h3>
+            <p className="mb-4 text-[11px] text-slate-500">Hover bars to see star count</p>
+            <Suspense fallback={<div className="h-[260px] animate-pulse rounded-lg bg-purple-900/10" />}>
+              <ThreeBarChart data={topReposData} barColor={0x8b5cf6} accentColor={0xa78bfa} height={260} />
+            </Suspense>
           </div>
         )}
       </div>
