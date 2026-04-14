@@ -1,10 +1,9 @@
 import { githubConfig } from '../generated/githubData'
+import type { GitforgeConfig } from '../types/gitforgeConfig'
 import MinimalBlogsPage from '../templates/minimal/BlogsPage'
 
 export default function BlogsPage() {
-  const template = (githubConfig as { template?: string }).template ?? 'minimal'
-  // 'classic' and 'bento' templates will be added in future issues
-  if (template === 'classic') return <MinimalBlogsPage />
-  if (template === 'bento') return <MinimalBlogsPage />
+  const template = (githubConfig as GitforgeConfig).template ?? 'minimal'
+  // 'classic' and 'bento' will be swapped in once those templates are built (#20, #21)
   return <MinimalBlogsPage />
 }
