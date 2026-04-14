@@ -210,11 +210,6 @@ export function AdminSettingsPage() {
                   )
                 })}
               </div>
-              {(config.template === 'classic' || config.template === 'bento') && (
-                <p className="mt-3 text-[11px] text-amber-400/80">
-                  This template is coming soon — saving will fall back to Minimal until it is released.
-                </p>
-              )}
             </section>
 
             <section className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
