@@ -20,15 +20,15 @@ type Stats = {
   topReposByStars: RepoStarsData[]
 }
 
-const BAR_WIDTH = 28
+const BAR_WIDTH = 22
 
 function AsciiBar({ pct, color = 'text-green-500' }: { pct: number; color?: string }) {
   const filled = Math.round((pct / 100) * BAR_WIDTH)
   const empty = BAR_WIDTH - filled
   return (
-    <span className="font-mono text-xs">
+    <span className="font-mono text-xs leading-none">
       <span className={color}>{'█'.repeat(filled)}</span>
-      <span className="text-green-900">{'░'.repeat(empty)}</span>
+      <span className="text-green-900/60">{'░'.repeat(empty)}</span>
     </span>
   )
 }
@@ -77,71 +77,74 @@ export default function StatsSection({ stats }: { stats: Stats | null }) {
           <p className="text-xs text-green-800 mt-2 select-none">{'─'.repeat(52)}</p>
         </div>
 
-        {/* Language distribution */}
-        {languageDistribution.length > 0 && (
-          <div>
-            <p className="text-xs text-green-600 mb-2">LANGUAGE_DISTRIBUTION</p>
-            <div className="space-y-1">
-              {languageDistribution.slice(0, 8).map((lang, i) => (
-                <div key={lang.language} className="flex items-center gap-2 text-xs">
-                  <span className="w-24 shrink-0 truncate text-green-700">{lang.language}</span>
-                  <AsciiBar pct={lang.percentage} color={BAR_COLORS[i % BAR_COLORS.length]} />
-                  <span className="text-green-800 w-10 text-right">{lang.percentage}%</span>
-                </div>
-              ))}
+        {/* 2-column chart grid */}
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Language distribution */}
+          {languageDistribution.length > 0 && (
+            <div className="border border-green-900/40 bg-[#030d03] p-4">
+              <p className="mb-3 text-xs text-green-600">LANGUAGE_DISTRIBUTION</p>
+              <div className="space-y-1.5">
+                {languageDistribution.slice(0, 8).map((lang, i) => (
+                  <div key={lang.language} className="flex items-center gap-2 text-xs">
+                    <span className="w-20 shrink-0 truncate text-green-700">{lang.language}</span>
+                    <AsciiBar pct={lang.percentage} color={BAR_COLORS[i % BAR_COLORS.length]} />
+                    <span className="w-8 shrink-0 text-right text-green-800">{lang.percentage}%</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Repo activity by year */}
-        {activityByYear.length > 0 && (
-          <div>
-            <p className="text-xs text-green-600 mb-2">REPO_ACTIVITY_BY_YEAR</p>
-            <div className="space-y-1">
-              {activityByYear.map((row) => (
-                <div key={row.year} className="flex items-center gap-2 text-xs">
-                  <span className="w-10 shrink-0 text-green-700">{row.year}</span>
-                  <AsciiBar pct={(row.repos / maxRepos) * 100} color="text-cyan-600" />
-                  <span className="text-green-800">{row.repos}</span>
-                </div>
-              ))}
+          {/* Repo activity by year */}
+          {activityByYear.length > 0 && (
+            <div className="border border-green-900/40 bg-[#030d03] p-4">
+              <p className="mb-3 text-xs text-green-600">REPO_ACTIVITY_BY_YEAR</p>
+              <div className="space-y-1.5">
+                {activityByYear.map((row) => (
+                  <div key={row.year} className="flex items-center gap-2 text-xs">
+                    <span className="w-10 shrink-0 text-green-700">{row.year}</span>
+                    <AsciiBar pct={(row.repos / maxRepos) * 100} color="text-cyan-600" />
+                    <span className="w-6 shrink-0 text-right text-green-800">{row.repos}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Commit activity */}
-        {commitActivityByYear && commitActivityByYear.length > 0 && (
-          <div>
-            <p className="text-xs text-green-600 mb-2">COMMIT_ACTIVITY_BY_YEAR</p>
-            <div className="space-y-1">
-              {commitActivityByYear.map((row) => (
-                <div key={row.year} className="flex items-center gap-2 text-xs">
-                  <span className="w-10 shrink-0 text-green-700">{row.year}</span>
-                  <AsciiBar pct={(row.commits / maxCommits) * 100} color="text-emerald-500" />
-                  <span className="text-green-800">{row.commits}</span>
-                </div>
-              ))}
+          {/* Commit activity */}
+          {commitActivityByYear && commitActivityByYear.length > 0 && (
+            <div className="border border-green-900/40 bg-[#030d03] p-4">
+              <p className="mb-3 text-xs text-green-600">COMMIT_ACTIVITY_BY_YEAR</p>
+              <div className="space-y-1.5">
+                {commitActivityByYear.map((row) => (
+                  <div key={row.year} className="flex items-center gap-2 text-xs">
+                    <span className="w-10 shrink-0 text-green-700">{row.year}</span>
+                    <AsciiBar pct={(row.commits / maxCommits) * 100} color="text-emerald-500" />
+                    <span className="w-10 shrink-0 text-right text-green-800">{row.commits}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Top repos by stars */}
-        {topReposByStars.length > 0 && (
-          <div>
-            <p className="text-xs text-green-600 mb-2">TOP_REPOS_BY_STARS</p>
-            <div className="space-y-1">
-              {topReposByStars.map((repo) => (
-                <div key={repo.name} className="flex items-center gap-2 text-xs">
-                  <span className="w-36 shrink-0 truncate text-green-700">{repo.name}</span>
-                  <AsciiBar pct={(repo.stars / maxStars) * 100} color="text-amber-500" />
-                  <span className="text-green-800">★ {repo.stars}</span>
-                </div>
-              ))}
+          {/* Top repos by stars */}
+          {topReposByStars.length > 0 && (
+            <div className="border border-green-900/40 bg-[#030d03] p-4">
+              <p className="mb-3 text-xs text-green-600">TOP_REPOS_BY_STARS</p>
+              <div className="space-y-1.5">
+                {topReposByStars.map((repo) => (
+                  <div key={repo.name} className="flex items-center gap-2 text-xs">
+                    <span className="w-24 shrink-0 truncate text-green-700">{repo.name}</span>
+                    <AsciiBar pct={(repo.stars / maxStars) * 100} color="text-amber-500" />
+                    <span className="shrink-0 text-green-800">★{repo.stars}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        <p className="text-xs text-green-900 select-none">{'─'.repeat(52)}</p>
+        <p className="text-xs text-green-900/60 select-none">{'─'.repeat(52)}</p>
       </div>
     </section>
   )
