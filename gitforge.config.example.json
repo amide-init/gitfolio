@@ -14,6 +14,7 @@
     "minorInfo": "Brief tagline or quick intro that appears in the hero section."
   },
   "template": "minimal",
+  "//_template_options": "minimal | classic | bento | hacker | netflix | threejs",
   "fontFamily": "system",
   "showVideosSection": true,
   "showBlogsSection": true,
