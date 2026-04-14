@@ -54,7 +54,7 @@ export default function HeroSection({ hero, snapshot }: HeroSectionProps) {
     >
       {/* Three.js WebGL background */}
       <Suspense fallback={<div className="absolute inset-0 bg-[#050509]" />}>
-        <HeroScene />
+        <HeroScene location={hero.contact?.location} />
       </Suspense>
 
       {/* Gradient overlay – fades the 3D scene at the bottom */}
