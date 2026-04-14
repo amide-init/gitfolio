@@ -13,7 +13,7 @@ type SearchState =
   | { status: 'idle' }
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | { status: 'done'; user: GHUser; repos: GHRepo[] }
+  | { status: 'done'; user: GHUser; repos: GHRepo[]; allRepos: GHRepo[] }
 
 // ── Language colour dots ──────────────────────────────────────────────────────
 
@@ -94,11 +94,9 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
       if (!userRes.ok) throw new Error('GitHub API error — try again later')
       const user = (await userRes.json()) as GHUser
       const allRepos = (await reposRes.json()) as GHRepo[]
-      const repos = allRepos
-        .filter((r) => !r.fork)
-        .sort((a, b) => b.stargazers_count - a.stargazers_count)
-        .slice(0, 6)
-      setState({ status: 'done', user, repos })
+      const ownRepos = allRepos.filter((r) => !r.fork)
+      const repos = [...ownRepos].sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 6)
+      setState({ status: 'done', user, repos, allRepos: ownRepos })
     } catch (err) {
       setState({ status: 'error', message: err instanceof Error ? err.message : 'Search failed' })
     }
@@ -305,6 +303,7 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
         <PortfolioPreviewModal
           user={state.user}
           repos={state.repos}
+          allRepos={state.allRepos}
           onClose={() => setPreviewOpen(false)}
         />
       )}
