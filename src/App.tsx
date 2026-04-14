@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import siteContent from './siteContent.json'
 import { githubConfig } from './generated/githubData'
@@ -24,8 +24,38 @@ function App() {
   const isHacker = template === 'hacker'
   // netflix template overrides the shared nav/footer to Netflix style
   const isNetflix = template === 'netflix'
+  // threejs template gets sci-fi HUD navbar
+  const isThreejs = template === 'threejs'
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const scanRef = useRef<HTMLCanvasElement>(null)
+
+  // Animated scan-line canvas for threejs navbar bottom border
+  useEffect(() => {
+    if (!isThreejs) return
+    const canvas = scanRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    let frame: number
+    let t = 0
+    const draw = () => {
+      frame = requestAnimationFrame(draw)
+      t += 0.012
+      const w = canvas.width
+      ctx.clearRect(0, 0, w, 1)
+      const grad = ctx.createLinearGradient(0, 0, w, 0)
+      const pos = (Math.sin(t) * 0.5 + 0.5)
+      const span = 0.28
+      grad.addColorStop(Math.max(0, pos - span), 'rgba(59,130,246,0)')
+      grad.addColorStop(pos, 'rgba(99,179,255,0.9)')
+      grad.addColorStop(Math.min(1, pos + span), 'rgba(6,182,212,0)')
+      ctx.fillStyle = grad
+      ctx.fillRect(0, 0, w, 1)
+    }
+    draw()
+    return () => cancelAnimationFrame(frame)
+  }, [isThreejs])
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -122,21 +152,27 @@ function App() {
     ? 'min-h-screen bg-black text-green-400'
     : isNetflix
       ? 'min-h-screen bg-[#141414] text-white'
-      : 'min-h-screen bg-slate-50 text-slate-900 dark:bg-[#050509] dark:text-slate-50'
+      : isThreejs
+        ? 'min-h-screen bg-[#050509] text-slate-50'
+        : 'min-h-screen bg-slate-50 text-slate-900 dark:bg-[#050509] dark:text-slate-50'
   const headerClasses = isHacker
     ? 'sticky top-0 z-20 border-b border-green-900/60 bg-black/95 backdrop-blur font-mono'
     : isNetflix
       ? 'sticky top-0 z-20 border-b border-white/5 bg-[#141414]/95 backdrop-blur'
-      : theme === 'dark'
-        ? 'sticky top-0 z-20 border-b border-white/5 bg-[#050509]/90 backdrop-blur'
-        : 'sticky top-0 z-20 border-b border-slate-200 bg-slate-50/90 backdrop-blur'
+      : isThreejs
+        ? 'sticky top-0 z-20 bg-[#050509]/80 backdrop-blur-md'
+        : theme === 'dark'
+          ? 'sticky top-0 z-20 border-b border-white/5 bg-[#050509]/90 backdrop-blur'
+          : 'sticky top-0 z-20 border-b border-slate-200 bg-slate-50/90 backdrop-blur'
   const footerClasses = isHacker
     ? 'border-t border-green-900/60 bg-black py-4 text-xs text-green-900 font-mono'
     : isNetflix
       ? 'border-t border-white/5 bg-[#141414] py-6 text-xs text-[#999]'
-      : theme === 'dark'
-        ? 'border-t border-slate-800 bg-gradient-to-b from-[#111120] to-[#050509] py-6 text-xs text-slate-400'
-        : 'border-t border-slate-200 bg-gradient-to-b from-slate-50 to-slate-100 py-6 text-xs text-slate-600'
+      : isThreejs
+        ? 'border-t border-blue-900/30 bg-gradient-to-b from-[#080c18] to-[#050509] py-6 text-xs text-slate-400'
+        : theme === 'dark'
+          ? 'border-t border-slate-800 bg-gradient-to-b from-[#111120] to-[#050509] py-6 text-xs text-slate-400'
+          : 'border-t border-slate-200 bg-gradient-to-b from-slate-50 to-slate-100 py-6 text-xs text-slate-600'
 
   const navInitials = (() => {
     const name = (hero.title || '').trim()
@@ -146,95 +182,205 @@ function App() {
     return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase()
   })()
 
+  const threejsNavLinks = (
+    [
+      { to: '/',         label: 'Home'     },
+      { to: '/videos',   label: 'Videos'   },
+      { to: '/blogs',    label: 'Blogs'    },
+      { to: '/projects', label: 'Projects' },
+    ] as const
+  )
+
   return (
     <div className={rootClasses}>
       <header className={headerClasses}>
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
-          <Link
-            to="/"
-            className={`inline-flex items-center gap-2 no-underline ${isHacker ? 'text-green-500' : isNetflix ? 'text-white' : 'text-slate-900 dark:text-slate-100'}`}
-            aria-label={`${hero.title} home`}
-          >
-            {isHacker ? (
-              <span className="font-mono text-sm text-green-500">
-                <span className="text-green-800">~/</span>{navInitials}
-                <span className="inline-block w-1.5 h-3.5 bg-green-500 animate-pulse ml-0.5 align-middle" />
-              </span>
-            ) : isNetflix ? (
-              <span className="text-lg font-black text-[#e50914] tracking-tight">{navInitials}</span>
-            ) : (
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 text-xs font-semibold text-[#050509]" aria-hidden="true">
-                {navInitials}
-              </span>
-            )}
-          </Link>
+        {isThreejs ? (
+          <>
+            <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
+              {/* Logo */}
+              <Link to="/" aria-label={`${hero.title} home`} className="group relative inline-flex items-center gap-2.5 no-underline">
+                {/* Outer pulse ring */}
+                <span className="absolute -inset-1 rounded-full bg-blue-500/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 blur-sm" />
+                <span className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 text-xs font-semibold text-[#050509] ring-1 ring-blue-500/40 group-hover:ring-cyan-400/60 transition-all duration-300">
+                  {navInitials}
+                </span>
+                <span className="hidden sm:block text-xs font-semibold tracking-widest uppercase text-slate-400 group-hover:text-slate-200 transition-colors">
+                  {hero.title}
+                </span>
+              </Link>
 
-          {/* Desktop nav — hidden below md */}
-          {isHacker ? (
-            <nav className="hidden md:flex items-center gap-4 text-xs text-green-700" aria-label="Primary">
-              {(['/', '/videos', '/blogs', '/projects'] as const).map((path, i) => {
-                const labels = ['~', 'videos', 'blogs', 'projects']
-                return (
-                  <Link key={path} to={path} className="transition hover:text-green-400">
-                    {labels[i]}
-                  </Link>
-                )
-              })}
-              <a href={`${import.meta.env.BASE_URL}#stats`} className="transition hover:text-green-400">stats</a>
-            </nav>
-          ) : isNetflix ? (
-            <nav className="hidden md:flex items-center gap-5 text-sm font-medium text-[#e5e5e5]" aria-label="Primary">
-              <Link to="/" className="transition hover:text-white">Home</Link>
-              <Link to="/videos" className="transition hover:text-white">Videos</Link>
-              <Link to="/blogs" className="transition hover:text-white">Blogs</Link>
-              <Link to="/projects" className="transition hover:text-white">Projects</Link>
-              <a href={`${import.meta.env.BASE_URL}#stats`} className="transition hover:text-white">Stats</a>
-            </nav>
-          ) : (
-            <nav className="hidden md:flex items-center gap-3 text-xs font-medium text-slate-700 dark:text-slate-300" aria-label="Primary">
-              <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Home</Link>
-              <Link to="/videos" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Videos</Link>
-              <Link to="/blogs" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Blogs</Link>
-              <Link to="/projects" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Projects</Link>
-              <a href={`${import.meta.env.BASE_URL}#stats`} className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Stats</a>
-            </nav>
-          )}
+              {/* Desktop nav */}
+              <nav className="hidden md:flex items-center gap-1" aria-label="Primary">
+                {threejsNavLinks.map(({ to, label }) => {
+                  const active = location.pathname === to
+                  return (
+                    <Link
+                      key={to}
+                      to={to}
+                      className={`relative px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
+                        active
+                          ? 'text-cyan-300 bg-cyan-500/10 ring-1 ring-cyan-500/30'
+                          : 'text-slate-400 hover:text-slate-100 hover:bg-white/5'
+                      }`}
+                    >
+                      {active && (
+                        <span className="absolute inset-x-2 bottom-0.5 h-px bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full" />
+                      )}
+                      {label}
+                    </Link>
+                  )
+                })}
+                <a
+                  href={`${import.meta.env.BASE_URL}#stats`}
+                  className="px-3 py-1.5 text-xs font-medium rounded-md text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-all duration-200"
+                >
+                  Stats
+                </a>
+              </nav>
 
-          {/* Mobile controls: hamburger */}
-          <div className="flex items-center gap-2 md:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className={`flex h-8 w-8 items-center justify-center rounded-md transition ${isHacker ? 'text-green-700 hover:bg-green-900/20' : isNetflix ? 'text-white hover:bg-white/10' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`}
-              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-            >
-              {mobileMenuOpen ? (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile dropdown menu */}
-        {mobileMenuOpen && (
-          <nav
-            className={`border-t md:hidden backdrop-blur ${isHacker ? 'border-green-900/60 bg-black/95 font-mono text-xs text-green-700' : isNetflix ? 'border-white/5 bg-[#141414]/95 text-sm text-[#e5e5e5]' : 'border-slate-200 bg-slate-50/95 dark:border-white/5 dark:bg-[#050509]/95'}`}
-            aria-label="Mobile navigation"
-          >
-            <div className={`mx-auto flex max-w-5xl flex-col px-4 py-2 ${isHacker ? '' : isNetflix ? 'font-medium' : 'text-sm font-medium text-slate-700 dark:text-slate-300'}`}>
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className={`py-2.5 transition-colors ${isHacker ? 'hover:text-green-400' : isNetflix ? 'hover:text-white' : 'hover:text-slate-900 dark:hover:text-slate-50'}`}>{isHacker ? '~ home' : 'Home'}</Link>
-              <Link to="/videos" onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>Videos</Link>
-              <Link to="/blogs" onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>Blogs</Link>
-              <Link to="/projects" onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>Projects</Link>
-              <a href={`${import.meta.env.BASE_URL}#stats`} onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>{isHacker ? '~/stats' : 'Stats'}</a>
+              {/* Mobile hamburger */}
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                className="md:hidden flex h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:text-slate-100 hover:bg-white/5 transition"
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              >
+                {mobileMenuOpen ? (
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
             </div>
-          </nav>
+
+            {/* Animated scan-line bottom border */}
+            <canvas ref={scanRef} width={1200} height={1} className="w-full block" aria-hidden="true" style={{ height: 1 }} />
+
+            {/* Mobile dropdown */}
+            {mobileMenuOpen && (
+              <nav
+                className="md:hidden border-t border-blue-900/30 bg-[#050509]/95 backdrop-blur"
+                aria-label="Mobile navigation"
+              >
+                <div className="mx-auto flex max-w-5xl flex-col px-4 py-2">
+                  {threejsNavLinks.map(({ to, label }, i) => {
+                    const active = location.pathname === to
+                    return (
+                      <Link
+                        key={to}
+                        to={to}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`${i > 0 ? 'border-t border-blue-900/20' : ''} py-2.5 text-sm font-medium transition-colors ${active ? 'text-cyan-300' : 'text-slate-400 hover:text-slate-100'}`}
+                      >
+                        {label}
+                      </Link>
+                    )
+                  })}
+                  <a
+                    href={`${import.meta.env.BASE_URL}#stats`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="border-t border-blue-900/20 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-100 transition-colors"
+                  >
+                    Stats
+                  </a>
+                </div>
+              </nav>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
+              <Link
+                to="/"
+                className={`inline-flex items-center gap-2 no-underline ${isHacker ? 'text-green-500' : isNetflix ? 'text-white' : 'text-slate-900 dark:text-slate-100'}`}
+                aria-label={`${hero.title} home`}
+              >
+                {isHacker ? (
+                  <span className="font-mono text-sm text-green-500">
+                    <span className="text-green-800">~/</span>{navInitials}
+                    <span className="inline-block w-1.5 h-3.5 bg-green-500 animate-pulse ml-0.5 align-middle" />
+                  </span>
+                ) : isNetflix ? (
+                  <span className="text-lg font-black text-[#e50914] tracking-tight">{navInitials}</span>
+                ) : (
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 text-xs font-semibold text-[#050509]" aria-hidden="true">
+                    {navInitials}
+                  </span>
+                )}
+              </Link>
+
+              {/* Desktop nav — hidden below md */}
+              {isHacker ? (
+                <nav className="hidden md:flex items-center gap-4 text-xs text-green-700" aria-label="Primary">
+                  {(['/', '/videos', '/blogs', '/projects'] as const).map((path, i) => {
+                    const labels = ['~', 'videos', 'blogs', 'projects']
+                    return (
+                      <Link key={path} to={path} className="transition hover:text-green-400">
+                        {labels[i]}
+                      </Link>
+                    )
+                  })}
+                  <a href={`${import.meta.env.BASE_URL}#stats`} className="transition hover:text-green-400">stats</a>
+                </nav>
+              ) : isNetflix ? (
+                <nav className="hidden md:flex items-center gap-5 text-sm font-medium text-[#e5e5e5]" aria-label="Primary">
+                  <Link to="/" className="transition hover:text-white">Home</Link>
+                  <Link to="/videos" className="transition hover:text-white">Videos</Link>
+                  <Link to="/blogs" className="transition hover:text-white">Blogs</Link>
+                  <Link to="/projects" className="transition hover:text-white">Projects</Link>
+                  <a href={`${import.meta.env.BASE_URL}#stats`} className="transition hover:text-white">Stats</a>
+                </nav>
+              ) : (
+                <nav className="hidden md:flex items-center gap-3 text-xs font-medium text-slate-700 dark:text-slate-300" aria-label="Primary">
+                  <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Home</Link>
+                  <Link to="/videos" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Videos</Link>
+                  <Link to="/blogs" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Blogs</Link>
+                  <Link to="/projects" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Projects</Link>
+                  <a href={`${import.meta.env.BASE_URL}#stats`} className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Stats</a>
+                </nav>
+              )}
+
+              {/* Mobile controls: hamburger */}
+              <div className="flex items-center gap-2 md:hidden">
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen((prev) => !prev)}
+                  className={`flex h-8 w-8 items-center justify-center rounded-md transition ${isHacker ? 'text-green-700 hover:bg-green-900/20' : isNetflix ? 'text-white hover:bg-white/10' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`}
+                  aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                >
+                  {mobileMenuOpen ? (
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  ) : (
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile dropdown menu */}
+            {mobileMenuOpen && (
+              <nav
+                className={`border-t md:hidden backdrop-blur ${isHacker ? 'border-green-900/60 bg-black/95 font-mono text-xs text-green-700' : isNetflix ? 'border-white/5 bg-[#141414]/95 text-sm text-[#e5e5e5]' : 'border-slate-200 bg-slate-50/95 dark:border-white/5 dark:bg-[#050509]/95'}`}
+                aria-label="Mobile navigation"
+              >
+                <div className={`mx-auto flex max-w-5xl flex-col px-4 py-2 ${isHacker ? '' : isNetflix ? 'font-medium' : 'text-sm font-medium text-slate-700 dark:text-slate-300'}`}>
+                  <Link to="/" onClick={() => setMobileMenuOpen(false)} className={`py-2.5 transition-colors ${isHacker ? 'hover:text-green-400' : isNetflix ? 'hover:text-white' : 'hover:text-slate-900 dark:hover:text-slate-50'}`}>{isHacker ? '~ home' : 'Home'}</Link>
+                  <Link to="/videos" onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>Videos</Link>
+                  <Link to="/blogs" onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>Blogs</Link>
+                  <Link to="/projects" onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>Projects</Link>
+                  <a href={`${import.meta.env.BASE_URL}#stats`} onClick={() => setMobileMenuOpen(false)} className={`border-t py-2.5 transition-colors ${isHacker ? 'border-green-900/40 hover:text-green-400' : isNetflix ? 'border-white/5 hover:text-white' : 'border-slate-200/60 hover:text-slate-900 dark:border-white/5 dark:hover:text-slate-50'}`}>{isHacker ? '~/stats' : 'Stats'}</a>
+                </div>
+              </nav>
+            )}
+          </>
         )}
       </header>
 
