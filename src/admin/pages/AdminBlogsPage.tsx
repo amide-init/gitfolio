@@ -1,24 +1,22 @@
 import { LuxeEditor, getEditorJSON } from 'luxe-edit'
 import 'luxe-edit/index.css'
+import { Plus, Trash2, AlertCircle, CheckCircle2, Loader2, RefreshCw } from 'lucide-react'
 import { useAdminAuthContext } from '../context/AdminAuthContext'
 import { useBlogsStore } from '../hooks/useBlogsStore'
 import type { Blog } from '../../types/contentTypes'
+import { Button } from '../../components/ui/button'
+import { Input } from '../../components/ui/input'
+import { Card, CardContent, CardHeader } from '../../components/ui/card'
 
 function formatDate(iso: string) {
   try {
-    return new Date(iso).toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
+    return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
   } catch {
     return iso
   }
 }
 
 // ── Minimal markdown → Lexical JSON ──────────────────────────────────────────
-// Handles headings, bold, italic, strikethrough, and paragraphs.
-// Returns a JSON string suitable for initialConfig.editorState.
 
 function makeText(text: string, format = 0) {
   return { detail: 0, format, mode: 'normal', style: '', text, type: 'text', version: 1 }
@@ -26,15 +24,14 @@ function makeText(text: string, format = 0) {
 
 function parseInline(line: string) {
   const nodes: object[] = []
-  // Tokenise bold (**), italic (*/_), strikethrough (~~)
   const re = /(\*\*(.+?)\*\*|\*(.+?)\*|_(.+?)_|~~(.+?)~~|([^*_~]+))/g
   let m: RegExpExecArray | null
   while ((m = re.exec(line)) !== null) {
-    if (m[2] != null) nodes.push(makeText(m[2], 1))        // bold
-    else if (m[3] != null) nodes.push(makeText(m[3], 2))   // *italic*
-    else if (m[4] != null) nodes.push(makeText(m[4], 2))   // _italic_
-    else if (m[5] != null) nodes.push(makeText(m[5], 4))   // strikethrough
-    else if (m[6] != null) nodes.push(makeText(m[6], 0))   // plain
+    if (m[2] != null) nodes.push(makeText(m[2], 1))
+    else if (m[3] != null) nodes.push(makeText(m[3], 2))
+    else if (m[4] != null) nodes.push(makeText(m[4], 2))
+    else if (m[5] != null) nodes.push(makeText(m[5], 4))
+    else if (m[6] != null) nodes.push(makeText(m[6], 0))
   }
   return nodes.length ? nodes : [makeText(line, 0)]
 }
@@ -57,6 +54,7 @@ function markdownToLexicalJSON(md: string): string {
   if (!blocks.length) blocks.push(makeBlock('paragraph', []))
   return JSON.stringify({ root: { children: blocks, direction: 'ltr', format: '', indent: 0, type: 'root', version: 1 } })
 }
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function AdminBlogsPage() {
@@ -65,9 +63,12 @@ export function AdminBlogsPage() {
 
   if (store.loading) {
     return (
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-8">
-        <p className="text-sm text-slate-400">Loading blogs…</p>
-      </div>
+      <Card className="border-zinc-800 bg-zinc-900">
+        <CardContent className="flex items-center gap-3 py-8">
+          <Loader2 className="h-4 w-4 animate-spin text-zinc-500" />
+          <p className="text-sm text-zinc-400">Loading blogs…</p>
+        </CardContent>
+      </Card>
     )
   }
 
@@ -75,46 +76,33 @@ export function AdminBlogsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-slate-100">Blogs</h2>
-          <p className="mt-1 text-sm text-slate-400">
-            Store in <code className="rounded bg-slate-800 px-1">data/blogs.json</code>
+          <h1 className="text-lg font-semibold text-zinc-100">Blogs</h1>
+          <p className="mt-1 text-sm text-zinc-400">
+            Stored in <code className="rounded bg-zinc-800 px-1 text-zinc-300">data/blogs.json</code>
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={store.add}
-            className="rounded-md border border-slate-600 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
-          >
-            + Add blog
-          </button>
-          <button
-            type="button"
-            onClick={store.persist}
-            disabled={store.saving}
-            className="rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:opacity-60"
-          >
-            {store.saving ? 'Saving…' : 'Save'}
-          </button>
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={store.add} className="gap-1.5 border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
+            <Plus className="h-3.5 w-3.5" /> Add blog
+          </Button>
+          <Button type="button" size="sm" onClick={store.persist} disabled={store.saving} className="min-w-16 bg-blue-600 text-white hover:bg-blue-500">
+            {store.saving ? <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving…</> : 'Save'}
+          </Button>
         </div>
       </div>
 
       {store.error && (
-        <div className="flex items-center justify-between gap-3 rounded-lg border border-rose-800 bg-rose-950/40 p-3 text-sm text-rose-400">
-          <span>{store.error}</span>
-          <button
-            type="button"
-            onClick={store.reload}
-            className="shrink-0 rounded px-2 py-1 text-xs font-medium text-rose-200 hover:bg-rose-900/60"
-          >
-            Reload
-          </button>
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-red-800/50 bg-red-950/30 px-3 py-2.5 text-sm text-red-400">
+          <span className="flex items-start gap-2"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />{store.error}</span>
+          <Button type="button" variant="ghost" size="sm" onClick={store.reload} className="shrink-0 gap-1.5 text-red-300 hover:bg-red-950/50 hover:text-red-200">
+            <RefreshCw className="h-3 w-3" /> Reload
+          </Button>
         </div>
       )}
       {store.success && (
-        <p className="rounded-lg border border-emerald-800 bg-emerald-950/40 p-3 text-sm text-emerald-400">
-          {store.success}
-        </p>
+        <div className="flex items-start gap-2 rounded-lg border border-green-800/50 bg-green-950/30 px-3 py-2.5 text-sm text-green-400">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />{store.success}
+        </div>
       )}
 
       <div className="space-y-4">
@@ -127,7 +115,7 @@ export function AdminBlogsPage() {
           />
         ))}
         {store.items.length === 0 && (
-          <p className="rounded-xl border border-dashed border-slate-700 p-8 text-center text-sm text-slate-500">
+          <p className="rounded-xl border border-dashed border-zinc-800 py-10 text-center text-sm text-zinc-600">
             No blogs yet. Click "Add blog" to create one.
           </p>
         )}
@@ -145,49 +133,43 @@ function BlogCard({
   onUpdate: (u: Partial<Pick<Blog, 'title' | 'content' | 'contentJSON'>>) => void
   onRemove: () => void
 }) {
-  // For legacy blogs (markdown only), seed the editor from converted markdown.
   const legacyEditorState =
-    blog.contentJSON == null && blog.content
-      ? markdownToLexicalJSON(blog.content)
-      : undefined
+    blog.contentJSON == null && blog.content ? markdownToLexicalJSON(blog.content) : undefined
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 space-y-3">
-          <input
-            type="text"
-            placeholder="Title"
-            className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm font-medium text-slate-100 focus:border-emerald-500 focus:outline-none"
-            value={blog.title}
-            onChange={(e) => onUpdate({ title: e.target.value })}
-          />
-          <LuxeEditor
-            colorScheme="dark"
-            initialConfig={{
-              namespace: `blog-${blog.id}`,
-              ...(legacyEditorState ? { editorState: legacyEditorState } : {}),
-            }}
-            initialJSON={blog.contentJSON}
-            onChange={(editorState) => {
-              onUpdate({ contentJSON: getEditorJSON(editorState) })
-            }}
-            ignoreInitialChange
-          />
-          <p className="text-[11px] text-slate-500">
-            Created {formatDate(blog.createdAt)} · Updated{' '}
-            {formatDate(blog.updatedAt)}
-          </p>
+    <Card className="border-zinc-800 bg-zinc-900">
+      <CardHeader className="pb-3 pt-4 px-4">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-medium text-zinc-500">Blog post</span>
+          <Button type="button" variant="ghost" size="icon" onClick={onRemove} className="h-7 w-7 text-zinc-600 hover:text-red-400 hover:bg-red-950/30">
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
         </div>
-        <button
-          type="button"
-          onClick={onRemove}
-          className="rounded px-2 py-1 text-xs text-slate-500 hover:bg-slate-800 hover:text-rose-400"
-          aria-label="Remove blog"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent className="space-y-3 px-4 pb-4">
+        <Input
+          type="text"
+          placeholder="Title"
+          value={blog.title}
+          onChange={(e) => onUpdate({ title: e.target.value })}
+          className="border-zinc-700 bg-zinc-950 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-blue-500"
+        />
+        <LuxeEditor
+          colorScheme="dark"
+          initialConfig={{
+            namespace: `blog-${blog.id}`,
+            ...(legacyEditorState ? { editorState: legacyEditorState } : {}),
+          }}
+          initialJSON={blog.contentJSON}
+          onChange={(editorState) => {
+            onUpdate({ contentJSON: getEditorJSON(editorState) })
+          }}
+          ignoreInitialChange
+        />
+        <p className="text-[11px] text-zinc-600">
+          Created {formatDate(blog.createdAt)} · Updated {formatDate(blog.updatedAt)}
+        </p>
+      </CardContent>
+    </Card>
   )
 }
