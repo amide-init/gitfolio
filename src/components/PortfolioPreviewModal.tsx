@@ -38,9 +38,17 @@ export type PreviewRepo = {
 // ── Data builders — convert GitHub API → threejs template prop shapes ─────────
 
 function buildHero(user: PreviewUser, allRepos: PreviewRepo[]) {
-  const topLangs = [
-    ...new Set(allRepos.map((r) => r.language).filter(Boolean)),
-  ].slice(0, 5)
+  // Top languages by repo count
+  const langCounts: Record<string, number> = {}
+  allRepos.forEach((r) => { if (r.language) langCounts[r.language] = (langCounts[r.language] ?? 0) + 1 })
+  const topLangs = Object.entries(langCounts).sort((a, b) => b[1] - a[1]).map(([l]) => l).slice(0, 5)
+
+  // Top topics by frequency
+  const topicCounts: Record<string, number> = {}
+  allRepos.forEach((r) => (r.topics ?? []).forEach((t) => { topicCounts[t] = (topicCounts[t] ?? 0) + 1 }))
+  const topTopics = Object.entries(topicCounts).sort((a, b) => b[1] - a[1]).map(([t]) => t).slice(0, 3)
+
+  const totalStars = allRepos.reduce((s, r) => s + r.stargazers_count, 0)
 
   const eyebrow = user.company
     ? `Working at ${user.company}`
@@ -48,9 +56,19 @@ function buildHero(user: PreviewUser, allRepos: PreviewRepo[]) {
       ? topLangs.join(' · ')
       : 'GitHub Developer'
 
-  const description =
-    user.bio ||
-    `${user.name || user.login} maintains ${user.public_repos} public repositories on GitHub.`
+  // Build a rich auto-generated description (same style as the CLI generator)
+  const name = user.name || user.login
+  let generated = `${name} maintains ${user.public_repos} public repositories on GitHub`
+  if (totalStars > 0) generated += ` with ${totalStars.toLocaleString()} star${totalStars === 1 ? '' : 's'} across these projects`
+  generated += '.'
+  if (topLangs.length) generated += ` Most of the work centers around ${topLangs[0]}`
+  if (topTopics.length) generated += `, with repositories touching topics like ${topTopics.join(', ')}`
+  if (topLangs.length || topTopics.length) generated += '.'
+
+  // Use the user's own bio if they have one, otherwise use the generated description
+  const description = user.bio
+    ? `${user.bio}\n\n${generated}`
+    : generated
 
   const social: { provider: string; url: string }[] = []
   if (user.twitter_username)
