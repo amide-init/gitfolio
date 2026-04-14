@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { X, GitFork } from 'lucide-react'
+import { X, GitFork, Copy, Check, ExternalLink } from 'lucide-react'
 import HeroSection from '../templates/threejs/HeroSection'
 import GitHubSection from '../templates/threejs/GitHubSection'
 import StatsSection from '../templates/threejs/StatsSection'
@@ -166,9 +166,84 @@ function buildStats(user: PreviewUser, allRepos: PreviewRepo[]) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ── Fork button — copies repo name then opens GitHub fork page ────────────────
 
-const FORK_URL = 'https://github.com/amide-init/gitfolio/fork'
+const FORK_BASE = 'https://github.com/amide-init/gitfolio/fork'
+
+/**
+ * Two-step fork flow:
+ * 1. Show a small panel with the suggested repo name + copy button.
+ * 2. "Go fork" button opens the GitHub fork page in a new tab.
+ *
+ * GitHub's web fork form cannot be pre-filled via URL params, so we give
+ * the user the name ready to paste.
+ */
+function ForkButton({ login, className }: { login: string; className?: string }) {
+  const [step, setStep] = useState<'idle' | 'confirm'>('idle')
+  const [copied, setCopied] = useState(false)
+  const repoName = `${login}.github.io`
+
+  const copy = async () => {
+    await navigator.clipboard.writeText(repoName).catch(() => {})
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const goFork = () => {
+    window.open(FORK_BASE, '_blank', 'noreferrer')
+  }
+
+  if (step === 'confirm') {
+    return (
+      <div className="inline-flex flex-col items-stretch gap-2 rounded-xl border border-indigo-500/30 bg-[#0d1527] p-3 text-left shadow-[0_0_20px_rgba(99,102,241,0.15)]">
+        <p className="text-xs text-zinc-400">
+          After forking, set the repository name to:
+        </p>
+        {/* Repo name + copy */}
+        <div className="flex items-center gap-2 rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2">
+          <code className="flex-1 text-sm font-mono font-semibold text-cyan-300">{repoName}</code>
+          <button
+            type="button"
+            onClick={copy}
+            className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-zinc-400 hover:text-zinc-100 transition"
+          >
+            {copied ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? 'Copied!' : 'Copy'}
+          </button>
+        </div>
+        {/* Actions */}
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setStep('idle')}
+            className="flex-1 rounded-md border border-zinc-700 py-1.5 text-xs text-zinc-400 hover:bg-zinc-800 transition"
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            onClick={goFork}
+            className="group relative flex-1 overflow-hidden rounded-md bg-indigo-600 py-1.5 text-xs font-semibold text-white hover:bg-indigo-500 transition flex items-center justify-center gap-1.5"
+          >
+            <ExternalLink className="h-3.5 w-3.5" /> Go fork →
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setStep('confirm')}
+      className={className}
+    >
+      <GitFork className="h-3.5 w-3.5" /> Fork &amp; make yours
+    </button>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 type Props = {
   user: PreviewUser
@@ -185,12 +260,8 @@ export function PortfolioPreviewModal({ user, repos: _, allRepos, onClose }: Pro
     return () => { document.body.style.overflow = prev }
   }, [])
 
-  // Close on Escape
-  useEffect(() => {
-    const h = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', h)
-    return () => window.removeEventListener('keydown', h)
-  }, [onClose])
+  // Escape is handled by NavSearch (it dismisses preview first, then closes search)
+  // No duplicate listener here.
 
   const hero     = buildHero(user, allRepos)
   const snapshot = buildSnapshot(user, allRepos)
@@ -216,14 +287,10 @@ export function PortfolioPreviewModal({ user, repos: _, allRepos, onClose }: Pro
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <a
-            href={FORK_URL}
-            target="_blank"
-            rel="noreferrer"
+          <ForkButton
+            login={user.login}
             className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-indigo-500/40 bg-indigo-500/10 px-3 py-1.5 text-xs font-semibold text-indigo-300 transition hover:bg-indigo-500/20"
-          >
-            <GitFork className="h-3.5 w-3.5" /> Fork &amp; make yours
-          </a>
+          />
           <button
             type="button"
             onClick={onClose}
@@ -263,22 +330,14 @@ export function PortfolioPreviewModal({ user, repos: _, allRepos, onClose }: Pro
               </span>
             </h2>
             <p className="mt-2 text-sm text-zinc-500">
-              Fork the repo, rename it to{' '}
-              <code className="rounded bg-zinc-800 px-1.5 py-0.5 text-zinc-300">
-                {'<username>.github.io'}
-              </code>
-              , and GitHub Actions auto-builds it with your data.
+              Fork the repo — GitHub Actions will auto-build your portfolio with your GitHub data.
             </p>
-            <a
-              href={FORK_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="group relative mt-6 inline-flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-[0_0_30px_rgba(59,130,246,0.35)] transition hover:shadow-[0_0_40px_rgba(59,130,246,0.55)]"
-            >
-              <span className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-white/20 transition-transform duration-500 group-hover:translate-x-[150%]" />
-              <GitFork className="h-4 w-4" />
-              Fork this template
-            </a>
+            <div className="mt-6 flex justify-center">
+              <ForkButton
+                login={user.login}
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-[0_0_30px_rgba(59,130,246,0.35)] transition hover:shadow-[0_0_40px_rgba(59,130,246,0.55)]"
+              />
+            </div>
           </div>
         </section>
 

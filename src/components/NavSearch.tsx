@@ -52,22 +52,27 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Close when clicking outside
+  // Close dropdown when clicking outside — but NOT when the preview modal is open
+  // (the modal is a portal outside containerRef; clicking inside it must not close the search)
   useEffect(() => {
     if (!open) return
     const onMouseDown = (e: MouseEvent) => {
+      if (previewOpen) return
       if (!containerRef.current?.contains(e.target as Node)) close()
     }
     document.addEventListener('mousedown', onMouseDown)
     return () => document.removeEventListener('mousedown', onMouseDown)
-  }, [open])
+  }, [open, previewOpen])
 
-  // Close on Escape
+  // Escape: dismiss preview first, then the search panel on a second press
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close() }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (previewOpen) { setPreviewOpen(false) } else { close() }
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [previewOpen])
 
   // Auto-focus input when expanded
   useEffect(() => {
