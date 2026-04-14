@@ -13,6 +13,7 @@
     "eyebrow": "Open-source, developer-first profile",
     "minorInfo": "Brief tagline or quick intro that appears in the hero section."
   },
+  "template": "minimal",
   "fontFamily": "system",
   "showVideosSection": true,
   "showBlogsSection": true,
