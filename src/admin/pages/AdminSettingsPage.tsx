@@ -90,6 +90,28 @@ export function AdminSettingsPage() {
           <>
             <Card className="border-zinc-800 bg-zinc-900">
               <CardHeader className="pb-4">
+                <CardTitle className="text-sm text-zinc-100">Search & discovery</CardTitle>
+                <CardDescription className="text-xs text-zinc-500">
+                  Allow visitors to search any GitHub user and preview their profile right inside your portfolio.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="show-search" className="text-sm text-zinc-300">Show search bar in navbar</Label>
+                    <p className="text-xs text-zinc-500 mt-0.5">Visitors can explore any GitHub user's profile and repos from your site.</p>
+                  </div>
+                  <Switch
+                    id="show-search"
+                    checked={config.showSearch !== false}
+                    onCheckedChange={(v) => updateConfigField('showSearch', v)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-zinc-800 bg-zinc-900">
+              <CardHeader className="pb-4">
                 <CardTitle className="text-sm text-zinc-100">Sections visibility</CardTitle>
                 <CardDescription className="text-xs text-zinc-500">
                   Toggle which sections appear on the public homepage. Routes like /videos, /blogs, and /projects remain available.

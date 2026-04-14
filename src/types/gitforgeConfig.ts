@@ -35,6 +35,8 @@ export interface GitforgeConfig {
   template?: 'minimal' | 'classic' | 'bento' | 'hacker' | 'netflix' | 'threejs'
   hero?: HeroConfig
   customLinks?: CustomLink[]
+  // Search bar in navbar (defaults to true when omitted)
+  showSearch?: boolean
   // Section visibility toggles (all default to true when omitted)
   showVideosSection?: boolean
   showBlogsSection?: boolean
