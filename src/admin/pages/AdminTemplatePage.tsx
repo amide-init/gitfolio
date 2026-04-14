@@ -86,6 +86,37 @@ const TEMPLATES = [
     ),
   },
   {
+    id: 'threejs' as const,
+    label: 'Three.js',
+    description: '3D WebGL, interactive, immersive',
+    preview: (
+      <svg viewBox="0 0 120 80" className="h-full w-full" aria-hidden="true">
+        <rect width="120" height="80" fill="#0a0a0f" />
+        <defs>
+          <radialGradient id="tj-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#6366f1" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#0a0a0f" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="40" rx="40" ry="30" fill="url(#tj-glow)" />
+        {/* Wireframe cube */}
+        <polygon points="45,25 75,25 75,55 45,55" fill="none" stroke="#6366f1" strokeOpacity="0.6" strokeWidth="1" />
+        <polygon points="55,15 85,15 85,45 55,45" fill="none" stroke="#818cf8" strokeOpacity="0.4" strokeWidth="0.8" />
+        <line x1="45" y1="25" x2="55" y2="15" stroke="#6366f1" strokeOpacity="0.5" strokeWidth="0.8" />
+        <line x1="75" y1="25" x2="85" y2="15" stroke="#6366f1" strokeOpacity="0.5" strokeWidth="0.8" />
+        <line x1="75" y1="55" x2="85" y2="45" stroke="#6366f1" strokeOpacity="0.5" strokeWidth="0.8" />
+        <line x1="45" y1="55" x2="55" y2="45" stroke="#6366f1" strokeOpacity="0.5" strokeWidth="0.8" />
+        {/* Particles */}
+        <circle cx="20" cy="20" r="1" fill="#a5b4fc" opacity="0.7" />
+        <circle cx="100" cy="15" r="1.2" fill="#818cf8" opacity="0.5" />
+        <circle cx="15" cy="60" r="0.8" fill="#6366f1" opacity="0.6" />
+        <circle cx="105" cy="65" r="1" fill="#a5b4fc" opacity="0.4" />
+        <circle cx="30" cy="70" r="1.2" fill="#818cf8" opacity="0.5" />
+        <circle cx="95" cy="50" r="0.8" fill="#6366f1" opacity="0.6" />
+      </svg>
+    ),
+  },
+  {
     id: 'netflix' as const,
     label: 'Netflix',
     description: 'Cinematic, red-on-black, horizontal rows',
@@ -141,7 +172,7 @@ export function AdminTemplatePage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {TEMPLATES.map(({ id, label, description, preview }) => {
           const isActive = (config.template ?? 'hacker') === id
           return (
