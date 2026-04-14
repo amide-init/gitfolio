@@ -31,9 +31,7 @@ type HeroSectionProps = {
   theme: 'dark' | 'light'
 }
 
-export default function HeroSection({ hero, snapshot, theme }: HeroSectionProps) {
-  const isDark = theme === 'dark'
-
+export default function HeroSection({ hero, snapshot }: HeroSectionProps) {
   const mainDescription =
     (hero.minorInfo && hero.minorInfo.trim().length > 0) || !hero.description
       ? hero.minorInfo || hero.description
