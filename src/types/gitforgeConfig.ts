@@ -32,7 +32,7 @@ export interface GitforgeConfig {
   featuredRepos?: string[]
   listedRepo?: ListedRepoConfig
   /** Active portfolio template (optional, defaults to "threejs"). */
-  template?: 'minimal' | 'classic' | 'bento' | 'hacker' | 'netflix' | 'threejs'
+  template?: 'minimal' | 'classic' | 'bento' | 'hacker' | 'netflix' | 'threejs' | 'minecraft'
   hero?: HeroConfig
   customLinks?: CustomLink[]
   // Search bar in navbar (defaults to true when omitted)
