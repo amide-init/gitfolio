@@ -24,6 +24,16 @@ export default function RepoCard({ repo }: { repo: ProjectRepo }) {
       {/* MC-style bevel edges */}
       <div className="pointer-events-none absolute inset-0 border-t-2 border-l-2 border-[#c6c6c6]" />
       <div className="pointer-events-none absolute inset-0 border-b-2 border-r-2 border-[#555555]" />
+      {/* Enchantment glint on featured repos */}
+      {repo.featured && (
+        <div
+          className="pointer-events-none absolute inset-0 animate-mc-enchant opacity-30"
+          style={{
+            backgroundImage: 'linear-gradient(120deg, transparent 30%, rgba(138,205,50,0.35) 50%, transparent 70%)',
+            backgroundSize: '200% 100%',
+          }}
+        />
+      )}
 
       <div className="relative">
         <div className="flex items-center justify-between gap-4">

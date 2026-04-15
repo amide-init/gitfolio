@@ -27,6 +27,16 @@ export default function BlogCard({ blog, featured }: { blog: Blog; featured?: bo
       <div className="pointer-events-none absolute inset-0 border-t-2 border-l-2 border-[#c6c6c6]" />
       {/* Shadow edge (bottom & right) */}
       <div className="pointer-events-none absolute inset-0 border-b-2 border-r-2 border-[#555555]" />
+      {/* Enchantment glint on featured posts */}
+      {featured && (
+        <div
+          className="pointer-events-none absolute inset-0 animate-mc-enchant opacity-30"
+          style={{
+            backgroundImage: 'linear-gradient(120deg, transparent 30%, rgba(138,205,50,0.35) 50%, transparent 70%)',
+            backgroundSize: '200% 100%',
+          }}
+        />
+      )}
 
       <div className="relative flex items-start gap-2">
         <span className="mt-0.5 shrink-0 text-[#5c7a29] text-lg leading-none">⬛</span>
