@@ -1,6 +1,6 @@
 import { githubConfig } from '../generated/githubData'
 
-export type TemplateName = 'minimal' | 'classic' | 'bento' | 'hacker' | 'netflix' | 'threejs'
+export type TemplateName = 'minimal' | 'classic' | 'bento' | 'hacker' | 'netflix' | 'threejs' | 'minecraft'
 
 export const DEFAULT_TEMPLATE: TemplateName = 'threejs'
 
