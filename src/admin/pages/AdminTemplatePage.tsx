@@ -154,6 +154,39 @@ const TEMPLATES = [
       </svg>
     ),
   },
+  {
+    id: 'minecraft' as const,
+    label: 'Minecraft',
+    description: 'Pixelated, block-style, game-inspired',
+    preview: (
+      <svg viewBox="0 0 120 80" className="h-full w-full" aria-hidden="true">
+        <rect width="120" height="80" fill="#87CEEB" />
+        {/* Grass / ground */}
+        <rect x="0" y="52" width="120" height="28" fill="#6B8E23" />
+        <rect x="0" y="58" width="120" height="22" fill="#8B6914" />
+        {/* Dirt blocks grid */}
+        <rect x="0" y="58" width="15" height="10" fill="#7A5B1A" stroke="#6B4F16" strokeWidth="0.5" />
+        <rect x="15" y="58" width="15" height="10" fill="#8B6914" stroke="#6B4F16" strokeWidth="0.5" />
+        <rect x="30" y="58" width="15" height="10" fill="#7A5B1A" stroke="#6B4F16" strokeWidth="0.5" />
+        <rect x="45" y="58" width="15" height="10" fill="#8B6914" stroke="#6B4F16" strokeWidth="0.5" />
+        <rect x="60" y="58" width="15" height="10" fill="#7A5B1A" stroke="#6B4F16" strokeWidth="0.5" />
+        <rect x="75" y="58" width="15" height="10" fill="#8B6914" stroke="#6B4F16" strokeWidth="0.5" />
+        <rect x="90" y="58" width="15" height="10" fill="#7A5B1A" stroke="#6B4F16" strokeWidth="0.5" />
+        <rect x="105" y="58" width="15" height="10" fill="#8B6914" stroke="#6B4F16" strokeWidth="0.5" />
+        {/* Tree trunk */}
+        <rect x="20" y="30" width="6" height="22" fill="#6B4F16" />
+        {/* Tree leaves */}
+        <rect x="12" y="16" width="22" height="18" rx="1" fill="#2E8B2E" />
+        <rect x="16" y="12" width="14" height="8" rx="1" fill="#3CB043" />
+        {/* Sun */}
+        <rect x="90" y="8" width="14" height="14" fill="#FFD700" />
+        {/* Text blocks */}
+        <rect x="50" y="22" width="40" height="6" rx="1" fill="#ffffff" opacity="0.8" />
+        <rect x="50" y="32" width="55" height="4" rx="1" fill="#ffffff" opacity="0.5" />
+        <rect x="50" y="40" width="30" height="4" rx="1" fill="#ffffff" opacity="0.4" />
+      </svg>
+    ),
+  },
 ]
 
 export function AdminTemplatePage() {
