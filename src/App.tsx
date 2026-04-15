@@ -38,6 +38,8 @@ function App() {
   const isNetflix = template === 'netflix'
   // threejs template gets sci-fi HUD navbar
   const isThreejs = template === 'threejs'
+  // minecraft template gets game UI styling
+  const isMinecraft = template === 'minecraft'
 
   const showSearch = (githubConfig as { showSearch?: boolean }).showSearch !== false
 
@@ -172,25 +174,31 @@ function App() {
       ? 'min-h-screen bg-[#141414] text-white'
       : isThreejs
         ? 'min-h-screen bg-[#050509] text-slate-50'
-        : 'min-h-screen bg-slate-50 text-slate-900 dark:bg-[#050509] dark:text-slate-50'
+        : isMinecraft
+          ? 'min-h-screen bg-[#1a1a2e] text-white'
+          : 'min-h-screen bg-slate-50 text-slate-900 dark:bg-[#050509] dark:text-slate-50'
   const headerClasses = isHacker
     ? 'sticky top-0 z-20 border-b border-green-900/60 bg-black/95 backdrop-blur font-mono'
     : isNetflix
       ? 'sticky top-0 z-20 border-b border-white/5 bg-[#141414]/95 backdrop-blur'
       : isThreejs
         ? 'sticky top-0 z-20 bg-[#050509]/80 backdrop-blur-md'
-        : theme === 'dark'
-          ? 'sticky top-0 z-20 border-b border-white/5 bg-[#050509]/90 backdrop-blur'
-          : 'sticky top-0 z-20 border-b border-slate-200 bg-slate-50/90 backdrop-blur'
+        : isMinecraft
+          ? 'sticky top-0 z-20 border-b-2 border-[#3b3b3b] bg-[#8b8b8b]/95 backdrop-blur'
+          : theme === 'dark'
+            ? 'sticky top-0 z-20 border-b border-white/5 bg-[#050509]/90 backdrop-blur'
+            : 'sticky top-0 z-20 border-b border-slate-200 bg-slate-50/90 backdrop-blur'
   const footerClasses = isHacker
     ? 'border-t border-green-900/60 bg-black py-4 text-xs text-green-900 font-mono'
     : isNetflix
       ? 'border-t border-white/5 bg-[#141414] py-6 text-xs text-[#999]'
       : isThreejs
         ? 'border-t border-blue-900/30 bg-gradient-to-b from-[#080c18] to-[#050509] py-6 text-xs text-slate-400'
-        : theme === 'dark'
-          ? 'border-t border-slate-800 bg-gradient-to-b from-[#111120] to-[#050509] py-6 text-xs text-slate-400'
-          : 'border-t border-slate-200 bg-gradient-to-b from-slate-50 to-slate-100 py-6 text-xs text-slate-600'
+        : isMinecraft
+          ? 'border-t-2 border-[#3b3b3b] bg-[#8b8b8b] py-6 text-xs text-[#3b3b3b]'
+          : theme === 'dark'
+            ? 'border-t border-slate-800 bg-gradient-to-b from-[#111120] to-[#050509] py-6 text-xs text-slate-400'
+            : 'border-t border-slate-200 bg-gradient-to-b from-slate-50 to-slate-100 py-6 text-xs text-slate-600'
 
   const navInitials = (() => {
     const name = (hero.title || '').trim()
@@ -348,7 +356,7 @@ function App() {
             <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
               <Link
                 to="/"
-                className={`inline-flex items-center gap-2 no-underline ${isHacker ? 'text-green-500' : isNetflix ? 'text-white' : 'text-slate-900 dark:text-slate-100'}`}
+                className={`inline-flex items-center gap-2 no-underline ${isHacker ? 'text-green-500' : isNetflix ? 'text-white' : isMinecraft ? 'text-white' : 'text-slate-900 dark:text-slate-100'}`}
                 aria-label={`${hero.title} home`}
               >
                 {isHacker ? (
@@ -358,6 +366,12 @@ function App() {
                   </span>
                 ) : isNetflix ? (
                   <span className="text-lg font-black text-[#e50914] tracking-tight">{navInitials}</span>
+                ) : isMinecraft ? (
+                  <span className="relative inline-block border-2 border-[#3b3b3b] bg-[#5c7a29] px-2 py-0.5 text-sm font-bold text-white drop-shadow-[1px_1px_0_#3f3f00]">
+                    <span className="pointer-events-none absolute inset-0 border-t border-l border-[#8acd32]" />
+                    <span className="pointer-events-none absolute inset-0 border-b border-r border-[#3a5a19]" />
+                    <span className="relative">{navInitials}</span>
+                  </span>
                 ) : (
                   <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 text-xs font-semibold text-[#050509]" aria-hidden="true">
                     {navInitials}
@@ -386,6 +400,18 @@ function App() {
                   <Link to="/projects" className="transition hover:text-white">Projects</Link>
                   <a href={`${import.meta.env.BASE_URL}#stats`} className="transition hover:text-white">Stats</a>
                 </nav>
+              ) : isMinecraft ? (
+                <nav className="hidden md:flex items-center gap-1 text-xs font-bold" aria-label="Primary">
+                  {(['/', '/videos', '/blogs', '/projects'] as const).map((path, i) => {
+                    const labels = ['Home', 'Videos', 'Blogs', 'Projects']
+                    return (
+                      <Link key={path} to={path} className="relative border-2 border-[#3b3b3b] bg-[#6b6b6b] px-2.5 py-1 text-[#d4d4d4] transition-all hover:bg-[#555555] hover:text-white">
+                        {labels[i]}
+                      </Link>
+                    )
+                  })}
+                  <a href={`${import.meta.env.BASE_URL}#stats`} className="relative border-2 border-[#3b3b3b] bg-[#6b6b6b] px-2.5 py-1 text-[#d4d4d4] transition-all hover:bg-[#555555] hover:text-white">Stats</a>
+                </nav>
               ) : (
                 <nav className="hidden md:flex items-center gap-3 text-xs font-medium text-slate-700 dark:text-slate-300" aria-label="Primary">
                   <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-slate-500 hover:text-slate-900 dark:hover:border-slate-400 dark:hover:text-slate-50">Home</Link>
@@ -408,7 +434,9 @@ function App() {
                       ? 'border-green-900 bg-green-950/40 text-green-600 hover:bg-green-900/30'
                       : isNetflix
                         ? 'border-white/10 bg-white/5 text-[#e5e5e5] hover:bg-white/10'
-                        : 'border-indigo-300/60 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-300 dark:hover:bg-indigo-500/20'
+                        : isMinecraft
+                          ? 'border-[#3b3b3b] bg-[#5c7a29] text-white hover:bg-[#6b8e3e] rounded-none'
+                          : 'border-indigo-300/60 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-300 dark:hover:bg-indigo-500/20'
                   }`}
                 >
                   <ForkIcon className="h-3 w-3 fill-current" />
@@ -421,7 +449,7 @@ function App() {
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen((prev) => !prev)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-md transition ${isHacker ? 'text-green-700 hover:bg-green-900/20' : isNetflix ? 'text-white hover:bg-white/10' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`}
+                  className={`flex h-8 w-8 items-center justify-center rounded-md transition ${isHacker ? 'text-green-700 hover:bg-green-900/20' : isNetflix ? 'text-white hover:bg-white/10' : isMinecraft ? 'text-[#3b3b3b] hover:bg-[#6b6b6b]' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`}
                   aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 >
                   {mobileMenuOpen ? (
@@ -440,7 +468,7 @@ function App() {
             {/* Mobile dropdown menu */}
             {mobileMenuOpen && (
               <nav
-                className={`border-t md:hidden backdrop-blur ${isHacker ? 'border-green-900/60 bg-black/95 font-mono text-xs text-green-700' : isNetflix ? 'border-white/5 bg-[#141414]/95 text-sm text-[#e5e5e5]' : 'border-slate-200 bg-slate-50/95 dark:border-white/5 dark:bg-[#050509]/95'}`}
+                className={`border-t md:hidden backdrop-blur ${isHacker ? 'border-green-900/60 bg-black/95 font-mono text-xs text-green-700' : isNetflix ? 'border-white/5 bg-[#141414]/95 text-sm text-[#e5e5e5]' : isMinecraft ? 'border-[#3b3b3b] bg-[#8b8b8b]/95 text-sm text-[#3b3b3b] font-bold' : 'border-slate-200 bg-slate-50/95 dark:border-white/5 dark:bg-[#050509]/95'}`}
                 aria-label="Mobile navigation"
               >
                 <div className={`mx-auto flex max-w-5xl flex-col px-4 py-2 ${isHacker ? '' : isNetflix ? 'font-medium' : 'text-sm font-medium text-slate-700 dark:text-slate-300'}`}>

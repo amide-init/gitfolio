@@ -5,6 +5,7 @@ import BentoProjectsPage from '../templates/bento/ProjectsPage'
 import HackerProjectsPage from '../templates/hacker/ProjectsPage'
 import NetflixProjectsPage from '../templates/netflix/ProjectsPage'
 import ThreejsProjectsPage from '../templates/threejs/ProjectsPage'
+import MinecraftProjectsPage from '../templates/minecraft/ProjectsPage'
 
 export default function ProjectsPage() {
   if (activeTemplate === 'classic') return <ClassicProjectsPage />
@@ -12,5 +13,6 @@ export default function ProjectsPage() {
   if (activeTemplate === 'hacker') return <HackerProjectsPage />
   if (activeTemplate === 'netflix') return <NetflixProjectsPage />
   if (activeTemplate === 'threejs') return <ThreejsProjectsPage />
+  if (activeTemplate === 'minecraft') return <MinecraftProjectsPage />
   return <MinimalProjectsPage />
 }
