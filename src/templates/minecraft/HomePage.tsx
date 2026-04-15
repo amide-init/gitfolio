@@ -20,6 +20,7 @@ const stats = (siteContent as { stats?: unknown }).stats as {
 
 export default function MinecraftHomePage() {
   const { theme } = useOutletContext<LayoutContext>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { hero, snapshot, philosophy, projects } = siteContent as any
 
   const sectionsConfig = githubConfig as {
