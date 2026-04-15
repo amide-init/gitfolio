@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import FloatingParticles from './FloatingParticles'
 
 type Hero = {
   eyebrow: string
@@ -156,13 +157,14 @@ export default function HeroSection({ hero, snapshot }: HeroSectionProps) {
   return (
     <section id="hero" className="relative bg-[#1a1a2e] py-16 overflow-hidden" aria-labelledby="hero-title">
       <BlockGrid />
+      <FloatingParticles />
 
       {/* Dirt block border at the top */}
       <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B8E3E] via-[#8B6E4E] to-[#6B8E3E]" style={{ imageRendering: 'pixelated' }} />
 
       <div className="relative mx-auto max-w-4xl px-6">
         {/* Main panel — styled like the Minecraft inventory UI */}
-        <div className="relative border-4 border-[#3b3b3b] bg-[#c6c6c6] p-1">
+        <div className="relative border-4 border-[#3b3b3b] bg-[#c6c6c6] p-1 animate-mc-fade-up">
           {/* Inner bevel */}
           <div className="border-2 border-t-[#ffffff80] border-l-[#ffffff80] border-b-[#555555] border-r-[#555555] bg-[#8b8b8b] p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-start gap-6">
@@ -197,10 +199,11 @@ export default function HeroSection({ hero, snapshot }: HeroSectionProps) {
                   <div className="mt-4">
                     <p className="text-xs text-[#555555] uppercase tracking-wider mb-2">{snapshot.title}</p>
                     <div className="flex flex-wrap gap-1">
-                      {snapshot.items.map((item) => (
+                      {snapshot.items.map((item, i) => (
                         <span
                           key={item}
-                          className="relative inline-block border-2 border-[#3b3b3b] bg-[#6b6b6b] px-2 py-1 text-xs text-[#5c7a29] font-bold"
+                          className="relative inline-block border-2 border-[#3b3b3b] bg-[#6b6b6b] px-2 py-1 text-xs text-[#5c7a29] font-bold animate-mc-place hover:animate-mc-item-bob"
+                          style={{ animationDelay: `${0.5 + i * 0.06}s` }}
                         >
                           <span className="pointer-events-none absolute inset-0 border-t border-l border-[#9b9b9b]" />
                           <span className="pointer-events-none absolute inset-0 border-b border-r border-[#4b4b4b]" />
