@@ -93,12 +93,13 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
     renderer.setClearColor(0x000000, 0)
     mount.appendChild(renderer.domElement)
 
-    const scene = new THREE.Scene()
+    const scene  = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 100)
-    camera.position.set(0, 2.5, 10)
+    // Camera stays fixed — we rotate the graph group instead
+    camera.position.set(0, 3, 12)
     camera.lookAt(0, 0, 0)
 
-    // Lights
+    // Lights (attached to scene so they don't rotate with the group)
     scene.add(new THREE.AmbientLight(0x0d1a3a, 6))
     const key = new THREE.PointLight(0x3b82f6, 60, 28)
     key.position.set(-5, 7, 9)
@@ -106,6 +107,13 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
     const fill = new THREE.PointLight(0x06b6d4, 35, 22)
     fill.position.set(6, -3, 6)
     scene.add(fill)
+
+    // ── Tilted graph group ────────────────────────────────────────────────────
+    // Tilt ~22° toward the viewer on X so the ring reads as a proper angled plane
+    const BASE_TILT = -0.38  // radians on X
+    const graphGroup = new THREE.Group()
+    graphGroup.rotation.x = BASE_TILT
+    scene.add(graphGroup)
 
     // ── Node positions ────────────────────────────────────────────────────────
     const featured = repos.filter((r) => r.featured)
@@ -115,25 +123,26 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
 
     const basePositions: THREE.Vector3[] = []
 
-    // Featured: tight inner ring
+    // Featured: tight inner ring with more Y spread for depth
     featured.forEach((_, i) => {
       const angle = (i / Math.max(featured.length, 1)) * Math.PI * 2
       const r = featured.length === 1 ? 0 : 1.8
       basePositions.push(new THREE.Vector3(
         Math.cos(angle) * r,
-        (Math.random() - 0.5) * 0.8,
-        Math.sin(angle) * r * 0.45,
+        (Math.random() - 0.5) * 1.8,
+        Math.sin(angle) * r,
       ))
     })
 
-    // Others: outer ring(s)
+    // Others: outer ring with alternating elevation layers for 3-D scatter feel
     others.forEach((_, i) => {
       const angle = (i / others.length) * Math.PI * 2 + Math.PI / others.length
-      const r = 3.4 + (i % 2) * 0.75
+      const r = 3.4 + (i % 2) * 0.8
+      const layer = (i % 3) - 1   // -1, 0, +1  → three height bands
       basePositions.push(new THREE.Vector3(
         Math.cos(angle) * r,
-        (Math.random() - 0.5) * 1.6,
-        Math.sin(angle) * r * 0.45,
+        layer * 1.4 + (Math.random() - 0.5) * 0.6,
+        Math.sin(angle) * r,
       ))
     })
 
@@ -153,7 +162,7 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
       const mesh = new THREE.Mesh(geo, mat)
       mesh.position.copy(basePositions[i])
       mesh.userData = { idx: i }
-      scene.add(mesh)
+      graphGroup.add(mesh)
 
       // Glow halo
       const haloGeo = new THREE.SphereGeometry(radius * 1.75, 16, 16)
@@ -161,8 +170,9 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
         color: col, transparent: true, opacity: 0.07,
         side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false,
       })
-      scene.add(new THREE.Mesh(haloGeo, haloMat))
-      scene.children[scene.children.length - 1].position.copy(basePositions[i])
+      const halo = new THREE.Mesh(haloGeo, haloMat)
+      halo.position.copy(basePositions[i])
+      graphGroup.add(halo)
 
       // Featured ring
       if (repo.featured) {
@@ -171,13 +181,13 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
         const ring = new THREE.Mesh(ringGeo, ringMat)
         ring.position.copy(basePositions[i])
         ring.rotation.x = Math.PI / 2
-        scene.add(ring)
+        graphGroup.add(ring)
       }
 
       // Label
       const label = makeLabel(repo.name, repo.stars)
       label.position.set(basePositions[i].x, basePositions[i].y + radius + 0.52, basePositions[i].z)
-      scene.add(label)
+      graphGroup.add(label)
 
       nodes.push({ mesh, mat, haloMat, repo, idx: i })
     })
@@ -185,7 +195,6 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
     // ── Connection lines ──────────────────────────────────────────────────────
     const lineVerts: number[] = []
 
-    // Same-language connections
     for (let i = 0; i < ordered.length; i++) {
       for (let j = i + 1; j < ordered.length; j++) {
         if (ordered[i].language && ordered[i].language === ordered[j].language) {
@@ -193,7 +202,6 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
         }
       }
     }
-    // Featured → first 3 others
     featured.forEach((_, fi) => {
       others.slice(0, 3).forEach((_, oi) => {
         lineVerts.push(...basePositions[fi].toArray(), ...basePositions[featured.length + oi].toArray())
@@ -207,10 +215,10 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
         color: 0x3b82f6, transparent: true, opacity: 0.14,
         blending: THREE.AdditiveBlending, depthWrite: false,
       })
-      scene.add(new THREE.LineSegments(lineGeo, lineMat))
+      graphGroup.add(new THREE.LineSegments(lineGeo, lineMat))
     }
 
-    // ── Ambient particles ─────────────────────────────────────────────────────
+    // ── Ambient particles (in scene, not group — they stay still) ─────────────
     const PC = 70
     const pp = new Float32Array(PC * 3)
     for (let i = 0; i < PC; i++) {
@@ -222,8 +230,9 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
     pGeo.setAttribute('position', new THREE.BufferAttribute(pp, 3))
     scene.add(new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x3b82f6, size: 0.032, transparent: true, opacity: 0.35 })))
 
-    // ── Orbit / drag ──────────────────────────────────────────────────────────
-    let orbitY = 0, orbitX = 0
+    // ── Drag / interaction ────────────────────────────────────────────────────
+    let rotY = 0        // group Y rotation (auto-spin + drag)
+    let rotXOffset = 0  // drag offset on top of BASE_TILT
     let autoRotate = true
     let isDragging = false, prevDX = 0, prevDY = 0
     const mouse = new THREE.Vector2(-99, -99)
@@ -233,8 +242,8 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
     const onUp   = () => { isDragging = false; setTimeout(() => { autoRotate = true }, 2200) }
     const onMove = (e: MouseEvent) => {
       if (isDragging) {
-        orbitY += (e.clientX - prevDX) * 0.005
-        orbitX = Math.max(-0.55, Math.min(0.55, orbitX + (e.clientY - prevDY) * 0.003))
+        rotY += (e.clientX - prevDX) * 0.005
+        rotXOffset = Math.max(-0.45, Math.min(0.45, rotXOffset + (e.clientY - prevDY) * 0.003))
         prevDX = e.clientX; prevDY = e.clientY
       }
       const rect = mount.getBoundingClientRect()
@@ -275,13 +284,10 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
       frameId = requestAnimationFrame(animate)
       const t = clock.getElapsedTime()
 
-      if (autoRotate) orbitY += 0.0025
-
-      const dist = 10
-      camera.position.x = Math.sin(orbitY) * dist
-      camera.position.z = Math.cos(orbitY) * dist
-      camera.position.y = 2.5 + orbitX * 5
-      camera.lookAt(0, 0, 0)
+      // Rotate the group (not the camera) for a clean tilted-disk spin
+      if (autoRotate) rotY += 0.0025
+      graphGroup.rotation.y = rotY
+      graphGroup.rotation.x = BASE_TILT + rotXOffset
 
       // Throttled hover detection
       if (t - lastHoverCheck > 0.045) {
@@ -293,7 +299,10 @@ export default function RepoGraph({ repos }: RepoGraphProps) {
         if (newIdx !== hoveredIdxRef.current) {
           hoveredIdxRef.current = newIdx
           if (newIdx >= 0) {
-            const proj = nodes[newIdx].mesh.position.clone().project(camera)
+            // Use world position so the tilt is accounted for in the tooltip
+            graphGroup.updateMatrixWorld()
+            const worldPos = nodes[newIdx].mesh.getWorldPosition(new THREE.Vector3())
+            const proj = worldPos.project(camera)
             setTipPos({
               x: ((proj.x + 1) / 2) * mount.clientWidth,
               y: ((-proj.y + 1) / 2) * mount.clientHeight,
