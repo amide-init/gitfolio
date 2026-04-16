@@ -2,7 +2,6 @@ import { lazy, Suspense, useMemo, useState } from 'react'
 
 const PhilosophyScene = lazy(() => import('./PhilosophyScene'))
 const CUBE_FACE_COUNT = 4
-const FACE_LABELS = ['Front', 'Back', 'Left', 'Right']
 
 type PhilosophyCardData = { title: string; body: string }
 type Philosophy = { title: string; body: string; cards: PhilosophyCardData[] }
@@ -32,37 +31,22 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
       aria-labelledby="philosophy-title"
     >
       <div className="relative z-10 mx-auto max-w-5xl px-6">
-        <header className="mb-10 max-w-2xl">
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-blue-400">
-            {philosophy.title}
-          </p>
-          <p className="text-sm leading-relaxed text-slate-400">{philosophy.body}</p>
-        </header>
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <header className="max-w-xl">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-blue-400/90">
+              {philosophy.title}
+            </p>
+            <h2 id="philosophy-title" className="text-3xl font-semibold leading-tight text-slate-100 sm:text-4xl">
+              {philosophy.title}
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-slate-300">{philosophy.body}</p>
+          </header>
 
-        <div className="mx-auto mb-8 h-[430px] w-full max-w-3xl overflow-hidden rounded-2xl border border-blue-900/35 bg-[#070d1d]/45 backdrop-blur-sm">
-          <Suspense fallback={null}>
-            <PhilosophyScene cards={cubeCards} activeIndex={activeFace} onActiveIndexChange={setActiveFace} />
-          </Suspense>
-        </div>
-
-        <div className="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2">
-          {cubeCards.map((card, index) => (
-            <button
-              key={`${FACE_LABELS[index]}-${card.title}`}
-              type="button"
-              onClick={() => setActiveFace(index)}
-              className={`rounded-xl border px-4 py-3 text-left transition ${
-                activeFace === index
-                  ? 'border-cyan-400/80 bg-cyan-500/10 shadow-[0_0_24px_rgba(6,182,212,0.18)]'
-                  : 'border-blue-900/45 bg-[#060b17]/70 hover:border-blue-500/70 hover:bg-[#0b1428]/75'
-              }`}
-            >
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-300/85">
-                {FACE_LABELS[index]}
-              </p>
-              <p className="text-sm font-semibold text-slate-100">{card.title}</p>
-            </button>
-          ))}
+          <div className="h-[430px] w-full overflow-hidden rounded-2xl border border-blue-900/35 bg-[#070d1d]/45 backdrop-blur-sm">
+            <Suspense fallback={null}>
+              <PhilosophyScene cards={cubeCards} activeIndex={activeFace} onActiveIndexChange={setActiveFace} />
+            </Suspense>
+          </div>
         </div>
       </div>
     </section>
