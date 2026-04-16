@@ -6,14 +6,14 @@ type PhilosophyCardData = { title: string; body: string }
 type Philosophy = { title: string; body: string; cards: PhilosophyCardData[] }
 
 export default function PhilosophySection({ philosophy }: { philosophy: Philosophy }) {
-  if (!philosophy?.cards?.length) return null
-
+  const cards = philosophy?.cards
   const cubeCards = useMemo(
-    () => Array.from({ length: 4 }, (_, i) => philosophy.cards[i % philosophy.cards.length]),
-    [philosophy.cards],
+    () => (cards?.length ? Array.from({ length: 4 }, (_, i) => cards[i % cards.length]) : []),
+    [cards],
   )
   const [activeFace, setActiveFace] = useState(0)
   const faceLabels = ['Front', 'Back', 'Left', 'Right']
+  if (!cards?.length) return null
 
   return (
     <section

@@ -97,7 +97,9 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     [cards],
   )
 
-  onActiveChangeRef.current = onActiveIndexChange
+  useEffect(() => {
+    onActiveChangeRef.current = onActiveIndexChange
+  }, [onActiveIndexChange])
 
   useEffect(() => {
     const mount = mountRef.current
