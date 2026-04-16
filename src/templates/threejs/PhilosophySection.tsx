@@ -1,13 +1,29 @@
-import { lazy, Suspense } from 'react'
-import PhilosophyCard from './PhilosophyCard'
+import { lazy, Suspense, useMemo, useState } from 'react'
 
 const PhilosophyScene = lazy(() => import('./PhilosophyScene'))
+const CUBE_FACE_COUNT = 4
+const FACE_LABELS = ['Front', 'Back', 'Left', 'Right']
 
 type PhilosophyCardData = { title: string; body: string }
 type Philosophy = { title: string; body: string; cards: PhilosophyCardData[] }
+const EMPTY_FACE_CARD: PhilosophyCardData = {
+  title: 'More to come',
+  body: 'Add another philosophy item to fill this cube face.',
+}
 
 export default function PhilosophySection({ philosophy }: { philosophy: Philosophy }) {
-  if (!philosophy?.cards?.length) return null
+  const cards = philosophy?.cards
+  const cubeCards = useMemo(
+    () => {
+      if (!cards?.length) return []
+      const filled = cards.slice(0, CUBE_FACE_COUNT)
+      while (filled.length < CUBE_FACE_COUNT) filled.push(EMPTY_FACE_CARD)
+      return filled
+    },
+    [cards],
+  )
+  const [activeFace, setActiveFace] = useState(0)
+  if (!cards?.length) return null
 
   return (
     <section
@@ -15,11 +31,6 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
       className="relative overflow-hidden border-t border-blue-900/30 bg-[#050509] py-16"
       aria-labelledby="philosophy-title"
     >
-      {/* Three.js floating wireframe shapes — one per card */}
-      <Suspense fallback={null}>
-        <PhilosophyScene count={philosophy.cards.length} />
-      </Suspense>
-
       <div className="relative z-10 mx-auto max-w-5xl px-6">
         <header className="mb-10 max-w-2xl">
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-blue-400">
@@ -28,14 +39,29 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
           <p className="text-sm leading-relaxed text-slate-400">{philosophy.body}</p>
         </header>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          {philosophy.cards.map((card, i) => (
-            <PhilosophyCard
-              key={card.title}
-              title={card.title}
-              body={card.body}
-              index={i}
-            />
+        <div className="mx-auto mb-8 h-[430px] w-full max-w-3xl overflow-hidden rounded-2xl border border-blue-900/35 bg-[#070d1d]/45 backdrop-blur-sm">
+          <Suspense fallback={null}>
+            <PhilosophyScene cards={cubeCards} activeIndex={activeFace} onActiveIndexChange={setActiveFace} />
+          </Suspense>
+        </div>
+
+        <div className="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2">
+          {cubeCards.map((card, index) => (
+            <button
+              key={`${FACE_LABELS[index]}-${card.title}`}
+              type="button"
+              onClick={() => setActiveFace(index)}
+              className={`rounded-xl border px-4 py-3 text-left transition ${
+                activeFace === index
+                  ? 'border-cyan-400/80 bg-cyan-500/10 shadow-[0_0_24px_rgba(6,182,212,0.18)]'
+                  : 'border-blue-900/45 bg-[#060b17]/70 hover:border-blue-500/70 hover:bg-[#0b1428]/75'
+              }`}
+            >
+              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-300/85">
+                {FACE_LABELS[index]}
+              </p>
+              <p className="text-sm font-semibold text-slate-100">{card.title}</p>
+            </button>
           ))}
         </div>
       </div>
