@@ -44,6 +44,7 @@ function getPreviewImageUrl(url: string): string | null {
       if (owner && repo) {
         return `https://opengraph.githubassets.com/1/${owner}/${repo}`
       }
+      return null
     }
 
     return `${WORDPRESS_MSHOTS_BASE}${encodeURIComponent(parsed.toString())}?w=${WEB_PREVIEW_WIDTH}`
@@ -130,11 +131,6 @@ export default function ProjectCard({ project }: { project: Project }) {
             <div className="absolute right-2 top-2 opacity-75 transition-opacity group-hover:opacity-100">
               <CardShape index={seed % SHAPE_KEYS.length} color={color.hex} size={64} isHovered={hovered} />
             </div>
-          )}
-          {previewFailed && (
-            <p className="absolute right-3 top-3 text-[10px] uppercase tracking-[0.16em] text-slate-400">
-              Placeholder
-            </p>
           )}
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#080c18] to-transparent" />
           <h3 className="absolute bottom-3 left-3 right-3 line-clamp-2 text-sm font-semibold leading-snug text-slate-100">
