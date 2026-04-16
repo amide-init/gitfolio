@@ -61,8 +61,6 @@ export default function ProjectCard({ project }: { project: Project }) {
     () => (previewLink ? getPreviewImageUrl(previewLink) : null),
     [previewLink],
   )
-  const isGithubPreview = previewImageUrl?.startsWith('https://opengraph.githubassets.com/') ?? false
-  const previewAltText = `${isGithubPreview ? 'GitHub repository' : 'Website'} preview for ${project.title || 'project'}`
   const host = previewLink
     ? (() => {
         try {
@@ -74,6 +72,8 @@ export default function ProjectCard({ project }: { project: Project }) {
         }
       })()
     : null
+  const isGithubPreview = previewImageUrl?.startsWith('https://opengraph.githubassets.com/') ?? false
+  const previewAltText = `${isGithubPreview ? 'GitHub repository' : 'Website'} preview for ${project.title || 'project'}${host ? ` (${host})` : ''}`
   const [failedPreviewUrl, setFailedPreviewUrl] = useState<string | null>(null)
   const previewFailed = !!previewImageUrl && failedPreviewUrl === previewImageUrl
 
