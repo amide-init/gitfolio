@@ -10,11 +10,25 @@ const PREVIEW_COLORS = [
   { hex: '#f59e0b', bar: 'from-amber-500 to-orange-400', glow: 'from-amber-500' },
   { hex: '#ec4899', bar: 'from-pink-500 to-rose-400', glow: 'from-pink-500' },
 ]
+const MAX_VISIBLE_LINKS = 2
+const VALID_HOSTNAME_PATTERN = /^[a-z0-9.-]+$/i
 
 function hashTitle(title: string): number {
   let hash = 0
+  // 31 is a common prime multiplier for lightweight deterministic string hashing.
   for (let i = 0; i < title.length; i += 1) hash = (hash * 31 + title.charCodeAt(i)) >>> 0
   return hash
+}
+
+function fallbackLinkText(url: string): string {
+  try {
+    const { hostname, pathname } = new URL(url)
+    const cleanHost = hostname.replace(/^www\./, '')
+    const cleanPath = pathname === '/' ? '' : pathname
+    return `${cleanHost}${cleanPath}`
+  } catch {
+    return url
+  }
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
@@ -24,8 +38,10 @@ export default function ProjectCard({ project }: { project: Project }) {
   const host = previewLink
     ? (() => {
         try {
-          return new URL(previewLink).hostname.replace(/^www\./, '')
+          const hostname = new URL(previewLink).hostname.replace(/^www\./, '')
+          return VALID_HOSTNAME_PATTERN.test(hostname) ? hostname : null
         } catch {
+          // Ignore invalid URLs from user content and continue without hostname text.
           return null
         }
       })()
@@ -87,7 +103,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           )}
           {project.links && project.links.length > 0 && (
             <div className="mt-auto flex flex-wrap gap-2 pt-4">
-              {project.links.slice(0, 2).map((link, i) =>
+              {project.links.slice(0, MAX_VISIBLE_LINKS).map((link, i) =>
                 link.url ? (
                   <a
                     key={i}
@@ -96,7 +112,7 @@ export default function ProjectCard({ project }: { project: Project }) {
                     rel="noreferrer"
                     className="inline-flex items-center gap-1 rounded-full border border-blue-500/25 bg-blue-500/10 px-2.5 py-1 text-[11px] font-medium text-blue-300 transition hover:border-blue-400/40 hover:bg-blue-500/20"
                   >
-                    {link.label || 'Open'}
+                    {link.label || fallbackLinkText(link.url)}
                     <span aria-hidden="true">↗</span>
                   </a>
                 ) : null,
