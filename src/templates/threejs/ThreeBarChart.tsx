@@ -158,7 +158,7 @@ export default function ThreeBarChart({
       if (hoveredIdx >= 0) {
         const d = data[hoveredIdx]
         const pos3 = bars[hoveredIdx].mesh.position.clone()
-        pos3.y = bars[hoveredIdx].mesh.scale.y * bars[hoveredIdx].targetH
+        pos3.y = bars[hoveredIdx].mesh.scale.y + 0.1
         const projected = pos3.clone().project(camera)
         setTooltip({
           x: ((projected.x + 1) / 2) * w,
