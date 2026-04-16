@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { X, GitFork, Copy, Check, ExternalLink } from 'lucide-react'
+import { X, GitFork, Copy, Check, ExternalLink, Link2 } from 'lucide-react'
 import HeroSection from '../templates/threejs/HeroSection'
 import GitHubSection from '../templates/threejs/GitHubSection'
 import StatsSection from '../templates/threejs/StatsSection'
@@ -272,12 +272,20 @@ type Props = {
 }
 
 export function PortfolioPreviewModal({ user, repos, allRepos, onClose }: Props) {
+  const [linkCopied, setLinkCopied] = useState(false)
+
   // Lock body scroll
   useEffect(() => {
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = prev }
   }, [])
+
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(window.location.href).catch(() => {})
+    setLinkCopied(true)
+    setTimeout(() => setLinkCopied(false), 2000)
+  }
 
   // Escape is handled by NavSearch (it dismisses preview first, then closes search)
   // No duplicate listener here.
@@ -306,6 +314,14 @@ export function PortfolioPreviewModal({ user, repos, allRepos, onClose }: Props)
           </span>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={copyLink}
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-zinc-700 bg-zinc-800/60 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition hover:bg-zinc-700"
+          >
+            {linkCopied ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Link2 className="h-3.5 w-3.5" />}
+            {linkCopied ? 'Copied!' : 'Share link'}
+          </button>
           <ForkButton
             login={user.login}
             className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-indigo-500/40 bg-indigo-500/10 px-3 py-1.5 text-xs font-semibold text-indigo-300 transition hover:bg-indigo-500/20"
