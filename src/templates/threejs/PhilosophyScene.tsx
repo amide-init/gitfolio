@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
 type PhilosophyCardData = { title: string; body: string }
@@ -10,6 +10,22 @@ interface PhilosophySceneProps {
 }
 
 const FACE_ANGLES = [0, Math.PI, Math.PI / 2, -Math.PI / 2]
+const MAX_TRUNCATION_LENGTH = 95
+const CUBE_SIZE = 3
+const CUBE_METALNESS = 0.5
+const CUBE_ROUGHNESS = 0.34
+const CUBE_OPACITY = 0.45
+const CUBE_EMISSIVE_INTENSITY = 0.55
+const FLOOR_RADIUS = 2.7
+const FLOOR_SEGMENTS = 64
+const FLOOR_OPACITY = 0.14
+const FLOOR_Y = -2.25
+const DRAG_SENSITIVITY = 0.012
+const ROTATION_DAMPING = 0.1
+const WAVE_SPEED = 0.6
+const WAVE_INTENSITY = 0.05
+const FLOAT_SPEED = 0.9
+const FLOAT_INTENSITY = 0.06
 
 function normalizeAngle(value: number): number {
   let angle = value
@@ -46,7 +62,10 @@ function wrapText(
   }
 
   if (line && lines < maxLines) {
-    const rendered = lines === maxLines - 1 ? `${line.slice(0, 95)}${line.length > 95 ? '…' : ''}` : line
+    const rendered =
+      lines === maxLines - 1
+        ? `${line.slice(0, MAX_TRUNCATION_LENGTH)}${line.length > MAX_TRUNCATION_LENGTH ? '…' : ''}`
+        : line
     ctx.fillText(rendered, x, currentY)
   }
 }
@@ -92,10 +111,6 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
   const cubeRef = useRef<THREE.Group | null>(null)
   const targetYRef = useRef(0)
   const onActiveChangeRef = useRef(onActiveIndexChange)
-  const sideCards = useMemo(
-    () => Array.from({ length: 4 }, (_, i) => cards[i % cards.length]),
-    [cards],
-  )
 
   useEffect(() => {
     onActiveChangeRef.current = onActiveIndexChange
@@ -103,7 +118,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
 
   useEffect(() => {
     const mount = mountRef.current
-    if (!mount || sideCards.length === 0) return
+    if (!mount || cards.length === 0) return
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -127,17 +142,17 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     scene.add(cube)
     cubeRef.current = cube
 
-    const size = 3
+    const size = CUBE_SIZE
     const body = new THREE.Mesh(
       new THREE.BoxGeometry(size, size, size),
       new THREE.MeshStandardMaterial({
         color: 0x040712,
-        metalness: 0.5,
-        roughness: 0.34,
+        metalness: CUBE_METALNESS,
+        roughness: CUBE_ROUGHNESS,
         transparent: true,
-        opacity: 0.45,
+        opacity: CUBE_OPACITY,
         emissive: 0x0b1228,
-        emissiveIntensity: 0.55,
+        emissiveIntensity: CUBE_EMISSIVE_INTENSITY,
       }),
     )
     cube.add(body)
@@ -155,7 +170,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
       { position: new THREE.Vector3(size / 2 + 0.02, 0, 0), rotationY: -Math.PI / 2 },
     ]
 
-    const faceMaterials = sideCards.map((card) => (
+    const faceMaterials = cards.map((card) => (
       new THREE.MeshBasicMaterial({
         map: buildFaceTexture(card),
         transparent: false,
@@ -174,17 +189,17 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     cube.rotation.y = targetYRef.current
 
     const floor = new THREE.Mesh(
-      new THREE.CircleGeometry(2.7, 64),
+      new THREE.CircleGeometry(FLOOR_RADIUS, FLOOR_SEGMENTS),
       new THREE.MeshBasicMaterial({
         color: 0x0ea5e9,
         transparent: true,
-        opacity: 0.14,
+        opacity: FLOOR_OPACITY,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       }),
     )
     floor.rotation.x = -Math.PI / 2
-    floor.position.y = -2.25
+    floor.position.y = FLOOR_Y
     scene.add(floor)
 
     let dragging = false
@@ -212,7 +227,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
       if (!dragging) return
       const dx = event.clientX - prevX
       prevX = event.clientX
-      targetYRef.current += dx * 0.012
+      targetYRef.current += dx * DRAG_SENSITIVITY
     }
     const up = () => {
       if (!dragging) return
@@ -245,9 +260,9 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
 
       const cubeGroup = cubeRef.current
       if (cubeGroup) {
-        cubeGroup.rotation.y += normalizeAngle(targetYRef.current - cubeGroup.rotation.y) * 0.1
-        cubeGroup.rotation.x = Math.sin(elapsed * 0.6) * 0.05
-        cubeGroup.position.y = Math.sin(elapsed * 0.9) * 0.06
+        cubeGroup.rotation.y += normalizeAngle(targetYRef.current - cubeGroup.rotation.y) * ROTATION_DAMPING
+        cubeGroup.rotation.x = Math.sin(elapsed * WAVE_SPEED) * WAVE_INTENSITY
+        cubeGroup.position.y = Math.sin(elapsed * FLOAT_SPEED) * FLOAT_INTENSITY
       }
 
       renderer.render(scene, camera)
@@ -282,7 +297,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
       try { mount.removeChild(renderer.domElement) } catch { /* ignore */ }
       cubeRef.current = null
     }
-  }, [activeIndex, sideCards])
+  }, [activeIndex, cards])
 
   useEffect(() => {
     targetYRef.current = FACE_ANGLES[activeIndex] ?? 0
