@@ -271,9 +271,9 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     const animate = () => {
       frameId = requestAnimationFrame(animate)
       const elapsed = clock.getElapsedTime()
-      while (elapsed >= nextAutoSwitchAtRef.current) {
+      if (elapsed >= nextAutoSwitchAtRef.current) {
         currentAutoFaceRef.current = (currentAutoFaceRef.current + 1) % FACE_ANGLES.length
-        nextAutoSwitchAtRef.current += AUTO_ROTATION_INTERVAL_SECONDS
+        nextAutoSwitchAtRef.current = elapsed + AUTO_ROTATION_INTERVAL_SECONDS
         onActiveChangeRef.current(currentAutoFaceRef.current)
       }
       targetYRef.current = FACE_ANGLES[currentAutoFaceRef.current]

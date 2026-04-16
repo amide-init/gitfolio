@@ -33,9 +33,7 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
       <div className="relative z-10 mx-auto max-w-5xl px-6">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <header className="max-w-xl">
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-blue-400/90">
-              Philosophy
-            </p>
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-blue-400/90">Insights</p>
             <h2 id="philosophy-title" className="text-3xl font-semibold leading-tight text-slate-100 sm:text-4xl">
               {philosophy.title}
             </h2>
