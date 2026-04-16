@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { Project } from '../../types/contentTypes'
 import CardShape, { SHAPE_KEYS } from './CardShape'
 
@@ -56,7 +56,10 @@ export default function ProjectCard({ project }: { project: Project }) {
   const seed = hashTitle(project.title || project.id)
   const color = PREVIEW_COLORS[seed % PREVIEW_COLORS.length]
   const previewLink = project.links?.find((link) => link.url)?.url
-  const previewImageUrl = previewLink ? getPreviewImageUrl(previewLink) : null
+  const previewImageUrl = useMemo(
+    () => (previewLink ? getPreviewImageUrl(previewLink) : null),
+    [previewLink],
+  )
   const host = previewLink
     ? (() => {
         try {
