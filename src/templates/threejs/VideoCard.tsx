@@ -35,6 +35,7 @@ export default function VideoCard({ video }: { video: Video }) {
   return (
     <div
       ref={cardRef}
+      className="h-full"
       onMouseEnter={() => setHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { setHovered(false); setTilt({ x: 0, y: 0 }) }}
@@ -44,7 +45,7 @@ export default function VideoCard({ video }: { video: Video }) {
         willChange: 'transform',
       }}
     >
-      <article className="group relative flex flex-col overflow-hidden rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] transition-shadow duration-300 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+      <article className="group relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] transition-shadow duration-300 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
         {/* Animated top-bar accent */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-blue-500 to-cyan-400 opacity-40 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -73,6 +74,24 @@ export default function VideoCard({ video }: { video: Video }) {
             </div>
             {/* Bottom gradient overlay */}
             <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#080c18] to-transparent opacity-80" />
+          </a>
+        )}
+        {!thumbnail && (
+          <a
+            href={video.videoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="relative block aspect-video w-full shrink-0 overflow-hidden bg-[#070b16]"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.2),transparent_45%),radial-gradient(circle_at_80%_78%,rgba(59,130,246,0.22),transparent_40%)]" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/80 ring-2 ring-white/20 shadow-[0_0_24px_rgba(59,130,246,0.5)] backdrop-blur-sm">
+                <svg className="ml-0.5 h-5 w-5 fill-white" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
           </a>
         )}
 

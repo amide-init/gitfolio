@@ -57,6 +57,7 @@ export default function BlogCard({ blog, excerptLength = 120, index = 0 }: BlogC
   return (
     <div
       ref={cardRef}
+      className="h-full"
       onMouseEnter={() => setHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { setHovered(false); setTilt({ x: 0, y: 0 }) }}
@@ -66,7 +67,7 @@ export default function BlogCard({ blog, excerptLength = 120, index = 0 }: BlogC
         willChange: 'transform',
       }}
     >
-      <article className="group relative flex flex-col rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] p-5 transition-shadow duration-300 hover:border-blue-500/40 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+      <article className="group relative flex h-full min-h-[320px] flex-col rounded-xl border border-blue-900/40 bg-gradient-to-b from-[#0d1220] to-[#080c18] p-5 transition-shadow duration-300 hover:border-blue-500/40 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]">
         {/* Animated top-bar accent */}
         <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${c.bar} opacity-40 transition-opacity duration-300 group-hover:opacity-100`} />
 
