@@ -159,6 +159,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
   const targetYRef = useRef(0)
   const onActiveChangeRef = useRef(onActiveIndexChange)
   const currentAutoFaceRef = useRef(0)
+  const nextAutoSwitchAtRef = useRef(AUTO_ROTATION_INTERVAL_SECONDS)
 
   useEffect(() => {
     onActiveChangeRef.current = onActiveIndexChange
@@ -189,6 +190,8 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     const cube = new THREE.Group()
     scene.add(cube)
     cubeRef.current = cube
+    currentAutoFaceRef.current = activeIndex
+    nextAutoSwitchAtRef.current = AUTO_ROTATION_INTERVAL_SECONDS
 
     const size = CUBE_SIZE
     const body = new THREE.Mesh(
@@ -268,12 +271,12 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     const animate = () => {
       frameId = requestAnimationFrame(animate)
       const elapsed = clock.getElapsedTime()
-      const autoFace = Math.floor(elapsed / AUTO_ROTATION_INTERVAL_SECONDS) % FACE_ANGLES.length
-      if (autoFace !== currentAutoFaceRef.current) {
-        currentAutoFaceRef.current = autoFace
-        onActiveChangeRef.current(autoFace)
+      while (elapsed >= nextAutoSwitchAtRef.current) {
+        currentAutoFaceRef.current = (currentAutoFaceRef.current + 1) % FACE_ANGLES.length
+        nextAutoSwitchAtRef.current += AUTO_ROTATION_INTERVAL_SECONDS
+        onActiveChangeRef.current(currentAutoFaceRef.current)
       }
-      targetYRef.current = FACE_ANGLES[autoFace]
+      targetYRef.current = FACE_ANGLES[currentAutoFaceRef.current]
 
       const cubeGroup = cubeRef.current
       if (cubeGroup) {
