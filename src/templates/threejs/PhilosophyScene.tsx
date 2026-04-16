@@ -62,9 +62,10 @@ function wrapText(
   }
 
   if (line && lines < maxLines) {
+    const isTruncated = line.length > MAX_TRUNCATION_LENGTH
     const rendered =
       lines === maxLines - 1
-        ? `${line.slice(0, MAX_TRUNCATION_LENGTH)}${line.length > MAX_TRUNCATION_LENGTH ? '…' : ''}`
+        ? `${line.slice(0, MAX_TRUNCATION_LENGTH)}${isTruncated ? '…' : ''}`
         : line
     ctx.fillText(rendered, x, currentY)
   }
@@ -282,8 +283,8 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
         if (mesh.geometry) mesh.geometry.dispose()
         if (Array.isArray(mesh.material)) {
           mesh.material.forEach((material) => {
-            const maybeTexture = material as THREE.MeshBasicMaterial
-            if (maybeTexture.map) maybeTexture.map.dispose()
+            const materialWithMap = material as THREE.MeshBasicMaterial
+            if (materialWithMap.map) materialWithMap.map.dispose()
             material.dispose()
           })
         } else if (mesh.material) {

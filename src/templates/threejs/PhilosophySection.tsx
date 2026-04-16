@@ -1,6 +1,7 @@
 import { lazy, Suspense, useMemo, useState } from 'react'
 
 const PhilosophyScene = lazy(() => import('./PhilosophyScene'))
+const CUBE_FACE_COUNT = 4
 
 type PhilosophyCardData = { title: string; body: string }
 type Philosophy = { title: string; body: string; cards: PhilosophyCardData[] }
@@ -8,7 +9,7 @@ type Philosophy = { title: string; body: string; cards: PhilosophyCardData[] }
 export default function PhilosophySection({ philosophy }: { philosophy: Philosophy }) {
   const cards = philosophy?.cards
   const cubeCards = useMemo(
-    () => (cards?.length ? Array.from({ length: 4 }, (_, i) => cards[i % cards.length]) : []),
+    () => (cards?.length ? Array.from({ length: CUBE_FACE_COUNT }, (_, i) => cards[i % cards.length]) : []),
     [cards],
   )
   const [activeFace, setActiveFace] = useState(0)
