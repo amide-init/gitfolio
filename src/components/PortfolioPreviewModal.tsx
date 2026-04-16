@@ -270,7 +270,7 @@ type Props = {
   onClose: () => void
 }
 
-export function PortfolioPreviewModal({ user, repos: _, allRepos, onClose }: Props) {
+export function PortfolioPreviewModal({ user, repos, allRepos, onClose }: Props) {
   // Lock body scroll
   useEffect(() => {
     const prev = document.body.style.overflow
@@ -283,7 +283,7 @@ export function PortfolioPreviewModal({ user, repos: _, allRepos, onClose }: Pro
 
   const hero     = buildHero(user, allRepos)
   const snapshot = buildSnapshot(user, allRepos)
-  const repos    = buildRepos(allRepos)
+  const previewRepos = buildRepos(repos.length > 0 ? repos : allRepos)
   const stats    = buildStats(user, allRepos)
 
   return createPortal(
@@ -328,7 +328,7 @@ export function PortfolioPreviewModal({ user, repos: _, allRepos, onClose }: Pro
         <GitHubSection
           title="GitHub"
           body={`${user.name || user.login}'s public repositories on GitHub.`}
-          repos={repos}
+          repos={previewRepos}
         />
         <StatsSection stats={stats} />
 

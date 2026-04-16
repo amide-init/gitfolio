@@ -14,6 +14,7 @@ interface ThreeBarChartProps {
 }
 
 const EASE_DURATION = 1100 // ms
+const TOOLTIP_TOP_OFFSET = 0.1
 
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3)
@@ -158,7 +159,7 @@ export default function ThreeBarChart({
       if (hoveredIdx >= 0) {
         const d = data[hoveredIdx]
         const pos3 = bars[hoveredIdx].mesh.position.clone()
-        pos3.y = bars[hoveredIdx].mesh.scale.y * bars[hoveredIdx].targetH
+        pos3.y = bars[hoveredIdx].mesh.scale.y + TOOLTIP_TOP_OFFSET
         const projected = pos3.clone().project(camera)
         setTooltip({
           x: ((projected.x + 1) / 2) * w,
