@@ -24,5 +24,18 @@
     ],
     "createdAt": "2026-02-22T10:26:19.756Z",
     "updatedAt": "2026-02-22T10:27:59.500Z"
+  },
+  {
+    "id": "237f9ec9-9c4c-4ad2-9a17-e8592c2034be",
+    "title": "Ledgerly : AI ledger for small businesses",
+    "description": "Manage udhaar, track payments, and check balances through simple AI chat—WhatsApp integration coming soon.",
+    "links": [
+      {
+        "label": "https://ledgerly.aamin.me",
+        "url": "https://ledgerly.aamin.me"
+      }
+    ],
+    "createdAt": "2026-04-16T20:29:58.396Z",
+    "updatedAt": "2026-04-16T20:35:29.976Z"
   }
 ]
