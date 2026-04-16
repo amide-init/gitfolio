@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Search, X, Star, Loader2, ExternalLink, MapPin, GitFork, Eye } from 'lucide-react'
 import { PortfolioPreviewModal } from './PortfolioPreviewModal'
 import type { PreviewUser, PreviewRepo } from './PortfolioPreviewModal'
@@ -45,12 +46,33 @@ type NavSearchProps = {
 }
 
 export function NavSearch({ variant = 'default' }: NavSearchProps) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [state, setState] = useState<SearchState>({ status: 'idle' })
   const [previewOpen, setPreviewOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const autoPreviewRef = useRef(searchParams.get('preview'))
+
+  const openPreview = () => {
+    if (state.status !== 'done') return
+    setSearchParams({ preview: state.user.login }, { replace: true })
+    setPreviewOpen(true)
+  }
+
+  const closePreview = () => {
+    setSearchParams({}, { replace: true })
+    setPreviewOpen(false)
+  }
+
+  const close = () => {
+    setOpen(false)
+    setQuery('')
+    setState({ status: 'idle' })
+    setSearchParams({}, { replace: true })
+    setPreviewOpen(false)
+  }
 
   // Close dropdown when clicking outside — but NOT when the preview modal is open
   // (the modal is a portal outside containerRef; clicking inside it must not close the search)
@@ -68,7 +90,7 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
-      if (previewOpen) { setPreviewOpen(false) } else { close() }
+      if (previewOpen) { closePreview() } else { close() }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -78,13 +100,6 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 50)
   }, [open])
-
-  const close = () => {
-    setOpen(false)
-    setQuery('')
-    setState({ status: 'idle' })
-    setPreviewOpen(false)
-  }
 
   const search = useCallback(async (username: string) => {
     const name = username.trim()
@@ -106,6 +121,28 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
       setState({ status: 'error', message: err instanceof Error ? err.message : 'Search failed' })
     }
   }, [])
+
+  // Auto-fetch from ?preview=username on mount
+  useEffect(() => {
+    const username = autoPreviewRef.current
+    if (username) {
+      setQuery(username)
+      void search(username)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Auto-open modal once the auto-fetch completes
+  useEffect(() => {
+    if (
+      autoPreviewRef.current &&
+      state.status === 'done' &&
+      state.user.login.toLowerCase() === autoPreviewRef.current.toLowerCase()
+    ) {
+      setPreviewOpen(true)
+      autoPreviewRef.current = null
+    }
+  }, [state])
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') void search(query)
@@ -279,7 +316,7 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
                 {/* Preview CTA — full width, prominent */}
                 <button
                   type="button"
-                  onClick={() => setPreviewOpen(true)}
+                  onClick={openPreview}
                   className={`w-full flex items-center justify-center gap-1.5 rounded-md py-2 text-xs font-semibold transition ${
                     isThreejs
                       ? 'bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600/30'
@@ -288,6 +325,7 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
                 >
                   <Eye className="h-3.5 w-3.5" /> Preview portfolio
                 </button>
+
                 {/* Secondary row */}
                 <div className="flex gap-2">
                   <a href={state.user.html_url} target="_blank" rel="noreferrer" className={viewBtnCls}>
@@ -309,7 +347,7 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
           user={state.user}
           repos={state.repos}
           allRepos={state.allRepos}
-          onClose={() => setPreviewOpen(false)}
+          onClose={closePreview}
         />
       )}
     </div>
