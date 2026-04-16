@@ -47,26 +47,30 @@ function wrapText(
   let line = ''
   let lines = 0
   let currentY = y
+  let truncated = false
 
-  for (const word of words) {
+  for (let i = 0; i < words.length; i += 1) {
+    const word = words[i]
     const test = line ? `${line} ${word}` : word
     if (ctx.measureText(test).width > maxWidth && line) {
+      if (lines >= maxLines - 1) {
+        truncated = true
+        break
+      }
       ctx.fillText(line, x, currentY)
       lines += 1
       currentY += lineHeight
       line = word
-      if (lines >= maxLines - 1) break
     } else {
       line = test
     }
   }
 
   if (line && lines < maxLines) {
-    const isTruncated = line.length > MAX_TRUNCATION_LENGTH
-    const rendered =
-      lines === maxLines - 1
-        ? `${line.slice(0, MAX_TRUNCATION_LENGTH)}${isTruncated ? '…' : ''}`
-        : line
+    const isLongLine = line.length > MAX_TRUNCATION_LENGTH
+    const needsEllipsis = truncated || isLongLine
+    const baseLine = isLongLine ? line.slice(0, MAX_TRUNCATION_LENGTH) : line
+    const rendered = lines === maxLines - 1 && needsEllipsis ? `${baseLine}…` : baseLine
     ctx.fillText(rendered, x, currentY)
   }
 }
@@ -101,7 +105,6 @@ function buildFaceTexture(card: PhilosophyCardData): THREE.CanvasTexture {
   wrapText(ctx, card.body, 74, 420, canvas.width - 148, 56, 8)
 
   const texture = new THREE.CanvasTexture(canvas)
-  texture.anisotropy = 8
   texture.colorSpace = THREE.SRGBColorSpace
   texture.needsUpdate = true
   return texture
@@ -178,6 +181,13 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
         side: THREE.DoubleSide,
       })
     ))
+    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
+    faceMaterials.forEach((material) => {
+      if (material.map) {
+        material.map.anisotropy = Math.min(8, maxAnisotropy)
+        material.map.needsUpdate = true
+      }
+    })
 
     faceMaterials.forEach((material, index) => {
       const face = new THREE.Mesh(new THREE.PlaneGeometry(size * 0.9, size * 0.9), material)
@@ -186,7 +196,6 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
       cube.add(face)
     })
 
-    targetYRef.current = FACE_ANGLES[activeIndex] ?? 0
     cube.rotation.y = targetYRef.current
 
     const floor = new THREE.Mesh(
@@ -298,7 +307,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
       try { mount.removeChild(renderer.domElement) } catch { /* ignore */ }
       cubeRef.current = null
     }
-  }, [activeIndex, cards])
+  }, [cards])
 
   useEffect(() => {
     targetYRef.current = FACE_ANGLES[activeIndex] ?? 0

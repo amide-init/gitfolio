@@ -5,11 +5,20 @@ const CUBE_FACE_COUNT = 4
 
 type PhilosophyCardData = { title: string; body: string }
 type Philosophy = { title: string; body: string; cards: PhilosophyCardData[] }
+const EMPTY_FACE_CARD: PhilosophyCardData = {
+  title: 'More to come',
+  body: 'Add another philosophy item to fill this cube face.',
+}
 
 export default function PhilosophySection({ philosophy }: { philosophy: Philosophy }) {
   const cards = philosophy?.cards
   const cubeCards = useMemo(
-    () => (cards?.length ? Array.from({ length: CUBE_FACE_COUNT }, (_, i) => cards[i % cards.length]) : []),
+    () => {
+      if (!cards?.length) return []
+      const filled = cards.slice(0, CUBE_FACE_COUNT)
+      while (filled.length < CUBE_FACE_COUNT) filled.push(EMPTY_FACE_CARD)
+      return filled
+    },
     [cards],
   )
   const [activeFace, setActiveFace] = useState(0)
