@@ -1,7 +1,7 @@
 [
   {
     "id": "4746fb7d-e1d3-4c6e-93b9-0a9ebc378c1d",
-    "title": "BadgeMonster",
+    "title": "BadgeMonster : Your AI Mentor",
     "description": "BadgeMonster is an AI-driven skill acceleration platform that combines structured SkillSprints, interactive quizzes, and an autonomous AI mentor to help learners upgrade skills faster and earn verifiable badges.",
     "links": [
       {
@@ -10,11 +10,11 @@
       }
     ],
     "createdAt": "2026-02-22T10:25:09.152Z",
-    "updatedAt": "2026-02-24T17:31:57.069Z"
+    "updatedAt": "2026-04-16T20:42:15.014Z"
   },
   {
     "id": "352f9b93-be16-4775-9c7a-9804043b381f",
-    "title": "GitFolio",
+    "title": "GitFolio : Build Portfolio maker in 30 seconds",
     "description": "Gitfolio is an open-source developer portfolio generator that transforms GitHub profiles into modern, customizable personal websites with minimal setup.",
     "links": [
       {
@@ -23,7 +23,7 @@
       }
     ],
     "createdAt": "2026-02-22T10:26:19.756Z",
-    "updatedAt": "2026-02-22T10:27:59.500Z"
+    "updatedAt": "2026-04-16T20:42:26.326Z"
   },
   {
     "id": "237f9ec9-9c4c-4ad2-9a17-e8592c2034be",
@@ -37,5 +37,18 @@
     ],
     "createdAt": "2026-04-16T20:29:58.396Z",
     "updatedAt": "2026-04-16T20:35:29.976Z"
+  },
+  {
+    "id": "3e4436e0-d9e6-46a0-a612-4deab83258f0",
+    "title": "next-lite-auth : Lightweight auth for modern apps",
+    "description": "Add authentication to your app in minutes—no complex setup, no overhead.",
+    "links": [
+      {
+        "label": "https://aamin.me/next-lite-auth/",
+        "url": "https://aamin.me/next-lite-auth/"
+      }
+    ],
+    "createdAt": "2026-04-16T20:42:33.129Z",
+    "updatedAt": "2026-04-16T20:43:59.689Z"
   }
 ]
