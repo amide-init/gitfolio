@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { useSearchParams } from 'react-router-dom'
 import { Search, X, Star, Loader2, ExternalLink, MapPin, GitFork, Eye } from 'lucide-react'
 import { PortfolioPreviewModal } from './PortfolioPreviewModal'
@@ -54,6 +55,8 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const autoPreviewRef = useRef(searchParams.get('preview'))
+  // true while auto-fetching from a shared ?preview= link
+  const [autoLoading, setAutoLoading] = useState(!!autoPreviewRef.current)
 
   const openPreview = () => {
     if (state.status !== 'done') return
@@ -132,17 +135,17 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Auto-open modal once the auto-fetch completes
+  // Auto-open modal once the auto-fetch completes; clear loader on done or error
   useEffect(() => {
-    if (
-      autoPreviewRef.current &&
-      state.status === 'done' &&
-      state.user.login.toLowerCase() === autoPreviewRef.current.toLowerCase()
-    ) {
+    if (!autoLoading) return
+    if (state.status === 'done') {
       setPreviewOpen(true)
+      setAutoLoading(false)
       autoPreviewRef.current = null
+    } else if (state.status === 'error') {
+      setAutoLoading(false)
     }
-  }, [state])
+  }, [state, autoLoading])
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') void search(query)
@@ -339,6 +342,57 @@ export function NavSearch({ variant = 'default' }: NavSearchProps) {
             </>
           )}
         </div>
+      )}
+
+      {/* Full-screen loading overlay — shown while auto-fetching from a shared link */}
+      {autoLoading && createPortal(
+        <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#050509]">
+          {/* Ambient glow */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(59,130,246,0.07) 0%, transparent 70%)',
+            }}
+          />
+
+          <div className="relative z-10 flex flex-col items-center gap-6 text-center px-6">
+            {/* Spinner ring */}
+            <div className="relative h-16 w-16">
+              <div className="absolute inset-0 rounded-full border-2 border-blue-500/15" />
+              <div
+                className="absolute inset-0 rounded-full border-2 border-transparent border-t-blue-400"
+                style={{ animation: 'spin 0.9s linear infinite' }}
+              />
+              <div className="absolute inset-[6px] rounded-full border border-cyan-500/20" />
+            </div>
+
+            {/* Label */}
+            <div className="flex flex-col items-center gap-1.5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-blue-400/70">
+                Loading portfolio
+              </p>
+              <p className="text-lg font-semibold text-zinc-100">
+                @{searchParams.get('preview') ?? query}
+              </p>
+              {state.status === 'loading' && (
+                <p className="text-xs text-zinc-600 mt-1">Fetching GitHub data…</p>
+              )}
+              {state.status === 'error' && (
+                <p className="text-xs text-red-400 mt-1">{(state as { status: 'error'; message: string }).message}</p>
+              )}
+            </div>
+
+            {/* Dismiss */}
+            <button
+              type="button"
+              onClick={() => { setAutoLoading(false); setSearchParams({}, { replace: true }) }}
+              className="mt-2 text-[11px] text-zinc-600 hover:text-zinc-400 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>,
+        document.body
       )}
 
       {/* Full-screen portfolio preview modal */}
