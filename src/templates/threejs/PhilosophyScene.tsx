@@ -67,9 +67,18 @@ function wrapText(
   }
 
   if (line && lines < maxLines) {
-    const isLongLine = line.length > MAX_TRUNCATION_LENGTH
+    const clipTextByWidth = (value: string, width: number) => {
+      let clipped = value
+      while (clipped && ctx.measureText(`${clipped}…`).width > width) {
+        clipped = clipped.slice(0, -1)
+      }
+      return clipped
+    }
+    const clippedLine = clipTextByWidth(line, maxWidth)
+    const isLongLine = clippedLine.length < line.length || line.length > MAX_TRUNCATION_LENGTH
     const needsEllipsis = truncated || isLongLine
-    const baseLine = isLongLine ? line.slice(0, MAX_TRUNCATION_LENGTH) : line
+    const baseLine =
+      clippedLine.length > MAX_TRUNCATION_LENGTH ? clippedLine.slice(0, MAX_TRUNCATION_LENGTH) : clippedLine
     const rendered = lines === maxLines - 1 && needsEllipsis ? `${baseLine}…` : baseLine
     ctx.fillText(rendered, x, currentY)
   }
@@ -185,7 +194,6 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     faceMaterials.forEach((material) => {
       if (material.map) {
         material.map.anisotropy = Math.min(8, maxAnisotropy)
-        material.map.needsUpdate = true
       }
     })
 
@@ -263,7 +271,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     window.addEventListener('resize', handleResize)
 
     const clock = new THREE.Clock()
-    let frameId = 0
+    let frameId: number
     const animate = () => {
       frameId = requestAnimationFrame(animate)
       const elapsed = clock.getElapsedTime()

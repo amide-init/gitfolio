@@ -2,6 +2,7 @@ import { lazy, Suspense, useMemo, useState } from 'react'
 
 const PhilosophyScene = lazy(() => import('./PhilosophyScene'))
 const CUBE_FACE_COUNT = 4
+const FACE_LABELS = ['Front', 'Back', 'Left', 'Right']
 
 type PhilosophyCardData = { title: string; body: string }
 type Philosophy = { title: string; body: string; cards: PhilosophyCardData[] }
@@ -22,7 +23,6 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
     [cards],
   )
   const [activeFace, setActiveFace] = useState(0)
-  const faceLabels = ['Front', 'Back', 'Left', 'Right']
   if (!cards?.length) return null
 
   return (
@@ -48,7 +48,7 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
         <div className="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2">
           {cubeCards.map((card, index) => (
             <button
-              key={`${faceLabels[index]}-${card.title}`}
+              key={`${FACE_LABELS[index]}-${card.title}`}
               type="button"
               onClick={() => setActiveFace(index)}
               className={`rounded-xl border px-4 py-3 text-left transition ${
@@ -58,7 +58,7 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
               }`}
             >
               <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-300/85">
-                {faceLabels[index]}
+                {FACE_LABELS[index]}
               </p>
               <p className="text-sm font-semibold text-slate-100">{card.title}</p>
             </button>
