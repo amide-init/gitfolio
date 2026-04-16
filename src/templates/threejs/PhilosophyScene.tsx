@@ -91,61 +91,42 @@ function buildFaceTexture(card: PhilosophyCardData): THREE.CanvasTexture {
   const ctx = canvas.getContext('2d')
   if (!ctx) return new THREE.CanvasTexture(canvas)
 
+  // Background
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
   gradient.addColorStop(0, '#07142d')
-  gradient.addColorStop(1, '#081021')
+  gradient.addColorStop(1, '#060e1e')
   ctx.fillStyle = gradient
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)'
-  ctx.lineWidth = 6
-  ctx.strokeRect(24, 24, canvas.width - 48, canvas.height - 48)
+  // Border
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)'
+  ctx.lineWidth = 5
+  ctx.strokeRect(28, 28, canvas.width - 56, canvas.height - 56)
 
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.28)'
+  const PAD = 80
+
+  // Label
+  ctx.fillStyle = 'rgba(125, 211, 252, 0.8)'
+  ctx.font = '600 52px Inter, ui-sans-serif, system-ui'
+  ctx.fillText('PRINCIPLE', PAD, 120)
+
+  // Accent line under label
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)'
   ctx.lineWidth = 3
   ctx.beginPath()
-  ctx.moveTo(74, 148)
-  ctx.lineTo(300, 148)
+  ctx.moveTo(PAD, 148)
+  ctx.lineTo(PAD + 180, 148)
   ctx.stroke()
 
-  ctx.fillStyle = 'rgba(125, 211, 252, 0.9)'
-  ctx.font = '600 36px Inter, ui-sans-serif, system-ui'
-  ctx.fillText('PHILOSOPHY', 74, 110)
+  // Title — large, prominent
+  ctx.fillStyle = '#f1f5f9'
+  ctx.font = '700 98px Inter, ui-sans-serif, system-ui'
+  wrapText(ctx, card.title, PAD, 280, canvas.width - PAD * 2, 114, 2)
 
-  ctx.fillStyle = '#e2e8f0'
-  ctx.font = '700 62px Inter, ui-sans-serif, system-ui'
-  wrapText(ctx, card.title, 74, 215, canvas.width - 148, 76, 3)
-
-  ctx.fillStyle = 'rgba(203, 213, 225, 0.95)'
-  ctx.font = '500 40px Inter, ui-sans-serif, system-ui'
-  wrapText(ctx, card.body, 74, 420, canvas.width - 148, 56, 8)
-
-  const iconX = 824
-  const iconY = 188
-  const iconSize = 98
-  const half = iconSize / 2
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.78)'
-  ctx.lineWidth = 4
-  ctx.beginPath()
-  ctx.moveTo(iconX, iconY - half)
-  ctx.lineTo(iconX + half, iconY - half / 2)
-  ctx.lineTo(iconX + half, iconY + half / 2)
-  ctx.lineTo(iconX, iconY + half)
-  ctx.lineTo(iconX - half, iconY + half / 2)
-  ctx.lineTo(iconX - half, iconY - half / 2)
-  ctx.closePath()
-  ctx.stroke()
-  ctx.beginPath()
-  ctx.moveTo(iconX, iconY - half)
-  ctx.lineTo(iconX, iconY)
-  ctx.lineTo(iconX + half, iconY + half / 2)
-  ctx.moveTo(iconX, iconY)
-  ctx.lineTo(iconX - half, iconY + half / 2)
-  ctx.stroke()
-  ctx.fillStyle = 'rgba(56, 189, 248, 0.85)'
-  ctx.beginPath()
-  ctx.arc(iconX, iconY, 6, 0, Math.PI * 2)
-  ctx.fill()
+  // Body — readable weight
+  ctx.fillStyle = 'rgba(203, 213, 225, 0.88)'
+  ctx.font = '400 64px Inter, ui-sans-serif, system-ui'
+  wrapText(ctx, card.body, PAD, 470, canvas.width - PAD * 2, 82, 6)
 
   const texture = new THREE.CanvasTexture(canvas)
   texture.colorSpace = THREE.SRGBColorSpace
@@ -216,10 +197,10 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     )
 
     const faceConfigs = [
-      { position: new THREE.Vector3(0, 0, size / 2 + 0.02), rotationY: 0 },
+      { position: new THREE.Vector3(0, 0, size / 2 + 0.02),  rotationY: 0 },
       { position: new THREE.Vector3(0, 0, -size / 2 - 0.02), rotationY: Math.PI },
-      { position: new THREE.Vector3(-size / 2 - 0.02, 0, 0), rotationY: Math.PI / 2 },
-      { position: new THREE.Vector3(size / 2 + 0.02, 0, 0), rotationY: -Math.PI / 2 },
+      { position: new THREE.Vector3(-size / 2 - 0.02, 0, 0), rotationY: -Math.PI / 2 },
+      { position: new THREE.Vector3(size / 2 + 0.02, 0, 0),  rotationY: Math.PI / 2 },
     ]
 
     const faceMaterials = cards.map((card) => (

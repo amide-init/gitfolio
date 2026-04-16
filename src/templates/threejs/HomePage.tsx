@@ -2,6 +2,7 @@ import siteContent from '../../siteContent.json'
 import { githubConfig } from '../../generated/githubData'
 import HeroSection from './HeroSection'
 import PhilosophySection from './PhilosophySection'
+import RewindSection from './RewindSection'
 import VideosSection from './VideosSection'
 import BlogsSection from './BlogsSection'
 import CustomProjectsSection from './CustomProjectsSection'
@@ -41,6 +42,7 @@ export default function ThreejsHomePage() {
   return (
     <div className="bg-[#050509]">
       <HeroSection hero={hero} snapshot={snapshot} />
+      <RewindSection stats={stats ?? null} name={hero?.title} />
       <PhilosophySection philosophy={philosophy} />
       {showVideos && <VideosSection />}
       {showBlogs && <BlogsSection />}
