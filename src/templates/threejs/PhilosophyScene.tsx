@@ -26,6 +26,7 @@ const WAVE_SPEED = 0.6
 const WAVE_INTENSITY = 0.05
 const FLOAT_SPEED = 0.9
 const FLOAT_INTENSITY = 0.06
+const AUTO_FACE_SECONDS = 3.8
 
 function normalizeAngle(value: number): number {
   let angle = value
@@ -101,6 +102,13 @@ function buildFaceTexture(card: PhilosophyCardData): THREE.CanvasTexture {
   ctx.lineWidth = 6
   ctx.strokeRect(24, 24, canvas.width - 48, canvas.height - 48)
 
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.28)'
+  ctx.lineWidth = 3
+  ctx.beginPath()
+  ctx.moveTo(74, 148)
+  ctx.lineTo(300, 148)
+  ctx.stroke()
+
   ctx.fillStyle = 'rgba(125, 211, 252, 0.9)'
   ctx.font = '600 36px Inter, ui-sans-serif, system-ui'
   ctx.fillText('PHILOSOPHY', 74, 110)
@@ -113,6 +121,33 @@ function buildFaceTexture(card: PhilosophyCardData): THREE.CanvasTexture {
   ctx.font = '500 40px Inter, ui-sans-serif, system-ui'
   wrapText(ctx, card.body, 74, 420, canvas.width - 148, 56, 8)
 
+  const iconX = 824
+  const iconY = 188
+  const iconSize = 98
+  const half = iconSize / 2
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.78)'
+  ctx.lineWidth = 4
+  ctx.beginPath()
+  ctx.moveTo(iconX, iconY - half)
+  ctx.lineTo(iconX + half, iconY - half / 2)
+  ctx.lineTo(iconX + half, iconY + half / 2)
+  ctx.lineTo(iconX, iconY + half)
+  ctx.lineTo(iconX - half, iconY + half / 2)
+  ctx.lineTo(iconX - half, iconY - half / 2)
+  ctx.closePath()
+  ctx.stroke()
+  ctx.beginPath()
+  ctx.moveTo(iconX, iconY - half)
+  ctx.lineTo(iconX, iconY)
+  ctx.lineTo(iconX + half, iconY + half / 2)
+  ctx.moveTo(iconX, iconY)
+  ctx.lineTo(iconX - half, iconY + half / 2)
+  ctx.stroke()
+  ctx.fillStyle = 'rgba(56, 189, 248, 0.85)'
+  ctx.beginPath()
+  ctx.arc(iconX, iconY, 6, 0, Math.PI * 2)
+  ctx.fill()
+
   const texture = new THREE.CanvasTexture(canvas)
   texture.colorSpace = THREE.SRGBColorSpace
   texture.needsUpdate = true
@@ -124,6 +159,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
   const cubeRef = useRef<THREE.Group | null>(null)
   const targetYRef = useRef(0)
   const onActiveChangeRef = useRef(onActiveIndexChange)
+  const currentAutoFaceRef = useRef(0)
 
   useEffect(() => {
     onActiveChangeRef.current = onActiveIndexChange
@@ -187,7 +223,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
       new THREE.MeshBasicMaterial({
         map: buildFaceTexture(card),
         transparent: false,
-        side: THREE.DoubleSide,
+        side: THREE.FrontSide,
       })
     ))
     const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
@@ -220,48 +256,6 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     floor.position.y = FLOOR_Y
     scene.add(floor)
 
-    let dragging = false
-    let prevX = 0
-
-    const findNearestFace = (angle: number) => {
-      let best = 0
-      let bestDistance = Number.POSITIVE_INFINITY
-      FACE_ANGLES.forEach((candidate, idx) => {
-        const distance = Math.abs(normalizeAngle(angle - candidate))
-        if (distance < bestDistance) {
-          best = idx
-          bestDistance = distance
-        }
-      })
-      return best
-    }
-
-    const down = (event: PointerEvent) => {
-      dragging = true
-      prevX = event.clientX
-      renderer.domElement.style.cursor = 'grabbing'
-    }
-    const move = (event: PointerEvent) => {
-      if (!dragging) return
-      const dx = event.clientX - prevX
-      prevX = event.clientX
-      targetYRef.current += dx * DRAG_SENSITIVITY
-    }
-    const up = () => {
-      if (!dragging) return
-      dragging = false
-      renderer.domElement.style.cursor = 'grab'
-      const nearest = findNearestFace(targetYRef.current)
-      targetYRef.current = FACE_ANGLES[nearest]
-      onActiveChangeRef.current(nearest)
-    }
-
-    renderer.domElement.style.cursor = 'grab'
-    renderer.domElement.addEventListener('pointerdown', down)
-    window.addEventListener('pointermove', move)
-    window.addEventListener('pointerup', up)
-    window.addEventListener('pointercancel', up)
-
     const handleResize = () => {
       if (!mount) return
       camera.aspect = mount.clientWidth / mount.clientHeight
@@ -275,6 +269,12 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     const animate = () => {
       frameId = requestAnimationFrame(animate)
       const elapsed = clock.getElapsedTime()
+      const autoFace = Math.floor(elapsed / AUTO_FACE_SECONDS) % FACE_ANGLES.length
+      if (autoFace !== currentAutoFaceRef.current) {
+        currentAutoFaceRef.current = autoFace
+        onActiveChangeRef.current(autoFace)
+      }
+      targetYRef.current = FACE_ANGLES[autoFace] ?? 0
 
       const cubeGroup = cubeRef.current
       if (cubeGroup) {
@@ -290,10 +290,6 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     return () => {
       cancelAnimationFrame(frameId)
       window.removeEventListener('resize', handleResize)
-      renderer.domElement.removeEventListener('pointerdown', down)
-      window.removeEventListener('pointermove', move)
-      window.removeEventListener('pointerup', up)
-      window.removeEventListener('pointercancel', up)
 
       scene.traverse((obj) => {
         const mesh = obj as THREE.Mesh
