@@ -122,6 +122,70 @@ async function fetchGraphQL(query, variables, token) {
   return json.data
 }
 
+/**
+ * Generate a contextual philosophy body paragraph from the user's actual GitHub data.
+ * Picks the most relevant angle based on their top topics, language, and activity.
+ */
+function generatePhilosophyBody(profile, topLanguage, allTopics, totalStars) {
+  const name = profile.name || profile.login
+  const topics = allTopics.map((t) => t.toLowerCase())
+
+  const has = (...keywords) => keywords.some((kw) => topics.includes(kw))
+
+  const hasAutomation  = has('automation', 'ci-cd', 'devops', 'infrastructure', 'github-action', 'github-actions', 'pipeline')
+  const hasAI          = has('ai', 'machine-learning', 'ml', 'deep-learning', 'nlp', 'llm', 'openai')
+  const hasOpenSource  = has('open-source', 'oss', 'hacktoberfest')
+  const hasWeb         = has('web', 'frontend', 'react', 'nextjs', 'vue', 'svelte', 'tailwind')
+  const hasCLI         = has('cli', 'terminal', 'command-line', 'shell', 'bash')
+  const hasAPI         = has('api', 'rest', 'graphql', 'backend', 'nodejs', 'fastapi')
+  const hasMobile      = has('android', 'ios', 'flutter', 'react-native', 'mobile')
+  const hasData        = has('data', 'analytics', 'pandas', 'jupyter', 'visualization', 'notebook')
+
+  const langNote = topLanguage
+    ? ` Working primarily in ${topLanguage}, the focus stays on code that is easy to read, easy to run, and hard to break silently.`
+    : ''
+
+  if (hasAI && hasAutomation) {
+    return `${name} combines AI and automation to build workflows that stay predictable — the goal is explainability over magic, with every step traceable and inspectable.${langNote}`
+  }
+
+  if (hasAI) {
+    return `${name} approaches AI as infrastructure: models are most useful when they're composable, observable, and easy to swap out — intelligence should enhance workflow, not obscure it.${langNote}`
+  }
+
+  if (hasAutomation) {
+    return `${name} believes great developer tooling should make the right path the easy path — automated, reproducible, and opinionated enough that teams spend time building instead of configuring.${langNote}`
+  }
+
+  if (hasOpenSource && totalStars > 20) {
+    return `${name} builds in the open because the best tools are shaped by the people who use them — every star and issue is signal worth acting on.${langNote}`
+  }
+
+  if (hasCLI || hasAPI) {
+    return `${name} gravitates toward tools that compose well: small, focused interfaces that do one thing reliably and can be wired together without surprises.${langNote}`
+  }
+
+  if (hasData) {
+    return `${name} treats data as a first-class citizen — clean inputs, reproducible pipelines, and visualisations that make the answer obvious rather than requiring interpretation.${langNote}`
+  }
+
+  if (hasWeb) {
+    return `${name} believes the best interfaces get out of the way — fast to load, easy to navigate, and built so the next developer can understand the code without a tour.${langNote}`
+  }
+
+  if (hasMobile) {
+    return `${name} builds mobile experiences with a platform-first mindset — respecting OS conventions, optimising for battery and connectivity, and shipping updates that feel native.${langNote}`
+  }
+
+  // Generic fallback derived from the profile data
+  const repoNote =
+    profile.public_repos > 20
+      ? `Across ${profile.public_repos} public repositories, the pattern is consistent`
+      : `Every project starts from the same principle`
+
+  return `${repoNote}: code should be clear enough to hand off, stable enough to deploy with confidence, and scoped tightly enough to stay maintainable over time.${langNote}`
+}
+
 async function main() {
   // Load .env file if it exists
   const envPath = path.join(rootDir, '.env')
@@ -820,8 +884,7 @@ async function main() {
     },
     philosophy: {
       title: 'Philosophy',
-      body:
-        'Guardrails over guesswork. The goal is to keep infrastructure and developer tooling deterministic, explainable, and easy to inspect — even when AI is part of the workflow.',
+      body: generatePhilosophyBody(profile, topLanguage, allTopics, totalStars),
       cards: philosophyCards,
     },
     projects: {

@@ -34,7 +34,7 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <header className="max-w-xl">
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-blue-400/90">
-              {philosophy.title}
+              Core principles
             </p>
             <h2 id="philosophy-title" className="text-3xl font-semibold leading-tight text-slate-100 sm:text-4xl">
               {philosophy.title}
@@ -42,7 +42,7 @@ export default function PhilosophySection({ philosophy }: { philosophy: Philosop
             <p className="mt-4 text-lg leading-relaxed text-slate-300">{philosophy.body}</p>
           </header>
 
-          <div className="h-[430px] w-full overflow-hidden rounded-2xl border border-blue-900/35 bg-[#070d1d]/45 backdrop-blur-sm">
+          <div className="h-[430px] w-full">
             <Suspense fallback={null}>
               <PhilosophyScene cards={cubeCards} activeIndex={activeFace} onActiveIndexChange={setActiveFace} />
             </Suspense>
