@@ -12,6 +12,8 @@ const PREVIEW_COLORS = [
 ]
 const MAX_VISIBLE_LINKS = 2
 const VALID_HOSTNAME_PATTERN = /^[a-z0-9.-]+$/i
+const WORDPRESS_MSHOTS_BASE = 'https://s.wordpress.com/mshots/v1/'
+const WEB_PREVIEW_WIDTH = 1200
 
 function hashTitle(title: string): number {
   let hash = 0
@@ -31,10 +33,30 @@ function fallbackLinkText(url: string): string {
   }
 }
 
+function getPreviewImageUrl(url: string): string | null {
+  try {
+    const parsed = new URL(url)
+    if (!['http:', 'https:'].includes(parsed.protocol)) return null
+
+    const host = parsed.hostname.toLowerCase()
+    if (host === 'github.com') {
+      const [owner, repo] = parsed.pathname.split('/').filter(Boolean)
+      if (owner && repo) {
+        return `https://opengraph.githubassets.com/1/${owner}/${repo}`
+      }
+    }
+
+    return `${WORDPRESS_MSHOTS_BASE}${encodeURIComponent(parsed.toString())}?w=${WEB_PREVIEW_WIDTH}`
+  } catch {
+    return null
+  }
+}
+
 export default function ProjectCard({ project }: { project: Project }) {
   const seed = hashTitle(project.title || project.id)
   const color = PREVIEW_COLORS[seed % PREVIEW_COLORS.length]
   const previewLink = project.links?.find((link) => link.url)?.url
+  const previewImageUrl = previewLink ? getPreviewImageUrl(previewLink) : null
   const host = previewLink
     ? (() => {
         try {
@@ -46,6 +68,8 @@ export default function ProjectCard({ project }: { project: Project }) {
         }
       })()
     : null
+  const [failedPreviewUrl, setFailedPreviewUrl] = useState<string | null>(null)
+  const previewFailed = !!previewImageUrl && failedPreviewUrl === previewImageUrl
 
   const cardRef = useRef<HTMLDivElement>(null)
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
@@ -81,14 +105,34 @@ export default function ProjectCard({ project }: { project: Project }) {
         <div className={`pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-gradient-to-br ${color.glow} to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-20`} />
 
         <div className="relative h-36 overflow-hidden border-b border-blue-900/30 bg-[#070b16]">
-          <div className={`absolute inset-0 bg-gradient-to-br ${color.bar} opacity-10`} />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(255,255,255,0.18),transparent_46%),radial-gradient(circle_at_85%_78%,rgba(255,255,255,0.12),transparent_42%)]" />
+          {previewImageUrl && !previewFailed ? (
+            <img
+              src={previewImageUrl}
+              alt={`${project.title || 'Project'} preview`}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+              referrerPolicy="no-referrer"
+              onError={() => setFailedPreviewUrl(previewImageUrl)}
+            />
+          ) : (
+            <>
+              <div className={`absolute inset-0 bg-gradient-to-br ${color.bar} opacity-10`} />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(255,255,255,0.18),transparent_46%),radial-gradient(circle_at_85%_78%,rgba(255,255,255,0.12),transparent_42%)]" />
+            </>
+          )}
           <div className="absolute left-3 top-3 rounded-full border border-blue-300/25 bg-[#070b16]/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-200/85 backdrop-blur-sm">
             Preview
           </div>
-          <div className="absolute right-2 top-2 opacity-75 transition-opacity group-hover:opacity-100">
-            <CardShape index={seed % SHAPE_KEYS.length} color={color.hex} size={64} isHovered={hovered} />
-          </div>
+          {(!previewImageUrl || previewFailed) && (
+            <div className="absolute right-2 top-2 opacity-75 transition-opacity group-hover:opacity-100">
+              <CardShape index={seed % SHAPE_KEYS.length} color={color.hex} size={64} isHovered={hovered} />
+            </div>
+          )}
+          {previewFailed && (
+            <p className="absolute right-3 top-3 text-[10px] uppercase tracking-[0.16em] text-slate-400">
+              Placeholder
+            </p>
+          )}
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#080c18] to-transparent" />
           <h3 className="absolute bottom-3 left-3 right-3 line-clamp-2 text-sm font-semibold leading-snug text-slate-100">
             {project.title || 'Untitled'}
