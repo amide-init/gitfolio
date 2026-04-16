@@ -160,6 +160,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
   const onActiveChangeRef = useRef(onActiveIndexChange)
   const currentAutoFaceRef = useRef(0)
   const nextAutoSwitchAtRef = useRef(AUTO_ROTATION_INTERVAL_SECONDS)
+  const elapsedTimeRef = useRef(0)
 
   useEffect(() => {
     onActiveChangeRef.current = onActiveIndexChange
@@ -271,6 +272,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     const animate = () => {
       frameId = requestAnimationFrame(animate)
       const elapsed = clock.getElapsedTime()
+      elapsedTimeRef.current = elapsed
       if (elapsed >= nextAutoSwitchAtRef.current) {
         currentAutoFaceRef.current = (currentAutoFaceRef.current + 1) % FACE_ANGLES.length
         nextAutoSwitchAtRef.current = elapsed + AUTO_ROTATION_INTERVAL_SECONDS
@@ -318,6 +320,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
   useEffect(() => {
     currentAutoFaceRef.current = activeIndex
     targetYRef.current = FACE_ANGLES[activeIndex] ?? 0
+    nextAutoSwitchAtRef.current = elapsedTimeRef.current + AUTO_ROTATION_INTERVAL_SECONDS
   }, [activeIndex])
 
   return (
