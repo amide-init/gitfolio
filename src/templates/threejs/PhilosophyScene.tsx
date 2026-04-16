@@ -25,7 +25,7 @@ const WAVE_SPEED = 0.6
 const WAVE_INTENSITY = 0.05
 const FLOAT_SPEED = 0.9
 const FLOAT_INTENSITY = 0.06
-const AUTO_FACE_SECONDS = 3.8
+const AUTO_ROTATION_INTERVAL_SECONDS = 3.8
 
 function normalizeAngle(value: number): number {
   let angle = value
@@ -268,12 +268,12 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     const animate = () => {
       frameId = requestAnimationFrame(animate)
       const elapsed = clock.getElapsedTime()
-      const autoFace = Math.floor(elapsed / AUTO_FACE_SECONDS) % FACE_ANGLES.length
+      const autoFace = Math.floor(elapsed / AUTO_ROTATION_INTERVAL_SECONDS) % FACE_ANGLES.length
       if (autoFace !== currentAutoFaceRef.current) {
         currentAutoFaceRef.current = autoFace
         onActiveChangeRef.current(autoFace)
       }
-      targetYRef.current = FACE_ANGLES[autoFace] ?? 0
+      targetYRef.current = FACE_ANGLES[autoFace]
 
       const cubeGroup = cubeRef.current
       if (cubeGroup) {
