@@ -4,6 +4,7 @@ import { X, GitFork, Copy, Check, ExternalLink } from 'lucide-react'
 import HeroSection from '../templates/threejs/HeroSection'
 import GitHubSection from '../templates/threejs/GitHubSection'
 import StatsSection from '../templates/threejs/StatsSection'
+import RewindSection from '../templates/threejs/RewindSection'
 
 // ── Shared types (also used by NavSearch) ────────────────────────────────────
 
@@ -325,6 +326,7 @@ export function PortfolioPreviewModal({ user, repos, allRepos, onClose }: Props)
 
         {/* Render the actual threejs template sections with live data */}
         <HeroSection hero={hero} snapshot={snapshot} />
+        <RewindSection stats={stats} name={user.name ?? user.login} />
         <GitHubSection
           title="GitHub"
           body={`${user.name || user.login}'s public repositories on GitHub.`}

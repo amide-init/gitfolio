@@ -327,21 +327,6 @@ export default function HeroSection({ hero, snapshot }: HeroSectionProps) {
 
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <div
-        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 flex flex-col items-center gap-1.5"
-        aria-hidden="true"
-        style={{ animation: 'fadeInUp 0.7s 1.1s ease-out both' }}
-      >
-        <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-slate-600">Scroll</span>
-        <div className="flex h-8 w-5 items-start justify-center rounded-full border border-slate-700 pt-1.5">
-          <div
-            className="h-1.5 w-1 rounded-full bg-blue-400"
-            style={{ animation: 'fadeInUp 1.2s ease-in-out infinite' }}
-          />
-        </div>
-      </div>
     </section>
   )
 }
