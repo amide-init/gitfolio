@@ -46,9 +46,13 @@
       {
         "label": "https://aamin.me/next-lite-auth/",
         "url": "https://aamin.me/next-lite-auth/"
+      },
+      {
+        "label": "NPM Link",
+        "url": "https://www.npmjs.com/package/next-lite-auth"
       }
     ],
     "createdAt": "2026-04-16T20:42:33.129Z",
-    "updatedAt": "2026-04-16T20:43:59.689Z"
+    "updatedAt": "2026-04-16T20:47:22.386Z"
   }
 ]
