@@ -190,7 +190,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
     const cube = new THREE.Group()
     scene.add(cube)
     cubeRef.current = cube
-    currentAutoFaceRef.current = activeIndex
+    currentAutoFaceRef.current = 0
     nextAutoSwitchAtRef.current = AUTO_ROTATION_INTERVAL_SECONDS
 
     const size = CUBE_SIZE
@@ -316,6 +316,7 @@ export default function PhilosophyScene({ cards, activeIndex, onActiveIndexChang
   }, [cards])
 
   useEffect(() => {
+    currentAutoFaceRef.current = activeIndex
     targetYRef.current = FACE_ANGLES[activeIndex] ?? 0
   }, [activeIndex])
 
