@@ -28,9 +28,9 @@
 - Keep routing/template patterns consistent across pages.
 
 ## Validation commands
-- Install: `corepack pnpm install`
-- Lint: `corepack pnpm lint`
-- Build: `corepack pnpm build`
+- Install: `pnpm install`
+- Lint: `pnpm lint`
+- Build: `pnpm build`
 
 ## Documentation consistency
 - Keep `CLAUDE.md`, `README.md`, and workflow behavior in sync when changing architecture expectations.

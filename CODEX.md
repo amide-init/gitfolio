@@ -33,9 +33,9 @@ Contribute safely to Gitfolio with small, correct changes that preserve branch/d
 - Reuse existing utilities/components and avoid unnecessary dependencies.
 
 ## Validation
-- Install dependencies: `corepack pnpm install`
-- Lint: `corepack pnpm lint`
-- Build: `corepack pnpm build`
+- Install dependencies: `pnpm install`
+- Lint: `pnpm lint`
+- Build: `pnpm build`
 - Report pre-existing failures separately from new issues introduced by your changes.
 
 ## Scope discipline
