@@ -30,8 +30,8 @@ export default function RepoCard({ repo }: { repo: ProjectRepo }) {
           )}
         </span>
         <div className="flex shrink-0 items-center gap-3 text-xs text-green-800">
-          <span className="text-green-700">★ {repo.stars ?? 0}</span>
-          <span className="text-green-700">⑂ {repo.forks ?? 0}</span>
+          {(repo.stars ?? 0) > 0 && <span className="text-green-700">★ {repo.stars}</span>}
+          {(repo.forks ?? 0) > 0 && <span className="text-green-700">⑂ {repo.forks}</span>}
           {repo.language && <span className="text-green-800">[{repo.language}]</span>}
         </div>
       </div>
