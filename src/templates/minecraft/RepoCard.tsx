@@ -3,6 +3,7 @@ type ProjectRepo = {
   description: string
   url: string
   stars: number
+  forks?: number
   language?: string | null
   topics?: string[]
   lastUpdated?: string
@@ -45,6 +46,7 @@ export default function RepoCard({ repo }: { repo: ProjectRepo }) {
           </span>
           <div className="flex shrink-0 items-center gap-3 text-xs text-[#d4d4d4]">
             {(repo.stars ?? 0) > 0 && <span className="text-[#ffaa00]">★ {repo.stars}</span>}
+            {(repo.forks ?? 0) > 0 && <span className="text-[#ffaa00]">⑂ {repo.forks}</span>}
             {repo.language && <span className="text-[#a0a0a0]">[{repo.language}]</span>}
           </div>
         </div>
