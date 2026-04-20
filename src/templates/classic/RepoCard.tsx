@@ -3,6 +3,7 @@ type Repo = {
   description: string
   url: string
   stars: number
+  forks?: number
   language?: string | null
   topics?: string[]
   lastUpdated?: string
@@ -52,6 +53,7 @@ export default function RepoCard({ repo }: RepoCardProps) {
           </svg>
           {repo.stars}
         </span>
+        <span>Forks {repo.forks ?? 0}</span>
         {repo.language && (
           <span className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-indigo-400" aria-hidden />
