@@ -3,6 +3,7 @@ type Repo = {
   description: string
   url: string
   stars: number
+  forks?: number
   language?: string | null
   topics?: string[]
   lastUpdated?: string
@@ -56,6 +57,12 @@ function RepoCard({ repo }: RepoCardProps) {
             </dt>
             <dd>{repo.stars}</dd>
           </div>
+          <div className="flex items-center gap-1">
+            <dt className="font-semibold text-slate-900 dark:text-slate-100">
+              Forks
+            </dt>
+            <dd>{repo.forks ?? 0}</dd>
+          </div>
           {repo.language && (
             <div className="flex items-center gap-1">
               <dt className="font-semibold text-slate-900 dark:text-slate-100">
@@ -91,4 +98,3 @@ function RepoCard({ repo }: RepoCardProps) {
 }
 
 export default RepoCard
-

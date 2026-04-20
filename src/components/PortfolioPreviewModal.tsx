@@ -120,6 +120,7 @@ function buildRepos(allRepos: PreviewRepo[]) {
     description: r.description ?? '',
     url: r.html_url,
     stars: r.stargazers_count,
+    forks: r.forks_count ?? 0,
     language: r.language ?? undefined,
     topics: r.topics ?? [],
     lastUpdated: undefined as string | undefined,

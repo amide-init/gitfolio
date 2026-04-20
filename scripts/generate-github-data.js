@@ -62,6 +62,7 @@ function pickRepoFields(json) {
     html_url: json.html_url,
     description: json.description,
     stargazers_count: json.stargazers_count,
+    forks_count: json.forks_count,
     language: json.language,
     open_issues_count: json.open_issues_count,
     topics: json.topics ?? [],
@@ -690,6 +691,7 @@ async function main() {
       'Repository on GitHub. Edit siteContent.json to customise this copy.',
     url: repo.html_url,
     stars: repo.stargazers_count ?? 0,
+    forks: repo.forks_count ?? 0,
     language: repo.language,
     topics: repo.topics ?? [],
     lastUpdated: repo.updated_at,
@@ -959,4 +961,3 @@ main().catch((err) => {
   console.error(err)
   process.exitCode = 1
 })
-
