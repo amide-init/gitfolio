@@ -75,6 +75,17 @@ export function useProjectsStore(token: string | null) {
     setItems((prev) => [...prev, newProject])
   }, [])
 
+  const addItem = useCallback((data: { title: string; description: string; links: ProjectLink[] }) => {
+    setItems((prev) => [...prev, {
+      id: generateId(),
+      title: data.title,
+      description: data.description,
+      links: data.links,
+      createdAt: nowISO(),
+      updatedAt: nowISO(),
+    }])
+  }, [])
+
   const update = useCallback(
     (id: string, updates: Partial<Omit<Project, 'id' | 'createdAt'>>) => {
       setItems((prev) =>
@@ -122,6 +133,7 @@ export function useProjectsStore(token: string | null) {
     error,
     success,
     add,
+    addItem,
     update,
     updateLinks,
     remove,

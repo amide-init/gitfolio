@@ -75,6 +75,18 @@ export function useBlogsStore(token: string | null) {
     setItems((prev) => [...prev, newBlog])
   }, [])
 
+  const addItem = useCallback((data: { title: string; content?: string; contentJSON?: string }) => {
+    const now = nowISO()
+    setItems((prev) => [...prev, {
+      id: generateId(),
+      title: data.title,
+      content: data.content ?? '',
+      contentJSON: data.contentJSON,
+      createdAt: now,
+      updatedAt: now,
+    }])
+  }, [])
+
   const update = useCallback(
     (id: string, updates: Partial<Omit<Blog, 'id' | 'createdAt'>>) => {
       setItems((prev) =>
@@ -108,6 +120,7 @@ export function useBlogsStore(token: string | null) {
     error,
     success,
     add,
+    addItem,
     update,
     remove,
     persist,

@@ -87,6 +87,17 @@ export function useVideosStore(token: string | null) {
     setItems((prev) => [...prev, newVideo])
   }, [])
 
+  const addItem = useCallback((data: { title: string; videoUrl: string; thumbnail?: string }) => {
+    setItems((prev) => [...prev, {
+      id: generateId(),
+      title: data.title,
+      videoUrl: data.videoUrl,
+      thumbnail: data.thumbnail,
+      createdAt: nowISO(),
+      updatedAt: nowISO(),
+    }])
+  }, [])
+
   const update = useCallback(
     (id: string, updates: Partial<Omit<Video, 'id' | 'createdAt'>>) => {
       setItems((prev) =>
@@ -120,6 +131,7 @@ export function useVideosStore(token: string | null) {
     error,
     success,
     add,
+    addItem,
     update,
     remove,
     persist,
