@@ -1,12 +1,20 @@
+import { useState } from 'react'
 import { LuxeEditor, getEditorJSON } from 'luxe-edit'
 import 'luxe-edit/index.css'
-import { Plus, Trash2, AlertCircle, CheckCircle2, Loader2, RefreshCw } from 'lucide-react'
+import { Plus, Trash2, Pencil, AlertCircle, CheckCircle2, Loader2, RefreshCw } from 'lucide-react'
 import { useAdminAuthContext } from '../context/AdminAuthContext'
 import { useBlogsStore } from '../hooks/useBlogsStore'
 import type { Blog } from '../../types/contentTypes'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
-import { Card, CardContent, CardHeader } from '../../components/ui/card'
+import { Card, CardContent } from '../../components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '../../components/ui/dialog'
 
 function formatDate(iso: string) {
   try {
@@ -15,8 +23,6 @@ function formatDate(iso: string) {
     return iso
   }
 }
-
-// ── Minimal markdown → Lexical JSON ──────────────────────────────────────────
 
 function makeText(text: string, format = 0) {
   return { detail: 0, format, mode: 'normal', style: '', text, type: 'text', version: 1 }
@@ -55,11 +61,27 @@ function markdownToLexicalJSON(md: string): string {
   return JSON.stringify({ root: { children: blocks, direction: 'ltr', format: '', indent: 0, type: 'root', version: 1 } })
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+type ModalState = { open: false } | { open: true; mode: 'add' } | { open: true; mode: 'edit'; id: string }
 
 export function AdminBlogsPage() {
   const { token } = useAdminAuthContext()
   const store = useBlogsStore(token)
+  const [modal, setModal] = useState<ModalState>({ open: false })
+
+  const editingBlog = modal.open && modal.mode === 'edit'
+    ? store.items.find((b) => b.id === modal.id)
+    : undefined
+
+  function closeModal() { setModal({ open: false }) }
+
+  function handleApply(draft: { title: string; contentJSON?: string }) {
+    if (modal.open && modal.mode === 'edit') {
+      store.update(modal.id, draft)
+    } else {
+      store.addItem(draft)
+    }
+    closeModal()
+  }
 
   if (store.loading) {
     return (
@@ -82,10 +104,22 @@ export function AdminBlogsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={store.add} className="gap-1.5 border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setModal({ open: true, mode: 'add' })}
+            className="gap-1.5 border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+          >
             <Plus className="h-3.5 w-3.5" /> Add blog
           </Button>
-          <Button type="button" size="sm" onClick={store.persist} disabled={store.saving} className="min-w-16 bg-blue-600 text-white hover:bg-blue-500">
+          <Button
+            type="button"
+            size="sm"
+            onClick={store.persist}
+            disabled={store.saving}
+            className="min-w-16 bg-blue-600 text-white hover:bg-blue-500"
+          >
             {store.saving ? <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving…</> : 'Save'}
           </Button>
         </div>
@@ -105,14 +139,37 @@ export function AdminBlogsPage() {
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {store.items.map((blog) => (
-          <BlogCard
+          <div
             key={blog.id}
-            blog={blog}
-            onUpdate={(u) => store.update(blog.id, u)}
-            onRemove={() => store.remove(blog.id)}
-          />
+            className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium text-zinc-200">{blog.title || <span className="text-zinc-500 italic">Untitled</span>}</p>
+              <p className="text-xs text-zinc-500 mt-0.5">Updated {formatDate(blog.updatedAt)}</p>
+            </div>
+            <div className="flex items-center gap-1 shrink-0 ml-4">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setModal({ open: true, mode: 'edit', id: blog.id })}
+                className="h-7 w-7 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => store.remove(blog.id)}
+                className="h-7 w-7 text-zinc-600 hover:text-red-400 hover:bg-red-950/30"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
         ))}
         {store.items.length === 0 && (
           <p className="rounded-xl border border-dashed border-zinc-800 py-10 text-center text-sm text-zinc-600">
@@ -120,56 +177,84 @@ export function AdminBlogsPage() {
           </p>
         )}
       </div>
+
+      <Dialog open={modal.open} onOpenChange={(v) => !v && closeModal()}>
+        <DialogContent className="border-zinc-800 bg-zinc-900 max-w-2xl max-h-[90vh] overflow-y-auto">
+          {modal.open && (
+            <BlogModalContent
+              key={modal.mode === 'edit' ? modal.id : 'new'}
+              blog={editingBlog}
+              onClose={closeModal}
+              onApply={handleApply}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
 
-function BlogCard({
+function BlogModalContent({
   blog,
-  onUpdate,
-  onRemove,
+  onClose,
+  onApply,
 }: {
-  blog: Blog
-  onUpdate: (u: Partial<Pick<Blog, 'title' | 'content' | 'contentJSON'>>) => void
-  onRemove: () => void
+  blog?: Blog
+  onClose: () => void
+  onApply: (draft: { title: string; contentJSON?: string }) => void
 }) {
+  const [title, setTitle] = useState(blog?.title ?? '')
+  const [contentJSON, setContentJSON] = useState<string | undefined>(blog?.contentJSON)
+
   const legacyEditorState =
-    blog.contentJSON == null && blog.content ? markdownToLexicalJSON(blog.content) : undefined
+    blog?.contentJSON == null && blog?.content ? markdownToLexicalJSON(blog.content) : undefined
 
   return (
-    <Card className="border-zinc-800 bg-zinc-900">
-      <CardHeader className="pb-3 pt-4 px-4">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-zinc-500">Blog post</span>
-          <Button type="button" variant="ghost" size="icon" onClick={onRemove} className="h-7 w-7 text-zinc-600 hover:text-red-400 hover:bg-red-950/30">
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3 px-4 pb-4">
+    <>
+      <DialogHeader>
+        <DialogTitle className="text-zinc-100">{blog ? 'Edit blog' : 'New blog'}</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-3 py-1">
         <Input
           type="text"
           placeholder="Title"
-          value={blog.title}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           className="border-zinc-700 bg-zinc-950 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-blue-500"
         />
         <LuxeEditor
           colorScheme="dark"
           initialConfig={{
-            namespace: `blog-${blog.id}`,
+            namespace: `modal-blog-${blog?.id ?? 'new'}`,
             ...(legacyEditorState ? { editorState: legacyEditorState } : {}),
           }}
-          initialJSON={blog.contentJSON}
-          onChange={(editorState) => {
-            onUpdate({ contentJSON: getEditorJSON(editorState) })
-          }}
+          initialJSON={blog?.contentJSON}
+          onChange={(editorState) => setContentJSON(getEditorJSON(editorState))}
           ignoreInitialChange
         />
-        <p className="text-[11px] text-zinc-600">
-          Created {formatDate(blog.createdAt)} · Updated {formatDate(blog.updatedAt)}
-        </p>
-      </CardContent>
-    </Card>
+        {blog && (
+          <p className="text-[11px] text-zinc-600">
+            Created {new Date(blog.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })} · Updated {new Date(blog.updatedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+          </p>
+        )}
+      </div>
+      <DialogFooter>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onClose}
+          className="border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          onClick={() => onApply({ title, contentJSON })}
+          className="bg-blue-600 text-white hover:bg-blue-500"
+        >
+          Apply
+        </Button>
+      </DialogFooter>
+    </>
   )
 }
