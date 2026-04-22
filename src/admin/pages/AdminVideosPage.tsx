@@ -147,6 +147,7 @@ export function AdminVideosPage() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setModal({ open: true, mode: 'edit', id: video.id })}
+                aria-label="Edit"
                 className="h-7 w-7 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800"
               >
                 <Pencil className="h-3.5 w-3.5" />
