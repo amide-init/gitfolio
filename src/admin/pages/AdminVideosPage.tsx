@@ -138,7 +138,9 @@ export function AdminVideosPage() {
               )}
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-zinc-200">{video.title || <span className="text-zinc-500 italic">Untitled</span>}</p>
-                <p className="truncate text-xs text-zinc-500 mt-0.5">{video.videoUrl || 'No URL'}</p>
+                <p className="truncate text-xs text-zinc-500 mt-0.5">
+                  {video.videoUrl ? video.videoUrl : 'No URL'} · Updated {formatDate(video.updatedAt)}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1 shrink-0 ml-4">
